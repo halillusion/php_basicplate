@@ -9,14 +9,29 @@ namespace app\core;
 
 class Core
 {
-
     /**
      * App Core
      *
-     * @return void
+     * @return this
      */
-    public function test()
+
+    protected $currentController = 'Pages';
+    protected $currentMethod = 'index';
+    protected $param = [];
+    public $url = '';
+    public $request = [];
+    public $route = null;
+
+
+    public function __construct()
     {
-        echo 'Started...';
+        $this->route = include path('app/external/route.php');
+
+    }
+
+    public function output() {
+
+        $this->route->go();
+
     }
 }
