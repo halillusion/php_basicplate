@@ -25,3 +25,9 @@ spl_autoload_register( function($className) {
     }
 
 });
+
+register_shutdown_function( "fatalHandler" );
+set_error_handler( "errorHandler" );
+set_exception_handler( "exceptionHandler" );
+ini_set('display_errors', 'off');
+error_reporting(E_ALL);

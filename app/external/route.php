@@ -7,7 +7,7 @@ $route = new Route();
 $route->get([
 
     // WEB
-    ''             => function () { return view('home'); },
+    ''             => function () { return (new app\controllers\AppController()); },
     'login'        => function () { return view('login'); },
     'register'     => function () { return view('register'); },
     'page/_'       => function () { return view('welcome'); },

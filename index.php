@@ -2,11 +2,24 @@
 
 /**
  * @package  Basicplate based on Kalipso Build Engine
- * @author   Halil IO <halillusion@gmail.com>
+ * @author   halillusion <halillusion@gmail.com>
  */
 
 use app\core\App;
 
-require __DIR__.'/app/bootstrap.php';
+try {
 
-(new App())->start();
+    require __DIR__.'/app/bootstrap.php';
+
+    (new App())->start();
+    
+} catch (\Throwable $t) {
+
+    errorHandler (
+        $t->getCode(), 
+        $t->getMessage(), 
+        $t->getFile(),
+        $t->getLine()
+    );
+
+}

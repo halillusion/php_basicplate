@@ -15,7 +15,7 @@ class Core
      * @return this
      */
 
-    protected $currentController = 'Pages';
+    protected $currentController = 'App';
     protected $currentMethod = 'index';
     protected $param = [];
     public $url = '';
