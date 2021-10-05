@@ -21,13 +21,7 @@ class Core
     public $url = '';
     public $request = [];
     public $route = null;
-
-
-    public function __construct()
-    {
-        $this->route = include path('app/external/route.php');
-
-    }
+    
 
     public function output() {
 

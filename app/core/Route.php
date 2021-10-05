@@ -29,11 +29,41 @@ class Route
 
 	}
 
+	public function post($route) {
+
+		$this->routes['GET'] = $route;
+
+	}
+
 	public function go() {
 
 		if (isset($this->routes[$this->method][$this->url]) !== false) {
 
-			$this->routes[$this->method][$this->url]();
+			foreach ($this->routes[$this->method][$this->url] as $method => $variable) {
+
+				if (strpos($method, '/') !== false) {
+
+					$class = explode('/', $method, 2);
+
+				} else {
+
+					$class = [$method];
+
+				}
+
+				if (count($class) === 1) {
+
+					$class = 'app\\controllers\\'.$class[0];
+					return (new $class($variable));
+
+				} else {
+
+					$method = $class[1];
+					$class = 'app\\controllers\\'.$class[0];
+					return (new $class)->$method($variable);
+				}
+
+			}
 
 		} else {
 

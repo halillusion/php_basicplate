@@ -15,9 +15,10 @@ function path($dir  = null) {
  * @return string $base main url
  */
 
-function base() {
+function base($body = null) {
 
 	$url = (config('settings.ssl') ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . '/';
+	if ($body) $url .= trim(strip_tags($body), '/');
 
 	return $url;
 }
