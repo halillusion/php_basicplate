@@ -84,8 +84,22 @@ class Database
      *
      * @param array $config
      */
-    public function __construct(array $config)
+    public function __construct(array $config = [])
     {
+        $this->cacheDir = path('app/storage/db_cache');
+        if (! count($config)) {
+
+            $config['driver'] = config('database.driver');
+            $config['host'] = config('database.host');
+            $config['charset'] = config('database.charset');
+            $config['collation'] = config('database.collation');
+            $config['port'] = config('database.port');
+            $config['prefix'] = config('database.prefix');
+            $config['username'] = config('database.user');
+            $config['password'] = config('database.pass');
+            $config['database'] = config('database.name');
+        }
+
         $config['driver'] = isset($config['driver']) ? $config['driver'] : 'mysql';
         $config['host'] = isset($config['host']) ? $config['host'] : 'localhost';
         $config['charset'] = isset($config['charset']) ? $config['charset'] : 'utf8mb4';
@@ -94,7 +108,6 @@ class Database
             ? $config['port']
             : (strstr($config['host'], ':') ? explode(':', $config['host'])[1] : '');
         $this->prefix = isset($config['prefix']) ? $config['prefix'] : '';
-        $this->cacheDir = isset($config['cachedir']) ? $config['cachedir'] : __DIR__ . '/cache/';
         $this->debug = isset($config['debug']) ? $config['debug'] : true;
 
         $dsn = '';

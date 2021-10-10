@@ -7,7 +7,6 @@
  * Column parameters is as follows.
  *
  * > type:          Type parameters(required) -> (INT | VARCHAR | TEXT | DATE | ENUM | JSON)
- * > limit:         Maximum length of column.
  * > nullable:      True if it is an empty field.
  * > auto_inc:      True if it is an auto increment field.
  * > attr:          Attribute parameters -> (BINARY | UNSIGNED | UNSIGNED ZEROFILL | ON UPDATE CURRENT_TIMESTAMP)

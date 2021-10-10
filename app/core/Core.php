@@ -16,12 +16,12 @@ class Core
      */
     public $currentLang = 'en';
     public $availableLangs = ['en', 'tr'];
-    public $changelog = null;
     
     public function __construct()
     {
         global $currentLang;
         global $languages;
+        global $changelog;
 
         try {
 
@@ -50,7 +50,7 @@ class Core
             $languages = include path('app/core/localization/'.$currentLang.'.php');
 
             // Loading changelog
-            $this->changelog = include path('app/core/external/changelog.php');
+            $changelog = include path('app/core/external/changelog.php');
             
         } catch (\Throwable $t) {
 

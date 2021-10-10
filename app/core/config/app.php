@@ -9,5 +9,6 @@
 
 
 return [
-	'name'		=> 'PHP Basicplate'
+	'name'		=> 'PHP Basicplate',
+	'dev_mode'	=> true
 ];

@@ -36,7 +36,7 @@ class App extends Core
 
             }
 
-        } elseif ($this->request[0] === 'sandbox') {
+        } elseif ($this->request[0] === 'sandbox' AND config('app.dev_mode')) {
 
             try {
 

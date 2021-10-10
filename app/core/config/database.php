@@ -8,10 +8,10 @@
 return [
 
     'host'      => 'localhost',
-    'name'      => 'php_basicplate',
+    'name'      => 'basicplate',
     'driver'    => 'mysql',
     'user'      => 'root',
-    'pass'      => '',
+    'pass'      => '1234',
     'collation' => 'utf8mb4_unicode_520_ci',
     'charset'   => 'utf8mb4',
     'prefix'    => '',

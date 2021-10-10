@@ -1,4 +1,6 @@
 <?php
+
+use app\core\Database;
 	
 $output = '';
 $action = '';
@@ -8,74 +10,227 @@ if (isset($_GET['action']) !== false) {
 
 	$action = $_GET['action'];
 
-	if ($action == 'licences') { // Licences
+	switch ($action) {
+		case 'licences': // Licences
+			
+			$output = '';
+			$title = 'Credits';
 
-		$output = '';
-		$title = 'Credits';
+			$licences = [
+				'PHP Basicplate by Kalipso Collective <a target="_blank" href="https://github.com/halillusion/php_basicplate">(Github)</a>' => path('app/core/external/licences/php_basicplate.txt'),
+				'PDOx by İzni Burak <a target="_blank" href="https://github.com/izniburak/pdox">(Github)</a>' => path('app/core/external/licences/pdox.txt'),
+				'Bootstrap <a target="_blank" href="https://github.com/twbs/bootstrap">(Github)</a>' => path('app/core/external/licences/bootstrap.txt'),
+				'Bootswatch by Thomas Park <a target="_blank" href="https://github.com/thomaspark/bootswatch">(Github)</a>' => path('app/core/external/licences/bootswatch.txt'),
+				'Inter Font by Rasmus Andersson <a target="_blank" href="https://github.com/rsms/inter">(Github)</a>' => path('app/core/external/licences/inter.txt'),
+				'Material Design Icons by Austin Andrews <a target="_blank" href="https://github.com/Templarian/MaterialDesign">(Github)</a>' => path('app/core/external/licences/mdi.txt'),
+			];
 
-		$licences = [
-			'PHP Basicplate by Kalipso Collective <a target="_blank" href="https://github.com/halillusion/php_basicplate">(Github)</a>' => 'MIT License
+			foreach($licences as $name => $licence) {
 
-Copyright (c) 2021 KalipsoCollective
+				if (file_exists($licence)) {
+					$licence = file_get_contents($licence);
+				} else {
+					$licence = '<p class="text-muted">License file not found!</p>';
+				}
+				$output .= '<details><summary>'.$name.'</summary><pre><br>'.$licence.'</pre></details>';
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+			}
+		break;
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+		case 'php-info': // PHP Informations
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.',
-			'PDOx by İzni Burak <a target="_blank" href="https://github.com/izniburak/pdox">(Github)</a>' => 'The MIT License (MIT)
+			$title = 'PHP Info';
+			ob_start ();
+			phpinfo ();
+			$output = ob_get_clean();
+			$output = preg_replace('/(<script[^>]*>.+?<\/script>|<style[^>]*>.+?<\/style>|<meta[^>]*>|<title[^>]*>.+?<\/title>)/is', "", $output);
+			$output = '<pre>'.trim(strip_tags($output)).'</pre>';
 
-Copyright (c) 2015, İzni Burak Demirtaş info@burakdemirtas.org
+		break;
 
-Permission is hereby granted, free of charge, to any person obtaining a copy 
-of this software and associated documentation files (the "Software"), to deal 
-in the Software without restriction, including without limitation the rights 
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell 
-copies of the Software, and to permit persons to whom the Software is 
-furnished to do so, subject to the following conditions:
+		case 'sys-info': // System Informations
 
-The above copyright notice and this permission notice shall be included in all 
-copies or substantial portions of the Software.
+			$title = 'System Info';
+			$output = '<h2 class="lead">'.VERSION.'</h2>'.PHP_EOL;
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE 
-SOFTWARE.',
-		];
+			global $changelog;
+			foreach ($changelog as $version => $detail) {
 
-		foreach($licences as $name => $licence) {
+				$date = $detail['date'];
+				$detail = implode('</li><li>', $detail['changes']);
 
-			$output .= '<details><summary>'.$name.'</summary><pre>'.$licence.'</pre></details>';
+				$output .= '<details><summary>'.$version.' @ '.$date.'</summary><pre><ul><li>'.$detail.'</li></ul></pre></details>';
+			}
 
-		}
+		break;
 
-	} elseif ($action == 'php-info') {
+		case 'db-init': // Database Init
 
-		$title = 'PHP Info';
+			$title = 'Prepare Database';
+			$output = '';
+			$dbSchema = require path('app/core/external/db_schema.php');
 
-		ob_start ();
-		phpinfo ();
-		$output = ob_get_clean();
-		$output = preg_replace('/(<script[^>]*>.+?<\/script>|<style[^>]*>.+?<\/style>|<meta[^>]*>|<title[^>]*>.+?<\/title>)/is', "", $output);
-		$output = '<pre>'.trim(strip_tags($output)).'</pre>';
+			if (isset($_GET['start']) !== false) {
 
+				$init = (new Database)->dbInit($dbSchema);
+
+				if ($init === 0) {
+					$output .= '<p class="text-success">Database has been prepared successfully.</p>';
+				} else {
+					$output .= '<p class="text-danger">There was a problem while preparing the database. -> ' . $init . '</p>';
+				}
+
+			} else {
+
+				foreach ($dbSchema['tables'] as $table => $detail) {
+
+					$cols = '
+					<div class="table-responsive">
+						<table class="table table-dark table-sm table-hover table-striped caption-bottom">
+							<thead>
+								<tr>
+									<th scope="col">Column</th>
+									<th scope="col">Type</th>
+									<th scope="col">AI</th>
+									<th scope="col">Attribute</th>
+									<th scope="col">Default</th>
+									<th scope="col">Index</th>
+								</tr>
+							</thead>
+							<tbody>';
+
+					foreach ($detail['cols'] as $col => $colDetail) {
+
+						$cols .= '
+								<tr>
+									<th scope="row">'.$col.'</th>
+									<td scope="col">
+										'.$colDetail['type'].(
+											isset($colDetail['type_values']) !== false ? 
+											(is_array($colDetail['type_values']) ? '('.implode(',', $colDetail['type_values']).')' : 
+												'('.$colDetail['type_values']).')' : ''
+										).'
+									</td>
+									<td scope="col">'.(isset($colDetail['auto_inc']) !== false ? 'yes' : 'no').'</td>
+									<td scope="col">'.(isset($colDetail['attr']) !== false ? $colDetail['attr'] : '').'</td>
+									<td scope="col">'.(isset($colDetail['default']) !== false ? $colDetail['default'] : '').'</td>
+									<td scope="col">'.(isset($colDetail['index']) !== false ? $colDetail['index'] : '').'</td>
+								<tr>';
+
+					}
+
+					$tableValues = '';
+
+					$tableValues = '<h3 class="small text-muted">
+						'.(
+							isset($dbSchema['table_values']['specific'][$table]['charset']) !== false ? 
+								'Charset: <strong>'.$dbSchema['table_values']['specific'][$table]['charset'].'</strong><br>' : 
+								''
+						).'
+						'.(
+							isset($dbSchema['table_values']['specific'][$table]['collate']) !== false ? 
+								'Collate: <strong>'.$dbSchema['table_values']['specific'][$table]['collate'].'</strong><br>' : 
+								''
+						).'
+						'.(
+							isset($dbSchema['table_values']['specific'][$table]['engine']) !== false ? 
+								'Engine: <strong>'.$dbSchema['table_values']['specific'][$table]['engine'].'</strong><br>' : 
+								''
+						).'
+					</h3>';
+
+					$cols .= '
+							</tbody>
+							<caption>'.$tableValues.'</caption>
+						</table>
+					</div>';
+
+					$output .= '<details><summary>'.$table.'</summary>'.$cols.'</details>';
+				}
+
+				if ($output != '') {
+					$output = '
+					<h3 class="small text-muted">
+						Database Name: 
+						<strong>'.config('database.name').'</strong><br>
+						Database Charset: 
+						<strong>'.(isset($dbSchema['table_values']['charset']) !== false ? $dbSchema['table_values']['charset'] : '-').'</strong><br>
+						Database Collate: 
+						<strong>'.(isset($dbSchema['table_values']['collate']) !== false ? $dbSchema['table_values']['collate'] : '-').'</strong><br>
+						Database Engine: 
+						<strong>'.(isset($dbSchema['table_values']['engine']) !== false ? $dbSchema['table_values']['engine'] : '-').'</strong><br>
+					</h3>
+					'.$output.'
+					<p class="small text-danger mt-5">If there is no database named <strong>'.config('database.name').'</strong>, add it with the <strong>'.config('database.collation').'</strong> collation.</p>
+					<a class="btn btn-dark btn-sm" href="/sandbox?action=db-init&start">Good, Prepare!</a>';
+				}
+			}
+
+		break;
+
+		case 'db-seed': // Database Migration
+
+			$title = 'Seed Database';
+			$output = '';
+			$dbSchema = require path('app/core/external/db_schema.php');
+
+			if (isset($_GET['start']) !== false) {
+
+				$output = '<p class="text-muted">Seeding...</p>';
+				$init = (new Database)->dbSeed($dbSchema);
+
+				if ($init === 0) {
+					$output .= '<p class="text-success">Database has been seeded successfully.</p>';
+				} else {
+					$output .= '<p class="text-danger">There was a problem while seeding the database. -> ' . $init. '</p>';
+				}
+
+			} else {
+
+				foreach ($dbSchema['data'] as $table => $detail) {
+
+					$cols = '
+					<div class="table-responsive">
+						<table class="table table-dark table-sm table-hover table-striped">
+							<thead>
+								<tr>
+									<th scope="col">Table</th>
+									<th scope="col">Data</th>
+								</tr>
+							</thead>
+							<tbody>';
+
+					foreach ($detail as $tableDataDetail) {
+
+						$dataList = '<ul class="list-group list-group-flush">';
+						foreach ($tableDataDetail as $col => $data) {
+							$dataList .= '<li class="list-group-item d-flex justify-content-between align-items-start space"><strong>'.$col.'</strong> <span class="ml-2">'.$data.'</span></li>';
+						}
+						$dataList .= '</ul>';
+
+						$cols .= '
+								<tr>
+									<th scope="row">'.$table.'</th>
+									<td scope="col">
+										'.$dataList.'
+									</td>
+								<tr>';
+
+					}
+					$cols .= '
+						</table>
+					</div>';
+
+					$output .= '<details><summary>'.$table.'</summary>'.$cols.'</details>';
+				}
+
+				if ($output != '') {
+					$output .= '<a class="btn btn-dark mt-5 btn-sm" href="/sandbox?action=db-seed&start">Good, Seed!</a>';
+				}
+			}
+
+		break;
 	}
-
 }
 
 ?>
@@ -84,13 +239,52 @@ SOFTWARE.',
 <head>
 	<meta charset="utf-8">
 	<title><?php echo $title.' - '.config('app.name'); ?></title>
-	<?php echo assets('css/basic.css', true, true); ?>
+	<link href="https://cdn.jsdelivr.net/npm/bootswatch@5.1.2/dist/zephyr/bootstrap.min.css" rel="stylesheet">
+	<style type="text/css">
+		::-webkit-scrollbar {
+			width:7px!important;
+			height:7px!important
+		}
+		::-webkit-scrollbar-track {
+			box-shadow:inset 0 0 0 1px #000;
+			background: #232531;
+			border-radius:15px
+		}
+		::-webkit-scrollbar-thumb {
+			background:#8993BE;
+			border-radius:15px
+		}
+		::-webkit-scrollbar-thumb:hover {
+			background:#fff
+		}
+		.basicplate-sandbox {
+			background: #e6e6e6;
+		}
+		.basicplate-sandbox nav a svg {
+			height: 3rem;
+			width: 3rem
+			padding-left: 0.5rem;
+		}
+		.basicplate-sandbox nav a:hover svg {
+			opacity: 0.6;
+		}
 
+		.basicplate-sandbox pre {
+		    padding: 1rem;
+		    background: #212529;
+		    color: #aeaeae;
+		    border-radius: 1rem;
+		}
+
+		.basicplate-sandbox ul {
+		    margin: 0;
+		}
+	</style>
 </head>
-<body class="basicplate-front">
-	<nav>
-		<a href="/sandbox">
-			<svg width="193" height="193" viewBox="0 0 193 193" fill="none" xmlns="http://www.w3.org/2000/svg">
+<body class="basicplate-sandbox">
+	<nav class="navbar sticky-top navbar-expand-md navbar-dark bg-dark">
+		<div class="container">
+			<a href="/sandbox" class="navbar-brand"><svg width="193" height="193" viewBox="0 0 193 193" fill="none" xmlns="http://www.w3.org/2000/svg">
 				<path d="M90.7598 1.37769C94.4352 -0.144721 98.5648 -0.144719 102.24 1.37769L159.703 25.1794C163.378 26.7018 166.298 29.6219 167.821 33.2973L191.622 90.7598C193.145 94.4352 193.145 98.5648 191.622 102.24L167.821 159.703C166.298 163.378 163.378 166.298 159.703 167.821L102.24 191.622C98.5648 193.145 94.4352 193.145 90.7597 191.622L33.2973 167.821C29.6219 166.298 26.7018 163.378 25.1794 159.703L1.37769 102.24C-0.144721 98.5648 -0.144719 94.4352 1.37769 90.7597L25.1794 33.2973C26.7018 29.6219 29.6219 26.7018 33.2973 25.1794L90.7598 1.37769Z" fill="url(#paint0_linear)"/>
 				<mask id="mask0" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="193" height="193">
 				<path d="M90.7598 1.37769C94.4352 -0.144721 98.5648 -0.144719 102.24 1.37769L159.703 25.1794C163.378 26.7018 166.298 29.6219 167.821 33.2973L191.622 90.7598C193.145 94.4352 193.145 98.5648 191.622 102.24L167.821 159.703C166.298 163.378 163.378 166.298 159.703 167.821L102.24 191.622C98.5648 193.145 94.4352 193.145 90.7597 191.622L33.2973 167.821C29.6219 166.298 26.7018 163.378 25.1794 159.703L1.37769 102.24C-0.144721 98.5648 -0.144719 94.4352 1.37769 90.7597L25.1794 33.2973C26.7018 29.6219 29.6219 26.7018 33.2973 25.1794L90.7598 1.37769Z" fill="url(#paint1_linear)"/>
@@ -116,32 +310,39 @@ SOFTWARE.',
 				<stop offset="1" stop-color="#8993BE"/>
 				</linearGradient>
 				</defs>
-			</svg>
-		</a>
-		<ul>
-			<li>
-				<a <?php if ($action == '') echo ' class="active"'; ?>href="/sandbox">Welcome</a>
-			</li>
-			<li>
-				<a <?php if ($action == 'db-init') echo ' class="active"'; ?>href="/sandbox?action=db-init">Prepare Database</a>
-			</li>
-			<li>
-				<a <?php if ($action == 'db-seed') echo ' class="active"'; ?>href="/sandbox?action=db-seed">Seed Database</a>
-			</li>
-			<li>
-				<a <?php if ($action == 'php-info') echo ' class="active"'; ?>href="/sandbox?action=php-info">PHP Info</a>
-			</li>
-			<li>
-				<a <?php if ($action == 'sys-info') echo ' class="active"'; ?>href="/sandbox?action=sys-info">System Info</a>
-			</li>
-			<li>
-				<a <?php if ($action == 'licences') echo ' class="active"'; ?>href="/sandbox?action=licences">Credits</a>
-			</li>
-		</ul>
+			</svg></a>
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarNav">
+				<ul class="navbar-nav">
+					<li class="nav-item">
+						<a class="nav-link<?php if ($action == '') echo ' active'; ?>" href="/sandbox">Welcome</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link<?php if ($action == 'db-init') echo ' active'; ?>" href="/sandbox?action=db-init">Prepare Database</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link<?php if ($action == 'db-seed') echo ' active'; ?>" href="/sandbox?action=db-seed">Seed Database</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link<?php if ($action == 'php-info') echo ' active'; ?>" href="/sandbox?action=php-info">PHP Info</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link<?php if ($action == 'sys-info') echo ' active'; ?>" href="/sandbox?action=sys-info">System Info</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link<?php if ($action == 'licences') echo ' active'; ?>" href="/sandbox?action=licences">Credits</a>
+					</li>
+				</ul>
+			</div>
+		</div>
 	</nav>
-	<main>
+	</div>
+	<main class="container mt-5">
 		<h1><?php echo $title; ?></h1>
 		<?php echo $output; ?>
 	</main>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
