@@ -39,7 +39,7 @@ function config($setting) {
 		if ($setting[0] == 'settings') { // JSON
 
 
-			$file = path() . 'app/config/' . $setting[0] . '.json';
+			$file = path() . 'app/core/config/' . $setting[0] . '.json';
 			if (file_exists($file)) {
 
 				$settings = json_decode(file_get_contents($file));
@@ -51,7 +51,7 @@ function config($setting) {
 
 		} else { // PHP
 
-			$file = path() . 'app/config/' . $setting[0] . '.php';
+			$file = path('app/core/config/' . $setting[0] . '.php');
 			if (file_exists($file)) {
 
 				$settings = require $file;
@@ -143,4 +143,102 @@ function exceptionHandler(Exception $e ) {
 	echo '</pre>';
 
 	exit();
+}
+
+function lang($key) {
+
+	global $languages;
+
+	if (is_array($languages)) {
+
+		$get = strpos($key, '.') !== false ? explode('.', $key, 2) : [$key];
+		
+		if (isset($languages[$get[0]]) !== false) {
+
+			if (isset($get[1]) !== false AND isset($languages[$get[0]][$get[1]]) !== false) {
+
+				$key = $languages[$get[0]][$get[1]];
+
+			} elseif (is_string($languages[$get[0]])) {
+
+				$key = $languages[$get[0]];
+
+			}
+
+		}
+
+	}
+
+	return $key;
+
+}
+
+function title() {
+
+	echo config('app.name');
+
+}
+
+
+function meta() {
+
+	echo '<!-- META -->';
+
+}
+
+function urlGenerator($key = null, $slugs = [], $getParams = []) {
+
+	return base($key);
+
+}
+
+/**
+ * Assets File Controller
+ * @param string $filename
+ * @param bool $version
+ * @param bool $tag
+ * @param bool $echo
+ * @param array $externalParameters
+ * @return string|null
+ */
+
+function assets(string $filename, $version = true, $tag = false, $echo = false, $externalParameters = [])
+{
+
+	$fileDir = rtrim( path().'assets/'.$filename, '/' );
+	$return = trim( base().'assets/'.$filename, '/' );
+	if (file_exists( $fileDir )) {
+
+		$return = $version==true ? $return.'?v='.filemtime($fileDir) : $return;
+		if ( $tag==true ) // Only support for javascript and stylesheet files
+		{
+			$_externalParameters = '';
+			foreach ($externalParameters as $param => $val) {
+				$_externalParameters = ' ' . $param . '="' . $val . '"';
+			}
+
+			$file_data = pathinfo( $fileDir );
+			if ( $file_data['extension'] == 'css' )
+			{
+				$return = '<link'.$_externalParameters.' rel="stylesheet" href="'.$return.'" type="text/css"/>'.PHP_EOL.'		';
+
+			} elseif ( $file_data['extension'] == 'js' )
+			{
+				$return = '<script'.$_externalParameters.' src="'.$return.'"></script>'.PHP_EOL.'		';
+			}
+		}
+
+	} else {
+		$return = null;
+		// new app\core\Log('sys_asset', $filename);
+	}
+
+	if ( $echo == true ) {
+
+		echo $return;
+		return null;
+
+	} else {
+		return $return;
+	}
 }

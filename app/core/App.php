@@ -12,17 +12,6 @@ use app\core\Core;
 class App extends Core
 {
 
-    public function __construct()
-    {
-        $this->route = include path('app/core/external/route.php');
-
-        $request = parse_url(base($_SERVER['REQUEST_URI']));
-        $request = trim($request['path'], '/');
-        
-        $this->request = strpos($request, '/') !== false ? explode('/', $request) : [$request];
-
-    }
-
     /**
      * Start app
      *
@@ -32,15 +21,51 @@ class App extends Core
     {   
         if ($this->request[0] === 'script') {
 
-            echo 'script';
+            try {
+
+                require path('app/core/external/script.php');
+                
+            } catch (\Throwable $t) {
+
+                errorHandler (
+                    $t->getCode(), 
+                    $t->getMessage(), 
+                    $t->getFile(),
+                    $t->getLine()
+                );
+
+            }
 
         } elseif ($this->request[0] === 'sandbox') {
 
-            echo 'sandbox';
+            try {
+
+                require path('app/core/external/sandbox.php');
+                
+            } catch (\Throwable $t) {
+
+                errorHandler (
+                    $t->getCode(), 
+                    $t->getMessage(), 
+                    $t->getFile(),
+                    $t->getLine()
+                );
+
+            }
 
         } else {
 
             echo $this->output();
         }
+    }
+
+    /**
+     * Response output
+     * 
+     **/
+    public function output() {
+
+        $this->route->go();
+
     }
 }

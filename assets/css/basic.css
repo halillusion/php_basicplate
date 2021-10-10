@@ -1,0 +1,134 @@
+@charset 'UTF-8';
+
+body {
+	font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
+}
+
+.basicplate-front {
+	background: #151515;
+	color: #888;
+	height: 100vh;
+	width: 100vw;
+	margin: 0;
+}
+
+.basicplate-front h1,
+.basicplate-front h2,
+.basicplate-front h3 {
+	color: #fff;
+}
+
+.basicplate-front * {
+	transition: 0.2s ease-out;
+}
+
+.basicplate-front nav {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	align-content: center;
+	justify-content: space-between;
+	align-items: center;
+   	padding-right: 15rem;
+    padding-left: 15rem;
+}
+
+.basicplate-front nav a svg {
+	height: 5rem;
+	width: 5rem
+}
+
+.basicplate-front nav a:hover svg {
+	opacity: 0.6;
+}
+
+
+.basicplate-front a {
+	color: #777;
+	text-decoration: none;
+}
+
+.basicplate-front a:hover {
+	color: #fff;
+	text-decoration: none;
+}
+
+.basicplate-front nav ul {
+	list-style-type: none;
+	display: flex;
+	flex-direction: row;
+	align-content: center;
+	justify-content: center;
+	align-items: center;
+	padding: 1rem 2rem;
+	background: #1c1c1c;
+	border-radius: 0.5rem;
+}
+
+.basicplate-front nav ul li + li {
+    margin-left: 1rem;
+}
+
+.basicplate-front nav ul li a {
+    position: relative;
+    color: #bbb;
+    padding: 0.4rem 0.8rem;
+    border-radius: 0.4rem;
+    background: transparent;
+}
+
+.basicplate-front nav ul li a:focus,
+.basicplate-front nav ul li a.active {
+    color: #8993be;
+    background: #232531;
+}
+
+.basicplate-front nav ul li a:after {
+	transition: 0.2s ease-out;
+	position: absolute;
+	content: '';
+	background: transparent;
+	bottom: -0.6rem;
+	border-top-left-radius: 0.2rem;
+	border-top-right-radius: 0.2rem;
+	left: 0;
+	right: 0;
+	width: 100%;
+	height: 0.2rem;
+}
+
+.basicplate-front nav ul li a.active:after,
+.basicplate-front nav ul li a:hover:after {
+	background: #8993be;
+}
+
+.basicplate-front nav ul li a:hover {
+    background: #1c1c1c;
+}
+.basicplate-front nav {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	align-content: center;
+	justify-content: space-between;
+	align-items: center;
+	padding-right: 15rem;
+	padding-left: 15rem;
+	padding-top: 0.5rem;
+}
+
+.basicplate-front main {
+	margin-top: 4rem;
+	height: auto;
+	max-width: 100%;
+	display: flex;
+	flex-direction: column;
+	flex-wrap: wrap;
+	align-content: flex-start;
+	justify-content: space-around;
+	align-items: flex-start;
+	padding-right: 15rem;
+	padding-left: 15rem;
+	white-space: break-spaces;
+	word-break: break-word;
+}

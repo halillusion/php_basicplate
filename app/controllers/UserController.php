@@ -7,9 +7,9 @@ namespace app\controllers;
  * Database Model
  * 
  **/
-use app\models\AppModel as Model;
+use app\models\UserModel as Model;
 
-class AppController extends Model {
+class UserController extends Model {
 
 	function __construct() {
 		
@@ -20,11 +20,12 @@ class AppController extends Model {
 		global $pageStructure;
 
 		if (is_array($pageStructure)) {
+			
 			foreach ($pageStructure as $part) {
 
 				if ($part == '_') { // Content File
 
-					require path('app/views/app/'.$key.'.php');
+					require path('app/views/user/'.$key.'.php');
 
 				} elseif (file_exists(path('app/views/'.$part.'.php'))) { // Layout File
 
