@@ -129,11 +129,12 @@ function errorHandler(int $errNo, string $errMsg, string $file, int $line) {
     echo str_replace('[OUTPUT]', $errorOutput, $handlerInterface);
 }
 
-function fatalHandler($exception) {
+function fatalHandler() {
 
 	$error = error_get_last();
-    if ( $error["type"] == E_ERROR )
+    if ( ! is_null($error) AND is_array($error) AND $error["type"] == E_ERROR ) {
         errorHandler( $error["type"], $error["message"], $error["file"], $error["line"] );
+    }
 }
 
 function exceptionHandler(Exception $e ) {
@@ -246,8 +247,9 @@ function assets(string $filename, $version = true, $tag = false, $echo = false, 
 function createCSRF($echo = true) {
 
     $token = $_COOKIE[config('app.session')].'_'.getIP().'_'.getHeader();
+    $_SESSION['token'] = $token;
 
-    $return = '<input type="hidden" name="token_babe" value="' . password_hash($token, PASSWORD_DEFAULT) . '" />';
+    $return = '<input type="hidden" name="token" value="' . encryptKey($token) . '" />';
 
     if ($echo) echo $return;
     else return $return;
@@ -258,7 +260,7 @@ function verifyCSRF($val) {
 
     $token = $_COOKIE[config('app.session')].'_'.getIP().'_'.getHeader();
 
-    if (password_verify($token, $val)) {
+    if (isset($_SESSION['token']) !== false AND $_SESSION['token'] == $token AND $token == decryptKey($val)) {
 
         return true;
 
@@ -287,6 +289,14 @@ function http($code, $data = null, $extra = null) {
 
 		case 301:
 			header('HTTP/1.1 301 Moved Permanently');
+			if (! is_null($data)) {
+				header('Location: '.$data);
+				exit;
+			}
+			break;
+
+		case 200:
+			header('HTTP/1.1 200 OK');
 			if (! is_null($data)) {
 				header('Location: '.$data);
 				exit;

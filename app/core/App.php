@@ -55,7 +55,9 @@ class App extends Core
 
         } else {
 
-            echo $this->output();
+            http(200);
+            http('content_type', 'html');
+            $this->output();
         }
     }
 

@@ -67,6 +67,7 @@ class Route
 
 		} else {
 
+			http(404);
 			view('404');
 
 		}
