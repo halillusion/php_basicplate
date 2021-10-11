@@ -37,6 +37,10 @@ return [
 		'login'				=> 'Login',
 		'register'			=> 'Register',
 		'recover'			=> 'Recover Account',
+		'login_desc'		=> 'You can login with your username or e-mail address.',
+		'email_or_username'	=> 'E-mail or Username',
+		'password'			=> 'Password',
+		'loading'			=> 'Loading...',
 	],
 
 ];

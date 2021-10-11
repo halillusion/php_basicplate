@@ -51,6 +51,11 @@ class Core
 
             // Loading changelog
             $changelog = include path('app/core/external/changelog.php');
+
+            http('powered_by');
+            session_name(config('app.session'));
+            session_start();
+            ob_start();
             
         } catch (\Throwable $t) {
 

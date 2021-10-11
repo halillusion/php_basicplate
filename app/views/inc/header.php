@@ -3,8 +3,11 @@
 	<head>
 		<meta charset="<?php echo lang('app.charset'); ?>">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
 		<title><?php title(); ?></title>
-		<?php meta(); ?>
+		<?php meta();
+		assets('libs/bootstrap/css/bootstrap'.(lang('app.dir') == 'rtl' ? '.rtl' : '').'.min.css', true, true, true);
+		assets('css/app.css', true, true, true); // Basicplate Styles
+		assets('css/style.css', true, true, true); // Your Styles
+		?>
 	</head>
 	<body>

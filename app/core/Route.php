@@ -31,7 +31,7 @@ class Route
 
 	public function post($route) {
 
-		$this->routes['GET'] = $route;
+		$this->routes['POST'] = $route;
 
 	}
 

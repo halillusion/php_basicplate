@@ -10,5 +10,6 @@
 
 return [
 	'name'		=> 'PHP Basicplate',
-	'dev_mode'	=> true
+	'dev_mode'	=> true,
+	'session'	=> 'php_basicplate',
 ];

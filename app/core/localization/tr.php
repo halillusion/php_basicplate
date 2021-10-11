@@ -37,6 +37,10 @@ return [
 		'login'				=> 'Giriş Yap',
 		'register'			=> 'Kayıt Ol',
 		'recover'			=> 'Hesabı Kurtar',
+		'login_desc'		=> 'Eposta adresiniz ya da şifrenizle giriş yapabilirsiniz.',
+		'email_or_username'	=> 'Eposta Adresi ya da Kullanıcı Adı',
+		'password'			=> 'Şifre',
+		'loading'			=> 'Yükleniyor...',
 	],
 
 ];

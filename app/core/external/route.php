@@ -31,4 +31,12 @@ $route->get([
 
 ]);
 
+$route->post([
+
+    'user/login'    => ['UserController/login'      => null],
+    'user/register' => ['UserController/register'   => null],
+    'user/recover'  => ['UserController/recover'    => null],
+
+]);
+
 return $route;
