@@ -176,7 +176,8 @@ function lang($key) {
 
 function title() {
 
-	echo config('app.name');
+	global $title;
+	echo ($title ? $title . ' | ' : '') . config('app.name');
 
 }
 

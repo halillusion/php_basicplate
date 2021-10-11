@@ -17,7 +17,9 @@ class AppController extends Model {
 
 	function view ($key = null) {
 
-		global $pageStructure;
+		global $pageStructure, $title;
+
+		$title = $key;
 
 		if (is_array($pageStructure)) {
 			foreach ($pageStructure as $part) {

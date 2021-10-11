@@ -10,13 +10,47 @@ if (defined('INLINE_JS')) { ?>
 NProgress.start();
 (function() {
 
-
 	setTimeout(() => {
 		NProgress.done()
 		console.log('ready!')
 
-		new vPjax('a:not([target="_blank"])', '#wrap');
+		new vPjax('a:not([target="_blank"])', '#wrap')
 
+		document.addEventListener('vPjax:click', (e) => {
+			console.log("click");
+		})
+
+		document.addEventListener('vPjax:beforeSend', (e) => {
+			console.log("beforeSend");
+		})
+
+		document.addEventListener('vPjax:start', (e) => {
+			console.log("start");
+		})
+
+		document.addEventListener('vPjax:beforeExtract', (e) => {
+			console.log("beforeExtract");
+		})
+
+		document.addEventListener('vPjax:success', (e) => {
+			console.log("success");
+		})
+
+		document.addEventListener('vPjax:timeout', (e) => {
+			console.log("timeout");
+		})
+
+		document.addEventListener('vPjax:error', (e) => {
+			console.log("error");
+		})
+
+		document.addEventListener('vPjax:popstate', (e) => {
+			console.log("popstate");
+		})
+
+		document.addEventListener('vPjax:finish', (e) => {
+			console.log("finish");
+		})
 
 		/*
 

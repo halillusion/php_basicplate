@@ -10,4 +10,4 @@
 		assets('css/style.css', true, true, true); // Your Styles
 		?>
 	</head>
-	<body>
+	<body id="wrap">

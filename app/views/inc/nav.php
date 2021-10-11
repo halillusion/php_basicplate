@@ -12,6 +12,9 @@
 						<li class="nav-item">
 							<a class="nav-link" href="<?php echo urlGenerator('login'); ?>"><?php echo lang('def.login'); ?></a>
 						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="https://sozluk.rap90.com/"><?php echo lang('def.home'); ?></a>
+						</li>
 					</ul>
 				</div>
 			</div>

@@ -6,95 +6,6 @@
 
 (function($){
 
-// When called on a container with a selector, fetches the href with
-// ajax into the container or with the data-pjax attribute on the link
-// itself.
-//
-// Tries to make sure the back button and ctrl+click work the way
-// you'd expect.
-//
-// Exported as $.fn.pjax
-//
-// Accepts a jQuery ajax options object that may include these
-// pjax specific options:
-//
-//
-// container - String selector for the element where to place the response body.
-//      push - Whether to pushState the URL. Defaults to true (of course).
-//   replace - Want to use replaceState instead? That's cool.
-//
-// For convenience the second parameter can be either the container or
-// the options object.
-//
-// Returns the jQuery object
-function fnPjax(selector, container, options) {
-  options = optionsFor(container, options)
-  return this.on('click.pjax', selector, function(event) {
-    var opts = options
-    if (!opts.container) {
-      opts = $.extend({}, options)
-      opts.container = $(this).attr('data-pjax')
-    }
-    handleClick(event, opts)
-  })
-}
-
-// Public: pjax on click handler
-//
-// Exported as $.pjax.click.
-//
-// event   - "click" jQuery.Event
-// options - pjax options
-//
-// Examples
-//
-//   $(document).on('click', 'a', $.pjax.click)
-//   // is the same as
-//   $(document).pjax('a')
-//
-// Returns nothing.
-function handleClick(event, container, options) {
-  options = optionsFor(container, options)
-
-  var link = event.currentTarget
-  var $link = $(link)
-
-  if (link.tagName.toUpperCase() !== 'A')
-    throw "$.fn.pjax or $.pjax.click requires an anchor element"
-
-  // Middle click, cmd click, and ctrl click should open
-  // links in a new tab as normal.
-  if ( event.which > 1 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey )
-    return
-
-  // Ignore cross origin links
-  if ( location.protocol !== link.protocol || location.hostname !== link.hostname )
-    return
-
-  // Ignore case when a hash is being tacked on the current URL
-  if ( link.href.indexOf('#') > -1 && stripHash(link) == stripHash(location) )
-    return
-
-  // Ignore event with default prevented
-  if (event.isDefaultPrevented())
-    return
-
-  var defaults = {
-    url: link.href,
-    container: $link.attr('data-pjax'),
-    target: link
-  }
-
-  var opts = $.extend({}, defaults, options)
-  var clickEvent = $.Event('pjax:click')
-  $link.trigger(clickEvent, [opts])
-
-  if (!clickEvent.isDefaultPrevented()) {
-    pjax(opts)
-    event.preventDefault()
-    $link.trigger('pjax:clicked', [opts])
-  }
-}
 
 // Public: pjax on form submit handler
 //
@@ -588,16 +499,6 @@ function parseURL(url) {
   var a = document.createElement('a')
   a.href = url
   return a
-}
-
-// Internal: Return the `href` component of given URL object with the hash
-// portion removed.
-//
-// location - Location or HTMLAnchorElement
-//
-// Returns String
-function stripHash(location) {
-  return location.href.replace(/#.*/, '')
 }
 
 // Internal: Build options Object for arguments.
