@@ -14,8 +14,21 @@ NProgress.start();
 		NProgress.done()
 		console.log('ready!')
 
-		const vanillaPjax = new vPjax('a:not([target="_blank"])', '#wrap')
+		const vanillaPjax = new vPjax('a:not([target="_blank"])', '#wrap').form('[data-vpjax]');
 
+		/*
+		document.addEventListener('submit', 'form[data-pjax]', function(event) {
+			$.pjax.submit(event, '#pjax-container')
+		})
+		*/
+
+		document.addEventListener("vPjax:start", (e) => {
+			NProgress.start();
+		})
+
+		document.addEventListener("vPjax:finish", (e) => {
+			NProgress.done();
+		});
 		/*
 
 		document.pjax('a:not([target="_blank"])', '#wrap');
