@@ -15,13 +15,18 @@ class AppController extends Model {
 		
 	}
 
-	function view ($key = null) {
+	static function view ($key = null) {
 
 		global $pageStructure, $title;
 
 		$title = $key;
 
 		if (is_array($pageStructure)) {
+			
+			if (isset($_SERVER['HTTP_X_VPJAX']) !== false) {
+				echo '<title>'.title(false).'</title><body id="wrap">';
+			}
+
 			foreach ($pageStructure as $part) {
 
 				if ($part == '_') { // Content File
@@ -30,10 +35,19 @@ class AppController extends Model {
 
 				} elseif (file_exists(path('app/views/'.$part.'.php'))) { // Layout File
 
-					require path('app/views/'.$part.'.php');
+					if (
+						isset($_SERVER['HTTP_X_VPJAX']) === false OR 
+						in_array($part, ['inc/header', 'inc/end']) === false) {
+
+						require path('app/views/'.$part.'.php');
+					}
 
 				}
 
+			}
+
+			if (isset($_SERVER['HTTP_X_VPJAX']) !== false) {
+				echo '</body>';
 			}
 			
 		}

@@ -54,4 +54,10 @@ class UserController extends Model {
 
 	}
 
+	function login () {
+
+		echo json_encode(['test' => 'sdfsdfsdf']);
+
+	}
+
 }

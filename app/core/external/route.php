@@ -7,35 +7,38 @@ $route = new Route();
 global $pageStructure;
 
 $pageStructure = [
-    'inc/header',
-    'inc/nav',
-    '_',
-    'inc/footer',
-    'inc/end',
+	'inc/header',
+	'inc/nav',
+	'_',
+	'inc/footer',
+	'inc/end',
 ];
 
-$route->get([
+$route->addRoutes([
 
-    // WEB
-    ''              => ['AppController/view'     => 'index'],
-    'login'         => ['UserController/view'    => 'login'],
-    'register'      => ['UserController/view'    => 'register'],
-    'recover'       => ['UserController/view'    => 'recover'],
-    'page/_'        => ['PageController/view'    => 'page/x'],
+	// WEB
+	''						=> [
+		'controller' => 'AppController::view(\'index\')', 
+		'middlewares' => ''
+	],
+	'login'					=> [
+		'controller' => 'UserController::view(\'login\')', 
+		'middlewares' => ['Auth::with(\'nonAuth\')']
+	],
+	'register'				=> [
+		'controller' => 'UserController::view(\'register\')', 
+		'middlewares' => ''
+	],
+	'recover'				=> [
+		'controller' => 'UserController::view(\'recover\')', 
+		'middlewares' => ''
+	],
 
-    // API
-    'api'           => ['ApiController/view'     => 'index'],
-    'api/login'     => ['ApiController/view'     => 'login'],
-    'api/register'  => ['ApiController/view'     => 'register'],
-    'api/page/_'    => ['ApiController/view'     => 'page/x'],
-
-]);
-
-$route->post([
-
-    'user/login'    => ['UserController/login'      => null],
-    'user/register' => ['UserController/register'   => null],
-    'user/recover'  => ['UserController/recover'    => null],
+	// FORM
+	'form/user/login'		=> [
+		'controller' => 'UserController::login()', 
+		'middlewares' => ''
+	],
 
 ]);
 

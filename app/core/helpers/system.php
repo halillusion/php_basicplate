@@ -293,7 +293,7 @@ function http($code, $data = null, $extra = null) {
 			break;
 
 		case 301:
-			header('HTTP/1.1 301 Moved Permanently');
+			header($_SERVER["SERVER_PROTOCOL"] . ' 301 Moved Permanently');
 			if (! is_null($data)) {
 				header('Location: '.$data);
 				exit;
@@ -301,7 +301,7 @@ function http($code, $data = null, $extra = null) {
 			break;
 
 		case 200:
-			header('HTTP/1.1 200 OK');
+			header($_SERVER["SERVER_PROTOCOL"] . ' 200 OK');
 			if (! is_null($data)) {
 				header('Location: '.$data);
 				exit;
@@ -309,7 +309,7 @@ function http($code, $data = null, $extra = null) {
 			break;
 
 		case 401:
-			header('HTTP/1.1 401 Unauthorized');
+			header($_SERVER["SERVER_PROTOCOL"] . ' 401 Unauthorized');
 			if (! is_null($data))
 			{
 				echo $data;
@@ -318,7 +318,7 @@ function http($code, $data = null, $extra = null) {
 			break;
 
 		case 403:
-			header('HTTP/1.1 403 Forbidden');
+			header($_SERVER["SERVER_PROTOCOL"] . ' 403 Forbidden');
 			if (!is_null($data)) {
 				echo $data;
 				exit;
@@ -326,7 +326,7 @@ function http($code, $data = null, $extra = null) {
 			break;
 
 		case 404:
-			header('HTTP/1.1 404 Not Found');
+			header($_SERVER["SERVER_PROTOCOL"] . ' 404 Not Found');
 			if (!is_null($data)) {
 				echo $data;
 				exit;
@@ -334,7 +334,7 @@ function http($code, $data = null, $extra = null) {
 			break;
 
 		case 410:
-			header('HTTP/1.1 410 Gone');
+			header($_SERVER["SERVER_PROTOCOL"] . ' 410 Gone');
 			if (!is_null($data)) {
 				echo $data;
 				exit;

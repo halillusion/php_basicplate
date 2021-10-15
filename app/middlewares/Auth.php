@@ -1,23 +1,20 @@
 <?php
 
-namespace app\core;
+namespace app\middlewares;
 
 /**
- * Route Class
+ * Auth Middleware
  * 
  **/
 
-class Route
+class Auth
 {
     public $routes = [];
 
 
     public function __construct()
     {
-        $url = parse_url(base() . trim(strip_tags($_SERVER['REQUEST_URI']), '/'));
-        $this->url = trim($url['path'], '/');
-        $this->request = strpos($this->url, '/') ? explode('/', $this->url) : [$this->url];
-        $this->request = array_map('urldecode', $this->request);
+        dump($_COOKIE[config('app.session')]);
 
     }
 
@@ -31,20 +28,9 @@ class Route
 
 		if (isset($this->routes[$this->url]) !== false) {
 
-			$response = null;
-			foreach ($this->routes[$this->url] as $type => $class) {
+			foreach ($this->routes[$this->url] as $method) {
 
-				dump($type);
-				dump($class);
-
-				try {
-					
-					$class = 'app\\controllers\\'.$class[0];
-					return (new $class($variable));
-
-				} catch (Exception $e) {
-					throw 'Class or method not found!';
-				}
+				dump($method);
 				/*
 				if (strpos($method, '/') !== false) {
 

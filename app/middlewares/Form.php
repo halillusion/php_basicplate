@@ -1,13 +1,13 @@
 <?php
 
-namespace app\core;
+namespace app\middlewares;
 
 /**
- * Route Class
+ * Auth Middleware
  * 
  **/
 
-class Route
+class Auth
 {
     public $routes = [];
 
@@ -31,20 +31,9 @@ class Route
 
 		if (isset($this->routes[$this->url]) !== false) {
 
-			$response = null;
-			foreach ($this->routes[$this->url] as $type => $class) {
+			foreach ($this->routes[$this->url] as $method) {
 
-				dump($type);
-				dump($class);
-
-				try {
-					
-					$class = 'app\\controllers\\'.$class[0];
-					return (new $class($variable));
-
-				} catch (Exception $e) {
-					throw 'Class or method not found!';
-				}
+				dump($method);
 				/*
 				if (strpos($method, '/') !== false) {
 
