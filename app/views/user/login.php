@@ -1,20 +1,26 @@
 				<div class="container">
 					<div class="row">
 						<div class="col-lg-4 offset-lg-4 col-md-6 offset-md-3 col-sm-8 offset-sm-2 col-12">
-							<form class="form-section my-5" method="get" id="loginForm"  data-onsubmit="formSender('loginForm', 'user/login'); return false">
+							<form class="form-section my-5" method="post" id="loginForm" data-vpjax action="/login" data-onsubmit="formSender('loginForm', 'user/login'); return false">
 								<h1 class="fw-light"><?php echo lang('def.login'); ?></h1>
 								<p class="small text-muted"><?php echo lang('def.login_desc'); ?></p>
 								<div class="form-loader position-absolute top-50 start-50 translate-middle">
 									<span class="visually-hidden"><?php echo lang('def.loading'); ?></span>
 									<div class="spinner-border text-light mx-auto" role="status" aria-hidden="true"></div>
 								</div>
+								<?php
+
+								if ($_POST) {
+									dump($_POST);
+								}
+								?>
 								<?php createCSRF(); ?>
 								<div class="form-floating mb-3">
-									<input type="text" class="form-control" id="email" placeholder="name@example.com">
+									<input type="text" class="form-control" id="email" name="email" placeholder="name@example.com">
 									<label for="email"><?php echo lang('def.email_or_username'); ?></label>
 								</div>
 								<div class="form-floating mb-3">
-									<input type="password" class="form-control" id="pass" placeholder="<?php echo lang('def.password'); ?>">
+									<input type="password" class="form-control" id="pass" name="password" placeholder="<?php echo lang('def.password'); ?>">
 									<label for="pass"><?php echo lang('def.password'); ?></label>
 								</div>
 								<div class="d-grid mb-3">

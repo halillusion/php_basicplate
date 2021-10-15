@@ -20,12 +20,11 @@ class vPjax {
 			timeOut: 1000,
 		}
 		this.fetch = null
-		// this.store = {}
-
-		// Init
-		this.init()
+		this.method = 'GET'
+		this.formData = null
 
 		window.onpopstate = (e) => this.getBack(e)
+		return this
 	}
 
 	// Add event listener for targets.
@@ -45,6 +44,8 @@ class vPjax {
 				})
 			}
 		}
+
+		return this
 	}
 
 	// Handle the click event.
@@ -74,44 +75,51 @@ class vPjax {
 		const clickEvent = new CustomEvent('vPjax:click', {detail: {options: this.options}});
 		document.dispatchEvent(clickEvent);
 
+		// Preparing header contents
+		this.formData = null
+		this.method = 'GET'
+
 		// Get
 		this.get(link)
 		event.preventDefault()
+		return this
+	}
+
+	// Reload current page
+	reload() {
+		this.method = 'GET'
+		this.formData = null
+		this.get(location.href)
 	}
 
 	// Handle the click event.
 	formHandler (event, element) {
 
-		/*
-		
 		// Ignore for hash-only addresses.
-		if ( element.getAttribute('href') === '#') 
+		if ( element.getAttribute('action') === '#') 
 			return
 
-		const link = new URL(element.getAttribute('href'))
-
-		// Middle click, command click, and control click should open links in a new tab as normal.
-		if ( event.ctrlKey || event.shiftKey || event.altKey || event.metaKey || event.which > 1 ) 
-			return
-
-		// Ignore cross origin links
-		if ( location.protocol !== link.protocol || location.hostname !== link.hostname ) {
-			location.href = link 
-			return
+		// Preparing link
+		let link = element.getAttribute('action')
+		if (link.indexOf(location.origin) === -1) {
+			link = location.origin + (link.substring(0,1) === '/' ? '' : '/') + link
 		}
 
-		// Ignore case when a hash is being tracked on the current URL
-		if ( link.href.indexOf('#') > -1 && this.stripHash(link) === this.stripHash(location) ) 
+		// Preparing header contents
+		this.formData = new FormData(element)
+		let method = element.getAttribute('method').toUpperCase()
+		if (method === 'GET') {
 			return
+		}
+		this.method = 'POST'
 
-		// The click event is generated.
-		const clickEvent = new CustomEvent('vPjax:click', {detail: {options: this.options}});
-		document.dispatchEvent(clickEvent);
+		// Creating event
+		const submitEvent = new CustomEvent('vPjax:submit', {detail: {options: this.options}});
+		document.dispatchEvent(submitEvent);
 
-		// Get
 		this.get(link)
-		*/
 		event.preventDefault()
+		return this
 	}
 
 	async get (url) {
@@ -143,8 +151,8 @@ class vPjax {
 		const startEvent = new CustomEvent('vPjax:start', {detail: {options: this.options, abort: controller}});
 		document.dispatchEvent(startEvent);
 
-		this.fetch = await fetch(url, {
-			method: 'GET',
+		let fetchOptions = {
+			method: this.method,
 			mode: 'cors',
 			cache: 'no-cache',
 			credentials: 'same-origin',
@@ -154,7 +162,13 @@ class vPjax {
 			redirect: 'follow',
 			referrerPolicy: 'same-origin',
 			signal: controller.signal
-		}).then(function (response) {
+		}
+
+		if (this.formData) {
+			fetchOptions['body'] = this.formData
+		}
+
+		this.fetch = await fetch(this.options.url, fetchOptions).then(function (response) {
 
 			return response.ok ? response.text() : false
 
@@ -186,8 +200,9 @@ class vPjax {
 		} else {
 
 			// Force redirect.
-			location.href = this.options.url
+			// location.href = this.options.url
 		}
+		return this
 	}
 
 	loadContent (html, back = false) {
@@ -239,6 +254,7 @@ class vPjax {
 			location.href = this.options.url
 			throw "Server response is not correct! -> " + html
 		}
+		return this
 	}
 
 	// Returns the "href" component of the given URL object, with the hash removed.
@@ -247,13 +263,10 @@ class vPjax {
 	}
 
 	// Form submit
-	form (selector, wrap = null) {
+	form (selector) {
 
-		if (wrap === null)
-			wrap = this.options.wrap
-
-		object.addEventListener("submit", myScript);
-
+		this.options.formSelector = selector;
+		return this
 	}
 
 	getBack (event) {
@@ -262,5 +275,6 @@ class vPjax {
 		const popStateEvent = new CustomEvent('vPjax:popstate', {detail: {options: this.options, url: document.location}});
 		document.dispatchEvent(popStateEvent);
 		this.get(document.location)
+		return this
 	}
 }

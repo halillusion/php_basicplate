@@ -174,10 +174,14 @@ function lang($key) {
 
 }
 
-function title() {
+function title($echo = true) {
 
 	global $title;
-	echo ($title ? $title . ' | ' : '') . config('app.name');
+
+	$return = ($title ? $title . ' | ' : '') . config('app.name');
+
+	if ($echo) echo $return;
+	else return $return;
 
 }
 
