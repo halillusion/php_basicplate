@@ -9,14 +9,14 @@ return [
 	 * 
 	 **/
 	'app' => [
-		'lang_code'			=> 'tr',
-		'lang_bigcode'		=> 'tr-TR',
-		'lang_name'			=> 'Türkçe',
-		'locale'			=> 'tr_TR.UTF-8',
-		'timezone'			=> 'Europe/Istanbul',
-		'charset'			=> 'UTF-8',
-		'dir'				=> 'ltr',
-		'plural_suffix'		=> '',
+		'lang_code'							=> 'tr',
+		'lang_bigcode'						=> 'tr-TR',
+		'lang_name'							=> 'Türkçe',
+		'locale'							=> 'tr_TR.UTF-8',
+		'timezone'							=> 'Europe/Istanbul',
+		'charset'							=> 'UTF-8',
+		'dir'								=> 'ltr',
+		'plural_suffix'						=> '',
 	],
 
 	/**
@@ -24,8 +24,15 @@ return [
 	 * 
 	 **/
 	'alert' => [
-		'error'				=> 'Hata!',
-		
+		'error'								=> 'Hata.',
+		'warning'							=> 'Uyarı.',
+		'success'							=> 'Harika.',
+		'form_cannot_empty'					=> 'Form boş gönderilemez!',
+		'you_have_an_session'				=> 'Zaten bir oturuma sahipsiniz!',
+		'you_have_not_an_session'			=> 'Açık bir oturumunuz yok!',
+		'account_not_found'					=> 'Böyle bir hesap bulunamadı!',
+		'user_info_incorrect'				=> 'Hesap bilgileriniz yanlış!',
+		'you_are_logged_in'					=> 'Oturumunuz açıldı!',
 	],
 
 	/**
@@ -33,14 +40,14 @@ return [
 	 * 
 	 **/
 	'def'	=> [
-		'home'				=> 'Ana sayfa',
-		'login'				=> 'Giriş Yap',
-		'register'			=> 'Kayıt Ol',
-		'recover'			=> 'Hesabı Kurtar',
-		'login_desc'		=> 'Eposta adresiniz ya da şifrenizle giriş yapabilirsiniz.',
-		'email_or_username'	=> 'Eposta Adresi ya da Kullanıcı Adı',
-		'password'			=> 'Şifre',
-		'loading'			=> 'Yükleniyor...',
+		'home'								=> 'Ana sayfa',
+		'login'								=> 'Giriş Yap',
+		'register'							=> 'Kayıt Ol',
+		'recover'							=> 'Hesabı Kurtar',
+		'login_desc'						=> 'Eposta adresiniz ya da şifrenizle giriş yapabilirsiniz.',
+		'email_or_username'					=> 'Eposta Adresi ya da Kullanıcı Adı',
+		'password'							=> 'Şifre',
+		'loading'							=> 'Yükleniyor...',
 	],
 
 ];

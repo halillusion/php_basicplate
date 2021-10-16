@@ -178,3 +178,42 @@ h1, h2, h3, h4, h5, h6 {
     cursor: progress;
     opacity: 1;
 }
+
+.toast.toast-warning {
+    background-color: var(--bs-warning) !important;
+    color: #fff
+}
+
+.toast-area {
+    display: contents;
+}
+
+.toast-area .toast-container {
+    z-index: 11;
+}
+
+.toast.toast-warning .toast-header
+.toast.toast-danger .toast-header
+.toast.toast-success .toast-header {
+    color: #000
+}
+
+.toast.toast-danger {
+    background-color: var(--bs-danger) !important;
+    color: #fff
+}
+
+.toast.toast-success {
+    background-color: var(--bs-success) !important;
+    color: #fff
+}
+
+.toast.toast-warning .toast-header,
+.toast.toast-danger .toast-header,
+.toast.toast-success .toast-header {
+    color: #000
+}
+
+.navbar {
+    z-index: 12;
+}

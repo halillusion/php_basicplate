@@ -9,14 +9,14 @@ return [
 	 * 
 	 **/
 	'app' => [
-		'lang_code'			=> 'en',
-		'lang_bigcode'		=> 'en-US',
-		'lang_name'			=> 'English',
-		'locale'			=> 'en_US.UTF-8',
-		'timezone'			=> 'America/New_York',
-		'charset'			=> 'UTF-8',
-		'dir'				=> 'ltr',
-		'plural_suffix'		=> '',
+		'lang_code'							=> 'en',
+		'lang_bigcode'						=> 'en-US',
+		'lang_name'							=> 'English',
+		'locale'							=> 'en_US.UTF-8',
+		'timezone'							=> 'America/New_York',
+		'charset'							=> 'UTF-8',
+		'dir'								=> 'ltr',
+		'plural_suffix'						=> '',
 	],
 
 	/**
@@ -24,8 +24,15 @@ return [
 	 * 
 	 **/
 	'alert' => [
-		'error'				=> 'Error!',
-		
+		'error'								=> 'Error.',
+		'warning'							=> 'Warning.',
+		'success'							=> 'Successful.',
+		'form_cannot_empty'					=> 'Form cannot be submitted empty!',
+		'you_have_an_session'				=> 'You have an session!',
+		'you_have_not_an_session'			=> 'You have\'nt an session!',
+		'account_not_found'					=> 'No such account found!',
+		'user_info_incorrect'				=> 'Your account information is incorrect!',
+		'you_are_logged_in'					=> 'You are logged in!',
 	],
 
 	/**
@@ -33,14 +40,14 @@ return [
 	 * 
 	 **/
 	'def'	=> [
-		'home'				=> 'Home',
-		'login'				=> 'Login',
-		'register'			=> 'Register',
-		'recover'			=> 'Recover Account',
-		'login_desc'		=> 'You can login with your username or e-mail address.',
-		'email_or_username'	=> 'E-mail or Username',
-		'password'			=> 'Password',
-		'loading'			=> 'Loading...',
+		'home'								=> 'Home',
+		'login'								=> 'Login',
+		'register'							=> 'Register',
+		'recover'							=> 'Recover Account',
+		'login_desc'						=> 'You can login with your username or e-mail address.',
+		'email_or_username'					=> 'E-mail or Username',
+		'password'							=> 'Password',
+		'loading'							=> 'Loading...',
 	],
 
 ];

@@ -820,16 +820,145 @@ function decryptKey($encrypted_string): string
 		$decryption_key, $options, $decryption_iv);
 }
 
-
-/**
- * Route Formatter
- * @param $class
- * @param $method
- * @return string
- */
-function routeFormatter($class, $method): string
+function filter($data=null, $parameter='text')
 {
-	$class = explode('\\', $class);
-	$class = array_pop($class);
-	return $class . '/' . $method;
+	/*	parameters
+		- text - strip_tags - trim
+		- html- htmlspecialchars - trim
+		- check - strip_tags - trim ? on : off
+		- pass - password_hash - trim
+	*/
+	if (is_array($data))
+	{	
+		$_value = [];
+		foreach ($data as $key => $value)
+		{
+			if (is_array($value))
+			{
+				$_value[$key] = filter($value, $parameter);
+			}
+			else
+			{
+				$value = str_replace('<p><br></p>', '<br>', $value);
+				switch ($parameter)
+				{
+					case 'html': $_value[$key] = htmlspecialchars(trim($value)); break;
+					case 'nulled_html': 
+						$_value[$key] = htmlspecialchars(trim($value)); 
+						$_value[$key] = $_value[$key] == '' ? null : $_value[$key]; 
+						if (trim(strip_tags($value)) == '') {
+							$_value[$key] = null;
+						}
+					break;
+					case 'check': $_value[$key] = !is_null($value) ? 'on' : 'off'; break;
+					case 'check_as_boolean': $_value[$key] = !is_null($value) ? true : false; break;
+					case 'int': $_value[$key] = (integer)$value; break;
+					case 'nulled_int': $_value[$key] = (integer)$value == 0 ? null : (integer)$value; break;
+					case 'float': $_value[$key] = floatval($value); break;
+					case 'pass': $_value[$key] = password_hash(trim($value), PASSWORD_DEFAULT); break;
+					case 'nulled_pass': $_value[$key] = trim($value) != '' ? password_hash(trim($value), PASSWORD_DEFAULT) : null; break;
+					case 'date': $_value[$key] = strtotime($value. ' 12:00'); break;
+					case 'nulled_text': $_value[$key] = strip_tags(trim($value)) == '' ? null : strip_tags(trim($value)); break;
+					case 'slug': $_value[$key] = strip_tags(trim($value)) == '' ? null : slugGenerator(strip_tags(trim($value))); break;
+					default: $_value[$key] = strip_tags(trim($value)); break;
+				}
+			}
+			
+			if (strpos($parameter, 'nulled') !== false AND $_value[$key] == '') {
+				$_value[$key] = null;
+			}
+		}
+		$data = $_value;
+	}
+	else
+	{
+		$data = str_replace('<p><br></p>', '<br>', $data);
+		switch ($parameter)
+		{
+			case 'html': $data = htmlspecialchars(trim($data)); break;
+			case 'nulled_html': 
+				$data = htmlspecialchars(trim($data));
+				$data = $data == '' ? null : $data; 
+				if ($data AND trim(strip_tags(htmlspecialchars_decode($data))) == '') {
+					$data = null;
+				}
+			break;
+			case 'check': $data = !is_null($data) ? 'on' : 'off'; break;
+			case 'check_as_boolean': $data = !is_null($data) ? true : false; break;
+			case 'int': $data = (integer)$data; break;
+			case 'nulled_int': $data  = (integer)$data  == 0 ? null : (integer)$data; break;
+			case 'float': $data = (float)$data; break;
+			case 'pass': $data = password_hash(trim($data), PASSWORD_DEFAULT); break;
+			case 'nulled_pass': $data = trim($data) != '' ? password_hash(trim($data), PASSWORD_DEFAULT) : null; break;
+			case 'date': $data = strtotime($data. ' 12:00'); break;
+			case 'nulled_text': $data = strip_tags(trim($data)) == '' ? null : strip_tags(trim($data)); break;
+			case 'slug': $data = strip_tags(trim($data)) == '' ? null : slugGenerator(strip_tags(trim($data))); break;
+			default: $data = strip_tags(trim($data)); break;
+		}
+
+		if (strpos($parameter, 'nulled') !== false AND $data == '') {
+			$data = null;
+		}
+	}
+
+	return $data;
+
+}
+
+function in($extract, $var): array
+{
+	$return = [];
+	if (is_array($extract) AND is_array($var))
+	{
+		foreach ($extract as $key => $value)
+		{
+			if (isset($var[$key])) $return[$key] = filter($var[$key], $value);
+			else $return[$key] = filter(null, $value);
+		}
+	}
+	return $return;
+}
+
+
+function out($type, $val) {
+
+	switch ($type) {
+		case 'float_with_zero':
+		$val = str_replace(['.', ','], ['', '.'], $val);
+
+		if (strpos($val, '.') === false) {
+		$val .= '.00';
+		}
+		break;
+
+		case 'with_comma':
+		$val = str_replace(['.', ','], ['', '.'], $val);
+
+		if (strpos($val, '.') === false) {
+		$val .= '.00';
+		}
+		$val = str_replace('.', ',', $val);
+		break;
+
+		case 'row_count':
+		$val = count(preg_split('/[\n\r]/', $val)) - 1;
+
+		if ($val <= 0) $val = 1;
+		break;
+
+		case 'html':
+		$val = htmlspecialchars_decode($val);
+		break;
+
+		case 'message':
+			$val = nl2br($val);
+		break;
+
+		default:
+		# code...
+		break;
+	}
+
+	return $val;
+
 }

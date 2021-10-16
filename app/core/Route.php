@@ -44,7 +44,7 @@ class Route
 					$gateway = null;
 					foreach ($middlewares as $path => $arguments) {
 
-						if (is_null($gateway) OR $gateway) {
+						if (is_null($gateway) OR $gateway === true) {
 
 							$path = 'app\\middlewares\\'.$path;
 							$path = explode('::', $path);

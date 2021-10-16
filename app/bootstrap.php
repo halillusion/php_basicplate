@@ -2,7 +2,7 @@
 
 define('ROOT_PATH',  rtrim($_SERVER["DOCUMENT_ROOT"], '/').'/');
 
-foreach (glob(ROOT_PATH.'app/core/helpers/*.php') as $file) {
+foreach (glob(ROOT_PATH.'app/core/libs/*.php') as $file) {
 	require_once $file;
 }
 

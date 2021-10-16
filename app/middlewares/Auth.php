@@ -30,7 +30,7 @@ class Auth
 
 		} else {
 
-			return true;
+			return ($type == 'nonAuth' ? 'you_have_an_session' : 'you_have_not_an_session');
 		}
 
 	}
