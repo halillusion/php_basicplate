@@ -10,8 +10,26 @@
 							<a class="nav-link" href="<?php echo urlGenerator(); ?>"><?php echo lang('def.home'); ?></a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="<?php echo urlGenerator('login'); ?>"><?php echo lang('def.login'); ?></a>
+							<a class="nav-link" href="<?php echo urlGenerator('contact'); ?>"><?php echo lang('def.contact'); ?></a>
 						</li>
+						<?php 
+						if (auth()) { ?>
+							<li class="nav-item">
+								<a class="nav-link" data-action="logout" href="javascript:;"><?php echo lang('def.logout'); ?></a>
+							</li>
+						<?php
+						} else { ?>
+							<li class="nav-item">
+								<a class="nav-link" href="<?php echo urlGenerator('login'); ?>"><?php echo lang('def.login'); ?></a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" href="<?php echo urlGenerator('register'); ?>"><?php echo lang('def.register'); ?></a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" href="<?php echo urlGenerator('recover'); ?>"><?php echo lang('def.recover'); ?></a>
+							</li>
+						<?php
+						}	?>
 					</ul>
 				</div>
 			</div>

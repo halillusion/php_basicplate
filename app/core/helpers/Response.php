@@ -21,16 +21,37 @@ class Response {
 		 *  reload: [(url | null), seconds]
 		 * 
 		 * */
+		if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) !== false AND $_SERVER['HTTP_X_REQUESTED_WITH'] == 'fetch') { // Fetch Responses
 
-		if (isset($return['title']) !== false) {
-			$return['title'] = lang($return['title']);
+			if (isset($return['title']) !== false) {
+				$return['title'] = lang($return['title']);
+			}
+
+			if (isset($return['message']) !== false) {
+				$return['message'] = lang($return['message']);
+			}
+			http('content_type', json_encode($return), 'application/json');
+
+		} else { // GET Responses
+
+			$message = '';
+			if (isset($return['title']) !== false) {
+				$message .= lang($return['title']);
+			}
+
+			if (isset($return['message']) !== false) {
+				$message .= ' ' . lang($return['message']);
+			}
+
+			if (isset($return['reload']) !== false) {
+
+				http('refresh', ['second' => $return['reload'][1], 'url' => $return['reload'][0]]);
+
+			}
+			http('content_type', 'html');
+			echo '<pre>'.$message.'</pre>';
+
 		}
-
-		if (isset($return['message']) !== false) {
-			$return['message'] = lang($return['message']);
-		}
-
-		echo json_encode($return);
 
 	}
 

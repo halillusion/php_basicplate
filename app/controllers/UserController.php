@@ -149,4 +149,27 @@ class UserController {
 
 	}
 
+	function logout() {
+
+		if (isset($_COOKIE[config('app.session')]) !== false) {
+			(new Database)
+				->table('sessions')
+				->where('auth_code', $_COOKIE[config('app.session')])
+				->delete();
+		}
+
+		session_destroy();
+
+		$return = [
+			'status'	=> 'success',
+			'title'		=> 'alert.success',
+			'message'	=> 'alert.you_are_logged_out',
+			'alert_type'=> 'toast',
+			'reload'	=> [base(), 3]
+		];
+
+		Response::out($return);
+
+	}
+
 }

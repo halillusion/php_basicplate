@@ -33,7 +33,9 @@ return [
 		'account_not_found'					=> 'Böyle bir hesap bulunamadı!',
 		'user_info_incorrect'				=> 'Hesap bilgileriniz yanlış!',
 		'you_are_logged_in'					=> 'Oturumunuz açıldı!',
+		'you_are_logged_out'				=> 'Oturum sonlandırıldı!',
 		'session_create_fail'				=> 'Oturum oluşturulamadı!',
+		'a_problem_occurred'				=> 'Bir sorun oluştu!',
 	],
 
 	/**
@@ -43,12 +45,14 @@ return [
 	'def'	=> [
 		'home'								=> 'Ana sayfa',
 		'login'								=> 'Giriş Yap',
+		'logout'							=> 'Çıkış',
 		'register'							=> 'Kayıt Ol',
 		'recover'							=> 'Hesabı Kurtar',
 		'login_desc'						=> 'Eposta adresiniz ya da şifrenizle giriş yapabilirsiniz.',
 		'email_or_username'					=> 'Eposta Adresi ya da Kullanıcı Adı',
 		'password'							=> 'Şifre',
 		'loading'							=> 'Yükleniyor...',
+		'contact'							=> 'İletişim',
 	],
 
 ];

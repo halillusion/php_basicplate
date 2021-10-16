@@ -78,11 +78,13 @@ function config($setting) {
 	return $return;
 }
 
-function dump($value) {
+function dump($value, $exit = false) {
 
 	echo '<pre>';
 	var_dump($value);
 	echo '</pre>';
+
+	if ($exit) exit;
 
 }
 
@@ -350,6 +352,14 @@ function http($code, $data = null, $extra = null) {
 			break;
 
 		case 'refresh':
+			if (is_null($data['url'])) {
+
+				if (isset($_SERVER['HTTP_REFERER']) !== false) {
+					$data['url'] = $_SERVER['HTTP_REFERER'];
+				} else {
+					$data['url'] = base();
+				}
+			}
 			header('refresh:'.$data['second'].'; url='.$data['url'] );
 			break;
 
@@ -968,5 +978,19 @@ function out($type, $val) {
 	}
 
 	return $val;
+
+}
+
+function auth() {
+
+	global $isLogged;
+
+	if (is_null($isLogged)) {
+
+		$isLogged = (new \app\core\helpers\Session)->isLogged();
+
+	}
+
+	return $isLogged;
 
 }

@@ -21,22 +21,30 @@ $route->addRoutes([
 		'middlewares'	=> [],
 		'controller'	=> ['AppController::view' => ['index']]
 	],
+	'contact'						=> [
+		'middlewares'	=> [],
+		'controller'	=> ['AppController::view' => ['contact']]
+	],
 	'login'					=> [
 		'middlewares'	=> ['Auth::with' => ['nonAuth']],
 		'controller'	=> ['UserController::view' => ['login']]
 	],
+	'logout'					=> [
+		'middlewares'	=> ['Auth::with' => ['auth']],
+		'controller'	=> ['UserController::logout' => []]
+	],
 	'register'				=> [
-		'middlewares'	=> [],
+		'middlewares'	=> ['Auth::with' => ['nonAuth']],
 		'controller'	=> ['UserController::view' => ['register']]
 	],
 	'recover'				=> [
-		'middlewares'	=> [],
+		'middlewares'	=> ['Auth::with' => ['nonAuth']],
 		'controller'	=> ['UserController::view' => ['recover']]
 	],
 
 	// FORM
 	'form/user/login'		=> [
-		'middlewares'	=> [],
+		'middlewares'	=> ['Auth::with' => ['nonAuth']],
 		'controller'	=> ['UserController::login' => []]
 	],
 

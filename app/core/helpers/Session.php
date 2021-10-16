@@ -49,4 +49,20 @@ class Session {
 
 	}
 
+	/**
+	 * 	@return boolean
+	 **/
+	public function isLogged () {
+
+		if (! $this->authCode) return false;
+
+		$session = (new Database)
+			->table('sessions')
+			->where('auth_code', $this->authCode)
+			->get();
+
+		return $session ? true : false;
+
+	}
+
 }

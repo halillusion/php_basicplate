@@ -17,8 +17,9 @@ NProgress.start();
 	})
 	document.addEventListener("vPjax:finish", (e) => {
 		NProgress.done()
+		init()
 	})
-
+	init()
 	setTimeout(() => {
 		NProgress.done()
 	}, 500)
@@ -41,6 +42,70 @@ function trimAny(str, chars) {
 
 /* /Helpers */
 
+/* Basicplate Defaults */
+
+function init() {
+
+
+	// Click actions
+	document.querySelectorAll("[data-action]").forEach(function(actionBtn) {
+		actionBtn.addEventListener("click", async (e, i) => {
+			
+			NProgress.start()
+
+			e.target.classList.add('disabled')
+			e.target.setAttribute('disabled', true)
+
+			const url = location.origin + '/' + trimAny(e.target.getAttribute('data-action'), '/')
+			const formData = new FormData();
+
+			let abortController = new AbortController()
+			const request = await fetch(url, {
+				method: 'POST',
+				mode: 'cors',
+				cache: 'no-cache',
+				credentials: 'same-origin',
+				headers: {
+					'X-Requested-With': 'fetch',
+				},
+				redirect: 'follow',
+				referrerPolicy: 'same-origin',
+				signal: abortController.signal,
+				body: formData
+			}).then(function (response) {
+
+				return response.ok ? response.json() : false
+
+			}).then(function (dom) {
+
+				return dom
+
+			}).catch(function (err) {
+
+				return false
+				throw err
+
+			})
+
+			if (request) {
+				asyncResponse(request)
+			} else {
+				alert("<?php echo lang('alert.a_problem_occurred'); ?>")
+			}
+			
+			setTimeout(() => {
+				NProgress.done()
+				e.target.classList.remove('disabled')
+				e.target.setAttribute('disabled', false)
+			}, 500)
+			
+			e.preventDefault()
+
+		})
+	});
+
+}
+
 async function formSender(e, url) {
 
 	// Preparing URL and Form Data
@@ -60,7 +125,9 @@ async function formSender(e, url) {
 		mode: 'cors',
 		cache: 'no-cache',
 		credentials: 'same-origin',
-		headers: {},
+		headers: {
+			'X-Requested-With': 'fetch',
+		},
 		redirect: 'follow',
 		referrerPolicy: 'same-origin',
 		signal: abortController.signal,
@@ -75,15 +142,15 @@ async function formSender(e, url) {
 
 	}).catch(function (err) {
 
-		throw err
 		return false
+		throw err
 
 	})
 
 	if (request) {
 		asyncResponse(request, formId)
 	} else {
-		alert("A problem occurred")
+		alert("<?php echo lang('alert.a_problem_occurred'); ?>")
 	}
 	
 	setTimeout(() => {
@@ -94,7 +161,6 @@ async function formSender(e, url) {
 	e.preventDefault()
 }
 
-/* Async Response Formatter */
 function asyncResponse(response, selector = null) {
 
 	// message output
@@ -176,7 +242,7 @@ function asyncResponse(response, selector = null) {
 	}
 
 }
-
+/* /Basicplate Defaults */
 <?php
 if (defined('INLINE_JS')) {
 ?>

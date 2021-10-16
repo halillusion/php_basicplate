@@ -29,11 +29,13 @@ return [
 		'success'							=> 'Successful.',
 		'form_cannot_empty'					=> 'Form cannot be submitted empty!',
 		'you_have_an_session'				=> 'You have an session!',
-		'you_have_not_an_session'			=> 'You have\'nt an session!',
+		'you_have_not_an_session'			=> 'You haven\'t an session!',
 		'account_not_found'					=> 'No such account found!',
 		'user_info_incorrect'				=> 'Your account information is incorrect!',
 		'you_are_logged_in'					=> 'You are logged in!',
+		'you_are_logged_out'				=> 'You are logged out!',
 		'session_create_fail'				=> 'Failed to create session!',
+		'a_problem_occurred'				=> 'A problem occurred!',
 	],
 
 	/**
@@ -43,12 +45,14 @@ return [
 	'def'	=> [
 		'home'								=> 'Home',
 		'login'								=> 'Login',
+		'logout'							=> 'Logout',
 		'register'							=> 'Register',
 		'recover'							=> 'Recover Account',
 		'login_desc'						=> 'You can login with your username or e-mail address.',
 		'email_or_username'					=> 'E-mail or Username',
 		'password'							=> 'Password',
 		'loading'							=> 'Loading...',
+		'contact'							=> 'Contact',
 	],
 
 ];
