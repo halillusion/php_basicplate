@@ -9,58 +9,28 @@ namespace app\middlewares;
 
 class Auth
 {
-    public $routes = [];
+    public static $session;
 
 
     public function __construct()
     {
-        dump($_COOKIE[config('app.session')]);
+        $this::$session = $_COOKIE[config('app.session')];
 
     }
 
-	public function addRoutes($routes) {
+	public static function with($type = 'auth') {
 
-		$this->routes = $routes;
+		if ($type == 'auth' AND isset($_SESSION['auth']) !== false AND $_SESSION['auth']) {
 
-	}
+			return true;
 
-	public function go() {
+		} elseif ($type == 'nonAuth' AND (isset($_SESSION['auth']) === false OR ! $_SESSION['auth'])) {
 
-		if (isset($this->routes[$this->url]) !== false) {
-
-			foreach ($this->routes[$this->url] as $method) {
-
-				dump($method);
-				/*
-				if (strpos($method, '/') !== false) {
-
-					$class = explode('/', $method, 2);
-
-				} else {
-
-					$class = [$method];
-
-				}
-
-				if (count($class) === 1) {
-
-					$class = 'app\\controllers\\'.$class[0];
-					return (new $class($variable));
-
-				} else {
-
-					$method = $class[1];
-					$class = 'app\\controllers\\'.$class[0];
-					return (new $class)->$method($variable);
-				}*/
-
-			}
+			return true;
 
 		} else {
 
-			http(404);
-			view('404');
-
+			return true;
 		}
 
 	}

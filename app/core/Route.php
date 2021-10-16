@@ -32,41 +32,63 @@ class Route
 		if (isset($this->routes[$this->url]) !== false) {
 
 			$response = null;
-			foreach ($this->routes[$this->url] as $type => $class) {
+			$gateway = true;
 
-				dump($type);
-				dump($class);
+			// Middlewares
+			if ($this->routes[$this->url]['middlewares']) {
 
-				try {
-					
-					$class = 'app\\controllers\\'.$class[0];
-					return (new $class($variable));
+				$middlewares = $this->routes[$this->url]['middlewares'];
 
-				} catch (Exception $e) {
-					throw 'Class or method not found!';
+				if (count($middlewares)) {
+
+					$gateway = null;
+					foreach ($middlewares as $path => $arguments) {
+
+						if (is_null($gateway) OR $gateway) {
+
+							$path = 'app\\middlewares\\'.$path;
+							$path = explode('::', $path);
+
+							try {
+
+								$gateway = call_user_func_array(array((new $path[0]), $path[1]), $arguments);
+
+							} catch (Exception $e) {
+								throw 'Middleware not found!';
+							}
+						}
+						else break;
+
+					}
+
 				}
-				/*
-				if (strpos($method, '/') !== false) {
 
-					$class = explode('/', $method, 2);
+			}
 
-				} else {
+			// Controller
+			if ($gateway) {
 
-					$class = [$method];
+				$controller = $this->routes[$this->url]['controller'];
+
+				foreach ($controller as $path => $arguments) {
+
+					$path = 'app\\controllers\\'.$path;
+					$path = explode('::', $path);
+
+					try {
+
+						$response = call_user_func_array(array((new $path[0]), $path[1]), $arguments);
+						break;
+
+					} catch (Exception $e) {
+						throw 'Middleware not found!';
+					}
 
 				}
 
-				if (count($class) === 1) {
+			} else {
 
-					$class = 'app\\controllers\\'.$class[0];
-					return (new $class($variable));
-
-				} else {
-
-					$method = $class[1];
-					$class = 'app\\controllers\\'.$class[0];
-					return (new $class)->$method($variable);
-				}*/
+				dump($gateway);
 
 			}
 

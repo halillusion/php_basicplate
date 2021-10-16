@@ -18,26 +18,26 @@ $route->addRoutes([
 
 	// WEB
 	''						=> [
-		'controller' => 'AppController::view(\'index\')', 
-		'middlewares' => ''
+		'middlewares'	=> [],
+		'controller'	=> ['AppController::view' => ['index']]
 	],
 	'login'					=> [
-		'controller' => 'UserController::view(\'login\')', 
-		'middlewares' => ['Auth::with(\'nonAuth\')']
+		'middlewares'	=> ['Auth::with' => ['nonAuth']],
+		'controller'	=> ['UserController::view' => ['login']]
 	],
 	'register'				=> [
-		'controller' => 'UserController::view(\'register\')', 
-		'middlewares' => ''
+		'middlewares'	=> [],
+		'controller'	=> ['UserController::view' => ['register']]
 	],
 	'recover'				=> [
-		'controller' => 'UserController::view(\'recover\')', 
-		'middlewares' => ''
+		'middlewares'	=> [],
+		'controller'	=> ['UserController::view' => ['recover']]
 	],
 
 	// FORM
 	'form/user/login'		=> [
-		'controller' => 'UserController::login()', 
-		'middlewares' => ''
+		'middlewares'	=> [],
+		'controller'	=> ['UserController::login' => []]
 	],
 
 ]);
