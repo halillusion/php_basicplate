@@ -11,7 +11,7 @@ if (defined('INLINE_JS')) { ?>
 NProgress.start();
 (function() {
 
-	const vanillaPjax = new vPjax('a:not([target="_blank"])', '#wrap').form('[data-vpjax]').init()
+	window.vanillaPjax = new vPjax('a:not([target="_blank"])', '#wrap').form('[data-vpjax]').init()
 	document.addEventListener("vPjax:start", (e) => {
 		NProgress.start()
 	})
@@ -97,11 +97,12 @@ async function formSender(e, url) {
 /* Async Response Formatter */
 function asyncResponse(response, selector = null) {
 
+	// message output
 	if (response.alert_type !== undefined) {
 		switch (response.alert_type) {
 			case 'toast': 
 
-				wrapper = document.querySelector('#toastPlacement')
+				let wrapper = document.querySelector('#toastPlacement')
 
 				if (wrapper) {
 
@@ -164,6 +165,14 @@ function asyncResponse(response, selector = null) {
 			default: 
 				alert(response.title + ' ' + response.message)
 		}
+	}
+
+	// reload
+	if (response.reload !== undefined) {
+
+		setTimeout(() => {
+			window.vanillaPjax.reload(response.reload[0])
+		}, (1000 * response.reload[1]))
 	}
 
 }

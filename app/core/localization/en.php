@@ -33,6 +33,7 @@ return [
 		'account_not_found'					=> 'No such account found!',
 		'user_info_incorrect'				=> 'Your account information is incorrect!',
 		'you_are_logged_in'					=> 'You are logged in!',
+		'session_create_fail'				=> 'Failed to create session!',
 	],
 
 	/**

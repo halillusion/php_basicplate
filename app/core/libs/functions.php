@@ -125,7 +125,7 @@ function errorHandler(int $errNo, string $errMsg, string $file, int $line) {
     ';
 
     $errorOutput = '    '.$file.':'.$line.' - '.$errMsg.' <strong>('.$errNo.')</strong>';
-
+    if (! config('app.dev_mode')) http(500);
     echo str_replace('[OUTPUT]', $errorOutput, $handlerInterface);
 }
 
@@ -335,6 +335,14 @@ function http($code, $data = null, $extra = null) {
 
 		case 410:
 			header($_SERVER["SERVER_PROTOCOL"] . ' 410 Gone');
+			if (!is_null($data)) {
+				echo $data;
+				exit;
+			}
+			break;
+
+		case 500:
+			header($_SERVER["SERVER_PROTOCOL"] . ' 500 Internal Server Error');
 			if (!is_null($data)) {
 				echo $data;
 				exit;

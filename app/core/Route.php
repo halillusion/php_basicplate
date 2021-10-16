@@ -41,23 +41,20 @@ class Route
 
 				if (count($middlewares)) {
 
-					$gateway = null;
+					$gateway = false;
 					foreach ($middlewares as $path => $arguments) {
 
-						if (is_null($gateway) OR $gateway === true) {
+						$path = 'app\\middlewares\\'.$path;
+						$path = explode('::', $path);
 
-							$path = 'app\\middlewares\\'.$path;
-							$path = explode('::', $path);
+						try {
 
-							try {
+							$gateway = call_user_func_array(array((new $path[0]), $path[1]), $arguments);
 
-								$gateway = call_user_func_array(array((new $path[0]), $path[1]), $arguments);
-
-							} catch (Exception $e) {
-								throw 'Middleware not found!';
-							}
+						} catch (Exception $e) {
+							break;
+							throw 'Middleware not found!';
 						}
-						else break;
 
 					}
 
@@ -66,7 +63,7 @@ class Route
 			}
 
 			// Controller
-			if ($gateway) {
+			if ($gateway === true) {
 
 				$controller = $this->routes[$this->url]['controller'];
 
@@ -86,9 +83,14 @@ class Route
 
 				}
 
+			} elseif (is_string($gateway)) {
+
+				http('refresh', ['second' => 3, 'url' => base()]);
+				echo '<pre>'.lang('alert.'.$gateway).'</pre>';
+
 			} else {
 
-				dump($gateway);
+				http('location', base());
 
 			}
 

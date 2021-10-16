@@ -9,14 +9,12 @@ namespace app\middlewares;
 
 class Auth
 {
-    public static $session;
 
 
-    public function __construct()
-    {
-        $this::$session = $_COOKIE[config('app.session')];
+	public function __construct()
+	{
 
-    }
+	}
 
 	public static function with($type = 'auth') {
 

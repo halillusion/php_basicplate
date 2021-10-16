@@ -33,6 +33,7 @@ return [
 		'account_not_found'					=> 'Böyle bir hesap bulunamadı!',
 		'user_info_incorrect'				=> 'Hesap bilgileriniz yanlış!',
 		'you_are_logged_in'					=> 'Oturumunuz açıldı!',
+		'session_create_fail'				=> 'Oturum oluşturulamadı!',
 	],
 
 	/**

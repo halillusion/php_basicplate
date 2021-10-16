@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\core\Database;
 use app\core\helpers\Response;
+use app\core\helpers\Session;
 
 class UserController {
 
@@ -61,6 +62,7 @@ class UserController {
 
 		if ($password AND $email) {
 
+			// Get user data
 			$get = (new Database)
 				->table('users')
 				->select('id, u_name, f_name, l_name, email, password, token, role_id, status')
@@ -70,22 +72,45 @@ class UserController {
 				->notWhere('status', 'deleted')
 				->get();
 
-
-
-
 			if ($get) {
 
+				// Verify password
 				if (password_verify($password, $get->password)) {
 
+					// Get user role
+					$getRole = (new Database)
+						->table('user_roles')
+						->select('name, view_points, action_points')
+						->where('id', $get->role_id)
+						->where('status', 'active')
+						->get();
 
+					if ($getRole) {
 
-					$return = [
-						'status'	=> 'success',
-						'title'		=> 'alert.success',
-						'message'	=> 'alert.you_are_logged_in',
-						'alert_type'=> 'toast',
-						'reload'	=> [null, 3]
-					];
+						$get->role = $getRole;
+
+					}
+					unset($get->password);
+
+					if ((new Session)->create($get)) {
+
+						$return = [
+							'status'	=> 'success',
+							'title'		=> 'alert.success',
+							'message'	=> 'alert.you_are_logged_in',
+							'alert_type'=> 'toast',
+							'reload'	=> [base(), 3]
+						];
+
+					} else {
+
+						$return = [
+							'status'	=> 'warning',
+							'title'		=> 'alert.warning',
+							'message'	=> 'alert.session_create_fail',
+							'alert_type'=> 'toast'
+						];
+					}
 
 				} else {
 
