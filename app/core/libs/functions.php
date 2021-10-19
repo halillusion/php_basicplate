@@ -253,7 +253,7 @@ function assets(string $filename, $version = true, $tag = false, $echo = false, 
 
 function createCSRF($echo = true) {
 
-    $token = $_COOKIE[config('app.session')].'_'.getIP().'_'.getHeader();
+    $token = md5($_COOKIE[config('app.session')].'_'.getIP().'_'.getHeader());
     $_SESSION['token'] = $token;
 
     $return = '<input type="hidden" name="token" value="' . encryptKey($token) . '" />';
@@ -265,9 +265,9 @@ function createCSRF($echo = true) {
 
 function verifyCSRF($val) {
 
-    $token = $_COOKIE[config('app.session')].'_'.getIP().'_'.getHeader();
+    $token = md5($_COOKIE[config('app.session')].'_'.getIP().'_'.getHeader());
 
-    if (isset($_SESSION['token']) !== false AND $_SESSION['token'] == $token AND $token == decryptKey($val)) {
+    if (isset($_SESSION['token']) !== false AND $_SESSION['token'] === $token AND $token === decryptKey($val)) {
 
         return true;
 

@@ -19,7 +19,7 @@ class Response {
 		 *  status: (success|warning|danger)
 		 *  alert_type: (card|toast|alert)
 		 *  reload: [(url | null), seconds]
-		 * 
+		 *  form_reset: (true|false)
 		 * */
 		if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) !== false AND $_SERVER['HTTP_X_REQUESTED_WITH'] == 'fetch') { // Fetch Responses
 

@@ -33,6 +33,10 @@ $route->addRoutes([
 		'middlewares'	=> ['Auth::with' => ['auth']],
 		'controller'	=> ['UserController::logout' => []]
 	],
+	'account'					=> [
+		'middlewares'	=> ['Auth::with' => ['auth']],
+		'controller'	=> ['UserController::view' => ['account']]
+	],
 	'register'				=> [
 		'middlewares'	=> ['Auth::with' => ['nonAuth']],
 		'controller'	=> ['UserController::view' => ['register']]
@@ -44,8 +48,24 @@ $route->addRoutes([
 
 	// FORM
 	'form/user/login'		=> [
-		'middlewares'	=> ['Auth::with' => ['nonAuth']],
+		'middlewares'	=> ['Form::checkCSRF' => [], 'Auth::with' => ['nonAuth']],
 		'controller'	=> ['UserController::login' => []]
+	],
+	'form/user/register'		=> [
+		'middlewares'	=> ['Form::checkCSRF' => [], 'Auth::with' => ['nonAuth']],
+		'controller'	=> ['UserController::register' => []]
+	],
+	'form/user/recovery'		=> [
+		'middlewares'	=> ['Form::checkCSRF' => [], 'Auth::with' => ['nonAuth']],
+		'controller'	=> ['UserController::recovery' => []]
+	],
+	'form/user/verify'		=> [
+		'middlewares'	=> ['Form::checkCSRF' => [], ],
+		'controller'	=> ['UserController::verify' => []]
+	],
+	'form/contact'		=> [
+		'middlewares'	=> ['Form::checkCSRF' => [], ],
+		'controller'	=> ['AppController::contactForm' => []]
 	],
 
 ]);

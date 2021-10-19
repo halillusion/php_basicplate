@@ -2,6 +2,8 @@
 
 namespace app\core;
 
+use app\core\helpers\Response;
+
 /**
  * Route Class
  * 
@@ -78,19 +80,32 @@ class Route
 						break;
 
 					} catch (Exception $e) {
-						throw 'Middleware not found!';
+						throw 'Controller not found!';
 					}
 
 				}
 
 			} elseif (is_string($gateway)) {
 
-				http('refresh', ['second' => 3, 'url' => base()]);
-				echo '<pre>'.lang('alert.'.$gateway).'</pre>';
+				$return = [
+					'status'	=> 'danger',
+					'title'		=> 'alert.error',
+					'message'	=> 'alert.' . $gateway,
+					'alert_type'=> 'toast'
+				];
+
+				Response::out($return);
 
 			} else {
 
-				http('location', base());
+				$return = [
+					'status'	=> 'danger',
+					'title'		=> 'alert.error',
+					'message'	=> 'alert.not_allowed_request',
+					'alert_type'=> 'toast'
+				];
+
+				Response::out($return);
 
 			}
 

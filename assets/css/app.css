@@ -101,18 +101,25 @@ a:hover {
 	color: var(--main-color);
 }
 
-.form-control {
+.form-control,
+.form-select {
 	border: 0.1rem solid var(--main-soft-color);
 	color: var(--main-soft-color);
 }
 
-.form-control:hover {
+.form-control:hover,
+.form-select:hover {
 	box-shadow: 0 0.1rem 0.4rem var(--main-soft-color-50);
 }
 
-.form-control:focus {
+.form-control:focus,
+.form-select:focus {
 	box-shadow: 0 0rem 0rem 0.2rem var(--main-soft-color-50);
 	border-color: var(--main-soft-color);
+}
+
+textarea.form-control {
+	min-height: 5rem;
 }
 
 .btn-primary {

@@ -15,6 +15,9 @@
 						<?php 
 						if (auth()) { ?>
 							<li class="nav-item">
+								<a class="nav-link" href="<?php echo urlGenerator('account'); ?>"><?php echo lang('def.account'); ?></a>
+							</li>
+							<li class="nav-item">
 								<a class="nav-link" data-action="logout" href="javascript:;"><?php echo lang('def.logout'); ?></a>
 							</li>
 						<?php

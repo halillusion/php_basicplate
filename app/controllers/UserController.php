@@ -65,7 +65,7 @@ class UserController {
 			// Get user data
 			$get = (new Database)
 				->table('users')
-				->select('id, u_name, f_name, l_name, email, password, token, role_id, status')
+				->select('id, u_name, f_name, l_name, email, b_date, password, token, role_id, status')
 				->grouped(function($q) use ($email) {
 					$q->where('u_name', $email)->orWhere('email', $email);
 				})

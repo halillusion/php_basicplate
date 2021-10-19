@@ -36,6 +36,10 @@ return [
 		'you_are_logged_out'				=> 'You are logged out!',
 		'session_create_fail'				=> 'Failed to create session!',
 		'a_problem_occurred'				=> 'A problem occurred!',
+		'form_token_invalid'				=> 'The form token is invalid.',
+		'not_allowed_request'				=> 'Not allowed request!',
+		'contact_form_saved'				=> 'We have successfully received your message!',
+		'contact_form_not_saved'			=> 'There was a problem retrieving your message!',
 	],
 
 	/**
@@ -53,6 +57,21 @@ return [
 		'password'							=> 'Password',
 		'loading'							=> 'Loading...',
 		'contact'							=> 'Contact',
+		'account'							=> 'Account',
+		'username'							=> 'Username',
+		'email'								=> 'Email Address',
+		'first_name'						=> 'Name',
+		'last_name'							=> 'Surname',
+		'birth_date'						=> 'Birth Date',
+		'password'							=> 'Password',
+		'update'							=> 'Update',
+		'subject'							=> 'Subject',
+		'send'								=> 'Send',
+		'contact_type'						=> 'Contact Type',
+		'other'								=> 'Other',
+		'bug_report'						=> 'Bug Report',
+		'suggestion'						=> 'Suggestion',
+		'message'							=> 'Message',
 	],
 
 ];
