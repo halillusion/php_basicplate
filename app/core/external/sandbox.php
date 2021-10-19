@@ -283,6 +283,8 @@ if (isset($this->request[1]) !== false) {
 		    margin: 0;
 		}
 	</style>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="https://unpkg.com/vpjax@0.5.1/vpjax.js"></script>
 </head>
 <body class="basicplate-sandbox" id="wrap">
 	<nav class="navbar sticky-top navbar-expand-md navbar-dark bg-dark">
@@ -346,10 +348,8 @@ if (isset($this->request[1]) !== false) {
 		<h1><?php echo $title; ?></h1>
 		<?php echo $output; ?>
 	</main>
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-	<script src="https://unpkg.com/vpjax@0.5.1/vpjax.js"></script>
-	<script>
-		(function() {
+	<script type="text/javascript">
+		document.addEventListener("DOMContentLoaded", function() {
 			window.vanillaPjax = new vPjax('a:not([target="_blank"])', '#wrap').init()
 		})
 	</script>
