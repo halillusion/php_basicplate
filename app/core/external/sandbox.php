@@ -6,9 +6,9 @@ $output = '';
 $action = '';
 $title = 'Welcome to Sandbox';
 
-if (isset($_GET['action']) !== false) {
+if (isset($this->request[1]) !== false) {
 
-	$action = $_GET['action'];
+	$action = $this->request[1];
 
 	switch ($action) {
 		case 'licences': // Licences
@@ -23,6 +23,9 @@ if (isset($_GET['action']) !== false) {
 				'Bootswatch by Thomas Park <a target="_blank" href="https://github.com/thomaspark/bootswatch">(Github)</a>' => path('app/core/external/licences/bootswatch.txt'),
 				'Inter Font by Rasmus Andersson <a target="_blank" href="https://github.com/rsms/inter">(Github)</a>' => path('app/core/external/licences/inter.txt'),
 				'Material Design Icons by Austin Andrews <a target="_blank" href="https://github.com/Templarian/MaterialDesign">(Github)</a>' => path('app/core/external/licences/mdi.txt'),
+				'Phpmailer <a target="_blank" href="https://github.com/PHPMailer/PHPMailer">(Github)</a>' => path('app/core/external/licences/phpmailer.txt'),
+				'Upload Class by verot.net <a target="_blank" href="https://github.com/verot/class.upload.php">(Github)</a>' => path('app/core/external/licences/upload_class.txt'),
+				'vPjax by KalipsoCollective <a target="_blank" href="https://github.com/halillusion/vpjax">(Github)</a>' => path('app/core/external/licences/vpjax.txt'),
 			];
 
 			foreach($licences as $name => $licence) {
@@ -162,7 +165,7 @@ if (isset($_GET['action']) !== false) {
 					</h3>
 					'.$output.'
 					<p class="small text-danger mt-5">If there is no database named <strong>'.config('database.name').'</strong>, add it with the <strong>'.config('database.collation').'</strong> collation.</p>
-					<a class="btn btn-dark btn-sm" href="/sandbox?action=db-init&start">Good, Prepare!</a>';
+					<a class="btn btn-dark btn-sm" href="'.base('sandbox/db-init?start').'">Good, Prepare!</a>';
 				}
 			}
 
@@ -225,7 +228,7 @@ if (isset($_GET['action']) !== false) {
 				}
 
 				if ($output != '') {
-					$output .= '<a class="btn btn-dark mt-5 btn-sm" href="/sandbox?action=db-seed&start">Good, Seed!</a>';
+					$output .= '<a class="btn btn-dark mt-5 btn-sm" href="'.base('sandbox/db-seed?start').'">Good, Seed!</a>';
 				}
 			}
 
@@ -281,10 +284,10 @@ if (isset($_GET['action']) !== false) {
 		}
 	</style>
 </head>
-<body class="basicplate-sandbox">
+<body class="basicplate-sandbox" id="wrap">
 	<nav class="navbar sticky-top navbar-expand-md navbar-dark bg-dark">
 		<div class="container">
-			<a href="/sandbox" class="navbar-brand"><svg width="193" height="193" viewBox="0 0 193 193" fill="none" xmlns="http://www.w3.org/2000/svg">
+			<a href="<?php echo base('sandbox'); ?>" class="navbar-brand"><svg width="193" height="193" viewBox="0 0 193 193" fill="none" xmlns="http://www.w3.org/2000/svg">
 				<path d="M90.7598 1.37769C94.4352 -0.144721 98.5648 -0.144719 102.24 1.37769L159.703 25.1794C163.378 26.7018 166.298 29.6219 167.821 33.2973L191.622 90.7598C193.145 94.4352 193.145 98.5648 191.622 102.24L167.821 159.703C166.298 163.378 163.378 166.298 159.703 167.821L102.24 191.622C98.5648 193.145 94.4352 193.145 90.7597 191.622L33.2973 167.821C29.6219 166.298 26.7018 163.378 25.1794 159.703L1.37769 102.24C-0.144721 98.5648 -0.144719 94.4352 1.37769 90.7597L25.1794 33.2973C26.7018 29.6219 29.6219 26.7018 33.2973 25.1794L90.7598 1.37769Z" fill="url(#paint0_linear)"/>
 				<mask id="mask0" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="193" height="193">
 				<path d="M90.7598 1.37769C94.4352 -0.144721 98.5648 -0.144719 102.24 1.37769L159.703 25.1794C163.378 26.7018 166.298 29.6219 167.821 33.2973L191.622 90.7598C193.145 94.4352 193.145 98.5648 191.622 102.24L167.821 159.703C166.298 163.378 163.378 166.298 159.703 167.821L102.24 191.622C98.5648 193.145 94.4352 193.145 90.7597 191.622L33.2973 167.821C29.6219 166.298 26.7018 163.378 25.1794 159.703L1.37769 102.24C-0.144721 98.5648 -0.144719 94.4352 1.37769 90.7597L25.1794 33.2973C26.7018 29.6219 29.6219 26.7018 33.2973 25.1794L90.7598 1.37769Z" fill="url(#paint1_linear)"/>
@@ -317,22 +320,22 @@ if (isset($_GET['action']) !== false) {
 			<div class="collapse navbar-collapse" id="navbarNav">
 				<ul class="navbar-nav">
 					<li class="nav-item">
-						<a class="nav-link<?php if ($action == '') echo ' active'; ?>" href="/sandbox">Welcome</a>
+						<a class="nav-link<?php if ($action == '') echo ' active'; ?>" href="<?php echo urlGenerator('sandbox'); ?>">Welcome</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link<?php if ($action == 'db-init') echo ' active'; ?>" href="/sandbox?action=db-init">Prepare Database</a>
+						<a class="nav-link<?php if ($action == 'db-init') echo ' active'; ?>" href="<?php echo urlGenerator('sandbox/db-init'); ?>">Prepare Database</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link<?php if ($action == 'db-seed') echo ' active'; ?>" href="/sandbox?action=db-seed">Seed Database</a>
+						<a class="nav-link<?php if ($action == 'db-seed') echo ' active'; ?>" href="<?php echo urlGenerator('sandbox/db-seed'); ?>">Seed Database</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link<?php if ($action == 'php-info') echo ' active'; ?>" href="/sandbox?action=php-info">PHP Info</a>
+						<a class="nav-link<?php if ($action == 'php-info') echo ' active'; ?>" href="<?php echo urlGenerator('sandbox/php-info'); ?>">PHP Info</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link<?php if ($action == 'sys-info') echo ' active'; ?>" href="/sandbox?action=sys-info">System Info</a>
+						<a class="nav-link<?php if ($action == 'sys-info') echo ' active'; ?>" href="<?php echo urlGenerator('sandbox/sys-info'); ?>">System Info</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link<?php if ($action == 'licences') echo ' active'; ?>" href="/sandbox?action=licences">Credits</a>
+						<a class="nav-link<?php if ($action == 'licences') echo ' active'; ?>" href="<?php echo urlGenerator('sandbox/licences'); ?>">Credits</a>
 					</li>
 				</ul>
 			</div>
@@ -344,5 +347,11 @@ if (isset($_GET['action']) !== false) {
 		<?php echo $output; ?>
 	</main>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="https://unpkg.com/vpjax@0.5.1/vpjax.js"></script>
+	<script>
+		(function() {
+			window.vanillaPjax = new vPjax('a:not([target="_blank"])', '#wrap').init()
+		})
+	</script>
 </body>
 </html>
