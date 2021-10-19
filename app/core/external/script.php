@@ -241,6 +241,13 @@ function asyncResponse(response, selector = null) {
 		}, (1000 * response.reload[1]))
 	}
 
+	// form reset
+	if (response.form_reset !== undefined && response.form_reset) {
+
+		document.querySelector(selector).reset()
+
+	}
+
 }
 /* /Basicplate Defaults */
 <?php

@@ -2,6 +2,9 @@
 
 namespace app\controllers;
 
+use app\core\Database;
+use app\core\helpers\Response;
+
 class AppController {
 
 	function __construct() {

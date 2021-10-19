@@ -40,6 +40,10 @@ return [
 		'not_allowed_request'				=> 'Not allowed request!',
 		'contact_form_saved'				=> 'We have successfully received your message!',
 		'contact_form_not_saved'			=> 'There was a problem retrieving your message!',
+		'already_created_this_username'		=> 'There is already an account with this username.',
+		'already_created_this_email'		=> 'There is already an account with this email address.',
+		'your_account_has_been_created'		=> 'Your account has been successfully created!',
+		'your_account_could_not_be_created'	=> 'Your account could not be created!',
 	],
 
 	/**

@@ -31,6 +31,11 @@ function base($body = null) {
 
 function config($setting) {
 
+	// TEMP
+	if ($setting == 'settings.default_user_role') {
+		return 1;
+	}
+
 	$return = false;
 	if (strpos($setting, '.') !== false) {
 		

@@ -40,6 +40,10 @@ return [
 		'not_allowed_request'				=> 'İzin verilmeyen istek!',
 		'contact_form_saved'				=> 'Mesajınızı başarıyla aldık!',
 		'contact_form_not_saved'			=> 'Mesajınızı alırken bir sorun oluştu!',
+		'already_created_this_username'		=> 'Zaten bu kullanıcı adıyla oluşturulmuş bir hesap var.',
+		'already_created_this_email'		=> 'Zaten bu eposta adresiyle oluşturulmuş bir hesap var.',
+		'your_account_has_been_created'		=> 'Hesabınız başarıyla oluşturuldu!',
+		'your_account_could_not_be_created'	=> 'Hesabınız oluşturulurken bir sorun oluştu!',
 	],
 
 	/**

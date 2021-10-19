@@ -12,7 +12,7 @@ class UserController {
 		
 	}
 
-	function view ($key = null) {
+	public function view ($key = null) {
 
 		global $pageStructure, $title;
 
@@ -51,7 +51,7 @@ class UserController {
 
 	}
 
-	function login () {
+	public function login () {
 
 		$return = [];
 
@@ -149,7 +149,7 @@ class UserController {
 
 	}
 
-	function logout() {
+	public function logout() {
 
 		if (isset($_COOKIE[config('app.session')]) !== false) {
 			(new Database)
@@ -167,6 +167,88 @@ class UserController {
 			'alert_type'=> 'toast',
 			'reload'	=> [base(), 3]
 		];
+
+		Response::out($return);
+
+	}
+
+	public function register () {
+
+		$return = [];
+
+		extract(in([
+			'password'	=> 'nulled_text',
+			'email'		=> 'nulled_text',
+			'username'	=> 'nulled_text'
+		], $_POST));
+
+		if ($password AND $email AND $username) {
+
+			// Get user data
+			$get = (new Database)
+				->table('users')
+				->select('email, u_name')
+				->grouped(function($q) use ($email, $username) {
+					$q->where('email', $email)->orWhere('u_name', $username);
+				})
+				->get();
+
+			if (! $get) {
+
+				$insert = (new Database)
+					->table('users')
+					->insert([
+						'u_name'	=> $username,
+						'email'		=> $email,
+						'password'	=> password_hash($password, PASSWORD_DEFAULT),
+						'token'		=> tokenGenerator(48),
+						'role_id'	=> config('settings.default_user_role'),
+						'created_at'=> time()
+					]);
+
+				if ($insert) {
+
+					$return = [
+						'status'	=> 'success',
+						'title'		=> 'alert.success',
+						'message'	=> 'alert.your_account_has_been_created',
+						'alert_type'=> 'toast',
+						'form_reset'=> true,
+						'reload'	=> [base('login'), 3]
+					];
+
+				} else {
+
+					$return = [
+						'status'	=> 'warning',
+						'title'		=> 'alert.warning',
+						'message'	=> 'alert.your_account_could_not_be_created',
+						'alert_type'=> 'toast'
+					];
+				}
+
+
+			} else {
+
+				$return = [
+					'status'	=> 'warning',
+					'title'		=> 'alert.warning',
+					'message'	=> 'alert.' . ($get->u_name == $username ? 'already_created_this_username' : 'already_created_this_email'),
+					'alert_type'=> 'toast'
+				];
+
+			}
+
+		} else {
+
+			$return = [
+				'status'	=> 'danger',
+				'title'		=> 'alert.error',
+				'message'	=> 'alert.form_cannot_empty',
+				'alert_type'=> 'toast'
+			];
+
+		}
 
 		Response::out($return);
 

@@ -47,11 +47,6 @@ return [
 					'nullable'      => 'true',
 					'index'         => 'UNIQUE'
 				],
-				'slug' => [
-					'type'          => 'varchar',
-					'type_values'   => 255,
-					'index'         => 'UNIQUE'
-				],
 				'email' => [
 					'type'          => 'varchar',
 					'type_values'   => 80,
