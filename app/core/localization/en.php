@@ -47,6 +47,17 @@ return [
 	],
 
 	/**
+	 *  Notification definitions
+	 * 
+	 **/
+	'notification' => [
+		'register_title'					=> 'Your account has been created!',
+		'register_mail_body'				=> 'Hi [USER], <br>
+		Your account has been successfully created. You can verify your account with the following methods. <br>
+		<a href="[LINK]">Verify now.</a>',	
+	],
+
+	/**
 	 *  Other definitions
 	 * 
 	 **/

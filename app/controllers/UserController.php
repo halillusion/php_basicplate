@@ -197,6 +197,17 @@ class UserController {
 			if (! $get) {
 
 				$token = tokenGenerator(48);
+
+				(new Notification)::create('register', [
+					'u_name'	=> $username,
+					'email'		=> $email,
+					'token'		=> $token,
+					'user_id'	=> 2,
+				]);
+
+				exit;
+
+				
 				$insert = (new Database)
 					->table('users')
 					->insert([

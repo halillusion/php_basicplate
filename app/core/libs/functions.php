@@ -32,9 +32,8 @@ function base($body = null) {
 function config($setting) {
 
 	// TEMP
-	if ($setting == 'settings.default_user_role') {
-		return 1;
-	}
+	if ($setting == 'settings.default_user_role') return 1;
+	if ($setting == 'settings.mail_queue') return true;
 
 	$return = false;
 	if (strpos($setting, '.') !== false) {
@@ -215,7 +214,7 @@ function urlGenerator($key = null, $slugs = [], $getParams = []) {
 		$url .= $operator . $name . '=' . $val;
 	}
 
-	return base($key);
+	return $url;
 
 }
 

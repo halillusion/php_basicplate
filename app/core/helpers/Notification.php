@@ -20,12 +20,17 @@ class Notification {
 				$title = lang('notification.register_title');
 				$mailBody = str_replace(['[USER]', '[LINK]'], [$data['u_name'], $link], lang('notification.register_mail_body'));
 
+				if (config('settings.mail_queue')) {
+					
+				}
 
 				$insert = [
 					'date'	=> time(),
 					'email'	=> $data['email'],
 					'name'	=> $data['u_name']
 				];
+
+				dump($mailBody);
 
 			break;
 		}
