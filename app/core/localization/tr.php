@@ -47,6 +47,17 @@ return [
 	],
 
 	/**
+	 *  Notification definitions
+	 * 
+	 **/
+	'notification' => [
+		'register_title'					=> 'Hesabınız oluşturuldu!',
+		'register_mail_body'				=> 'Selam [USER], <br>
+		Hesabınız başarıyla oluşturuldu. Aşağıdaki yöntemlerle hesabınızı doğrulayabilirsiniz. <br>
+		<a href="[LINK]">Şimdi doğrula.</a>',	
+	],
+
+	/**
 	 *  Other definitions
 	 * 
 	 **/

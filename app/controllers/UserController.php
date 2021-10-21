@@ -5,6 +5,7 @@ namespace app\controllers;
 use app\core\Database;
 use app\core\helpers\Response;
 use app\core\helpers\Session;
+use app\core\helpers\Notification;
 
 class UserController {
 
@@ -195,18 +196,26 @@ class UserController {
 
 			if (! $get) {
 
+				$token = tokenGenerator(48);
 				$insert = (new Database)
 					->table('users')
 					->insert([
 						'u_name'	=> $username,
 						'email'		=> $email,
 						'password'	=> password_hash($password, PASSWORD_DEFAULT),
-						'token'		=> tokenGenerator(48),
+						'token'		=> $token,
 						'role_id'	=> config('settings.default_user_role'),
 						'created_at'=> time()
 					]);
 
 				if ($insert) {
+
+					(new Notification)::create('register', [
+						'u_name'	=> $username,
+						'email'		=> $email,
+						'token'		=> $token,
+						'user_id'	=> $insert,
+					]);
 
 					$return = [
 						'status'	=> 'success',

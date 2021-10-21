@@ -201,6 +201,20 @@ function meta() {
 
 function urlGenerator($key = null, $slugs = [], $getParams = []) {
 
+	$url = base($key);
+
+	// slug definitions
+	foreach( $slugs as $slug ) {
+		$url = preg_replace("/\?/", $slug, $url, 1);
+	}
+
+	$i = 0;
+	foreach ($getParams as $name => $val) {
+
+		$operator = $i === 0 ? '?' : '&';
+		$url .= $operator . $name . '=' . $val;
+	}
+
 	return base($key);
 
 }
