@@ -31,10 +31,6 @@ function base($body = null) {
 
 function config($setting) {
 
-	// TEMP
-	if ($setting == 'settings.default_user_role') return 1;
-	if ($setting == 'settings.mail_queue') return true;
-
 	$return = false;
 	if (strpos($setting, '.') !== false) {
 		
@@ -86,7 +82,7 @@ function dump($value, $exit = false) {
 
 	echo '<pre>';
 	var_dump($value);
-	echo '</pre>';
+	echo '</pre>'.PHP_EOL;
 
 	if ($exit) exit;
 
@@ -1011,4 +1007,36 @@ function auth() {
 
 	return $isLogged;
 
+}
+
+
+function pathChecker(string $path) {
+
+	$return = null;
+
+	$path = trim($path, '/');
+	$path = strpos($path, '/') !== false ? explode('/', $path) : [$path];
+
+	$currentPath = '';
+
+	foreach ($path as $dir) {
+
+		$currentPath = $currentPath == '' ? $dir : $currentPath . '/' . $dir;
+		if (! is_dir(path($currentPath))) {
+
+			$return = mkdir(path($currentPath));
+
+			if (! $return) {
+				break;
+			}
+
+		} else continue;
+
+	}
+
+	if ($return) {
+		$return = path($currentPath);
+	}
+
+	return $return;
 }

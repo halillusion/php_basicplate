@@ -20,7 +20,12 @@ class Notification {
 				$title = lang('notification.register_title');
 				$mailBody = str_replace(['[USER]', '[LINK]'], [$data['u_name'], $link], lang('notification.register_mail_body'));
 
-				if (config('settings.mail_queue')) {
+				pathChecker('app/storage/email/uncompleted/');
+
+				dump(config('settings.mail_queue'));
+				if (! config('settings.mail_queue')) {
+
+					self::sendEmail($title, $content, $address);
 					
 				}
 
@@ -34,6 +39,14 @@ class Notification {
 
 			break;
 		}
+
+	}
+
+	public static function sendEmail (array $content) {
+
+
+		
+
 
 	}
 
