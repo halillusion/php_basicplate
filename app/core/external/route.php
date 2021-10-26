@@ -45,6 +45,10 @@ $route->addRoutes([
 		'middlewares'	=> ['Auth::with' => ['nonAuth']],
 		'controller'	=> ['UserController::view' => ['recover']]
 	],
+	'verify'				=> [
+		'middlewares'	=> [],
+		'controller'	=> ['UserController::view' => ['verify']]
+	],
 
 	// FORM
 	'form/user/login'		=> [
