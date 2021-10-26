@@ -22,14 +22,26 @@ class Notification {
 				$title = lang('notification.register_title');
 				$mailBody = str_replace(['[USER]', '[LINK]'], [$data['u_name'], $link], lang('notification.register_mail_body'));
 
-				pathChecker('app/storage/email/uncompleted/');
+				dump(config('settings.mail_send_type'), true);
 
-				dump(config('settings.mail_queue'));
 				if (! config('settings.mail_queue')) {
 
-					self::sendEmail($title, $content, $address);
+					$status = self::sendEmail([
+						'title'				=> $title,
+						'content'			=> $mailBody,
+						'recipient_name'	=> $data['u_name'],
+						'recipient_email'	=> $data['email'],
+					]);
 					
+				} else {
+
+					$status = 'pending';
+
 				}
+
+				pathChecker('app/storage/email');
+
+				dump($status);
 
 				$insert = [
 					'date'	=> time(),
@@ -46,7 +58,6 @@ class Notification {
 
 	public static function sendEmail (array $content) {
 
-		// HERE
 		switch (config('settings.mail_send_type')) {
 			case 'smtp':
 				$mail = new PHPMailer(true);
@@ -60,13 +71,13 @@ class Notification {
 					$mail->Username		= config('settings.smtp_email_address');
 					$mail->Password		= config('settings.smtp_email_pass');
 					$mail->SMTPSecure	= config('settings.smtp_secure') == 'tls' ? PHPMailer::ENCRYPTION_STARTTLS : PHPMailer::ENCRYPTION_SMTPS;
-					$mail->Port         = config('settings.smtp_port');
-					$mail->CharSet      = config('app.charset');
+					$mail->Port			= config('settings.smtp_port');
+					$mail->CharSet		= config('app.charset');
 
 					
 					//Recipients
 					$mail->setFrom(config('settings.smtp_email_address'), config('settings.name'));
-					$mail->addAddress($recipientMail, $recipientName);
+					$mail->addAddress($content['recipient_email'], $content['recipient_name']);
 					$reply = config('settings.contact_email');
 					if (! $reply OR $reply == '') {
 						$reply = config('settings.smtp_email_address');
@@ -74,16 +85,12 @@ class Notification {
 					$mail->addReplyTo($reply, config('settings.name') );
 
 					// Content
-					$mail->isHTML(true);                                    // Set email format to HTML
-					$mail->Subject = $title;
-					$mail->Body    = $content;
-					$mail->AltBody = trim(strip_tags($content));
+					$mail->isHTML(true);
+					$mail->Subject = $content['title'];
+					$mail->Body    = $content['content'];
+					$mail->AltBody = trim(strip_tags($content['content']));
 
-					if ($mail->send()) {
-						$return = true;
-					} else {
-						$return = false;
-					}
+					$return = $mail->send();
 
 				} catch (PHPMailerException $e) {
 
@@ -99,6 +106,7 @@ class Notification {
 				break;
 		}
 
+		return $return;
 
 	}
 

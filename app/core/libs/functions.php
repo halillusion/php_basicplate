@@ -31,47 +31,47 @@ function base($body = null) {
 
 function config($setting) {
 
+	global $configs;
+
 	$return = false;
+	$settings = false;
+
 	if (strpos($setting, '.') !== false) {
 		
 		$setting = explode('.', $setting, 2);
 
-		if ($setting[0] == 'settings') { // JSON
+		if (isset($configs[$setting[0]]) !== false) {
 
+			$settings = $configs[$setting[0]];
 
-			$file = path() . 'app/core/config/' . $setting[0] . '.json';
-			if (file_exists($file)) {
-
-				$settings = json_decode(file_get_contents($file));
-				if ($settings AND isset($settings->{$setting[1]}) !== false) {
-
-					$return = $settings->{$setting[1]};
-				}
-			}
-
-		} else { // PHP
+		} else {
 
 			$file = path('app/core/config/' . $setting[0] . '.php');
 			if (file_exists($file)) {
 
 				$settings = require $file;
-				$setting = strpos($setting[1], '.') !== false ? explode('.', $setting[1]) : [$setting[1]];
+				$configs[$setting[0]] = $settings;
 				
-				$data = null;
-				foreach ($setting as $key) {
-					
-					if (isset($settings[$key]) !== false) {
-						$data = $settings[$key];
-						$settings = $settings[$key];
-					} else {
-						$data = null;
-					}
-				}
-				$return = $data;
 			}
 
 		}
 
+		if ($settings) {
+
+			$setting = strpos($setting[1], '.') !== false ? explode('.', $setting[1]) : [$setting[1]];
+
+			$data = null;
+			foreach ($setting as $key) {
+				
+				if (isset($settings[$key]) !== false) {
+					$data = $settings[$key];
+					$settings = $settings[$key];
+				} else {
+					$data = null;
+				}
+			}
+			$return = $data;
+		}
 
 	}
 	
