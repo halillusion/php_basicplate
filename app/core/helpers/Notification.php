@@ -3,8 +3,8 @@
 namespace app\core\helpers;
 
 use app\core\Database;
-use app\vendor\phpmailer\src\PHPMailer;
-use app\vendor\phpmailer\src\Exception as PHPMailerException;
+use app\vendor\phpmailer\PHPMailer;
+use app\vendor\phpmailer\Exception as PHPMailerException;
 
 class Notification {
 
@@ -22,8 +22,6 @@ class Notification {
 				$title = lang('notification.register_title');
 				$mailBody = str_replace(['[USER]', '[LINK]'], [$data['u_name'], $link], lang('notification.register_mail_body'));
 
-				dump(config('settings.mail_send_type'), true);
-
 				if (! config('settings.mail_queue')) {
 
 					$status = self::sendEmail([
@@ -32,6 +30,8 @@ class Notification {
 						'recipient_name'	=> $data['u_name'],
 						'recipient_email'	=> $data['email'],
 					]);
+
+					$status = $status ? 'completed' : 'pending';
 					
 				} else {
 
@@ -39,17 +39,25 @@ class Notification {
 
 				}
 
-				pathChecker('app/storage/email');
+				$fileName = slugGenerator($title.'_'.$data['u_name'].tokenGenerator(8)).'.html';
 
-				dump($status);
+				pathChecker('app/storage/email/'.$status);
+				file_put_contents(path('app/storage/email/'.$status.'/'.$fileName), $mailBody);
 
 				$insert = [
-					'date'	=> time(),
-					'email'	=> $data['email'],
-					'name'	=> $data['u_name']
+					'date'		=> time(),
+					'email'		=> $data['email'],
+					'name'		=> $data['u_name'],
+					'title'		=> $title,
+					'user_id'	=> $data['user_id'],
+					'sender_id'	=> 0,
+					'file'		=> $fileName,
+					'status'	=> $status
 				];
 
-				dump($mailBody);
+				return (new Database)
+					->table('email_logs')
+					->insert($insert);
 
 			break;
 		}
@@ -57,6 +65,10 @@ class Notification {
 	}
 
 	public static function sendEmail (array $content) {
+
+		if (config('app.dev_mode')) {
+			$content['recipient_email'] = config('settings.contact_email');
+		}
 
 		switch (config('settings.mail_send_type')) {
 			case 'smtp':
@@ -94,7 +106,8 @@ class Notification {
 
 				} catch (PHPMailerException $e) {
 
-					$return = false; // $e->errorMessage();
+					$return = false;
+					// dump($e->errorMessage());
 				}
 				break;
 									

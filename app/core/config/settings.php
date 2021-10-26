@@ -6,9 +6,9 @@ return [
 	'contact_email'			=> 'hi@example.com',
 	'separator'				=> '-',
 	'language'				=> 'tr',
-	'ssl'					=> true,
+	'ssl'					=> false,
 
-	'mail_send_type'		=> 'smtp',
+	'mail_send_type'		=> 'server',
 	'smtp_address'			=> 'smtp.yandex.com.tr',
 	'smtp_port'				=> '587',
 	'smtp_email_address'	=> 'hi@example.com',
@@ -16,7 +16,7 @@ return [
 	'smtp_secure'			=> 'tls',
 
 	'default_user_role'		=> 1,
-	'mail_queue'			=> true,
+	'mail_queue'			=> false,
 	'js_cache'				=> true,
 	'privacy_policy_page'	=> '1',
 	'last_updated_at'		=> 1633026723,
