@@ -196,7 +196,7 @@ class UserController {
 
 			if (! $get) {
 
-				$token = tokenGenerator(48);
+				$token = $this->createToken();
 				
 				$insert = (new Database)
 					->table('users')
@@ -262,6 +262,104 @@ class UserController {
 
 		Response::out($return);
 
+	}
+
+	public function verify () {
+
+		$return = [];
+
+		extract(in([
+			'verify_token'	=> 'nulled_text',
+		], $_POST));
+
+		if ($verify_token) {
+
+			// Get user data
+			$get = (new Database)
+				->table('users')
+				->select('id, token, status')
+				->grouped(function($q) use ($verify_token) {
+					$q->where('token', $verify_token)->notWhere('status', 'deleted');
+				})
+				->get();
+
+			if ($get) {
+
+				if ($get->status == 'passive') {
+
+					$update = (new Database)
+						->table('users')
+						->where('id', $get->id)
+						->update([
+							'status'	=> 'active',
+							'token'		=> $this->createToken()
+						]);
+
+					if ($update) {
+
+						if (isset($_SESSION['user']->id) !== false AND $_SESSION['user']->id == $get->id) {
+							$_SESSION['user']->status = 'active';
+						}
+
+						$return = [
+							'status'	=> 'success',
+							'title'		=> 'alert.success',
+							'message'	=> 'alert.your_account_has_been_verified',
+							'alert_type'=> 'toast',
+							'form_reset'=> true,
+							'reload'	=> [base((isset($_SESSION['user']->id) !== false ? 'account' : 'login')), 3]
+						];
+
+					} else {
+
+						$return = [
+							'status'	=> 'warning',
+							'title'		=> 'alert.warning',
+							'message'	=> 'alert.your_account_could_not_be_verified',
+							'alert_type'=> 'toast'
+						];
+					}
+
+				} else {
+
+					$return = [
+						'status'	=> 'warning',
+						'title'		=> 'alert.warning',
+						'message'	=> 'alert.this_account_already_verified',
+						'alert_type'=> 'toast'
+					];
+
+				}
+
+			} else {
+
+				$return = [
+					'status'	=> 'warning',
+					'title'		=> 'alert.warning',
+					'message'	=> 'alert.user_not_found',
+					'alert_type'=> 'toast'
+				];
+
+			}
+
+		} else {
+
+			$return = [
+				'status'	=> 'danger',
+				'title'		=> 'alert.error',
+				'message'	=> 'alert.form_cannot_empty',
+				'alert_type'=> 'toast'
+			];
+
+		}
+
+		Response::out($return);
+
+	}
+
+	public function createToken() {
+
+		return tokenGenerator(48);
 	}
 
 }

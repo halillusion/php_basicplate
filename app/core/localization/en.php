@@ -32,6 +32,7 @@ return [
 		'you_have_not_an_session'			=> 'You haven\'t an session!',
 		'account_not_found'					=> 'No such account found!',
 		'user_info_incorrect'				=> 'Your account information is incorrect!',
+		'user_not_found'					=> 'There is no such account!',
 		'you_are_logged_in'					=> 'You are logged in!',
 		'you_are_logged_out'				=> 'You are logged out!',
 		'session_create_fail'				=> 'Failed to create session!',
@@ -44,6 +45,9 @@ return [
 		'already_created_this_email'		=> 'There is already an account with this email address.',
 		'your_account_has_been_created'		=> 'Your account has been successfully created!',
 		'your_account_could_not_be_created'	=> 'Your account could not be created!',
+		'this_account_already_verified'		=> 'This account has already been verified.',
+		'your_account_has_been_verified'	=> 'The account has been successfully verified.',
+		'your_account_could_not_be_verified'=> 'There was a problem verifying the account!',
 	],
 
 	/**
@@ -87,6 +91,10 @@ return [
 		'bug_report'						=> 'Bug Report',
 		'suggestion'						=> 'Suggestion',
 		'message'							=> 'Message',
+		'verify'							=> 'Verify',
+		'token'								=> 'Token',
+		'verify_desc'						=> 'You can verify your account by pasting the token in the field below.',
+		'recover_desc'						=> 'You can reset your account password from this page.',
 	],
 
 ];

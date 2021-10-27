@@ -39,7 +39,7 @@ class Notification {
 
 				}
 
-				$fileName = slugGenerator($title.'_'.$data['u_name'].tokenGenerator(8)).'.html';
+				$fileName = slugGenerator($title.'_'.$data['u_name'].'_'.tokenGenerator(8)).'.html';
 
 				pathChecker('app/storage/email/'.$status);
 				file_put_contents(path('app/storage/email/'.$status.'/'.$fileName), $mailBody);

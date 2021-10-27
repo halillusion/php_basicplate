@@ -32,6 +32,7 @@ return [
 		'you_have_not_an_session'			=> 'Açık bir oturumunuz yok!',
 		'account_not_found'					=> 'Böyle bir hesap bulunamadı!',
 		'user_info_incorrect'				=> 'Hesap bilgileriniz yanlış!',
+		'user_not_found'					=> 'Böyle bir hesap yok!',
 		'you_are_logged_in'					=> 'Oturumunuz açıldı!',
 		'you_are_logged_out'				=> 'Oturum sonlandırıldı!',
 		'session_create_fail'				=> 'Oturum oluşturulamadı!',
@@ -44,6 +45,9 @@ return [
 		'already_created_this_email'		=> 'Zaten bu eposta adresiyle oluşturulmuş bir hesap var.',
 		'your_account_has_been_created'		=> 'Hesabınız başarıyla oluşturuldu!',
 		'your_account_could_not_be_created'	=> 'Hesabınız oluşturulurken bir sorun oluştu!',
+		'this_account_already_verified'		=> 'Bu hesap zaten doğrulandı.',
+		'your_account_has_been_verified'	=> 'Hesap başarıyla doğrulandı.',
+		'your_account_could_not_be_verified'=> 'Hesap doğrulanırken bir sorun oluştu!',
 	],
 
 	/**
@@ -87,6 +91,10 @@ return [
 		'bug_report'						=> 'Hata Raporlama',
 		'suggestion'						=> 'Öneri, İstek',
 		'message'							=> 'Mesaj',
+		'verify'							=> 'Doğrula',
+		'token'								=> 'Anahtar',
+		'verify_desc'						=> 'Anahtarı aşağıdaki alana yapıştırıp hesabınızı doğrulayabilirsiniz.',
+		'recover_desc'						=> 'Bu sayfadan hesap şifrenizi sıfırlayabilirsiniz.',
 	],
 
 ];

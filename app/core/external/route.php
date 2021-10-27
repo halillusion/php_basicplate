@@ -64,11 +64,11 @@ $route->addRoutes([
 		'controller'	=> ['UserController::recovery' => []]
 	],
 	'form/user/verify'		=> [
-		'middlewares'	=> ['Form::checkCSRF' => [], ],
+		'middlewares'	=> ['Form::checkCSRF' => []],
 		'controller'	=> ['UserController::verify' => []]
 	],
 	'form/contact'		=> [
-		'middlewares'	=> ['Form::checkCSRF' => [], ],
+		'middlewares'	=> ['Form::checkCSRF' => []],
 		'controller'	=> ['AppController::contactForm' => []]
 	],
 
