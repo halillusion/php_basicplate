@@ -21,6 +21,7 @@ if (isset($this->request[1]) !== false) {
 				'PDOx by İzni Burak <a target="_blank" href="https://github.com/izniburak/pdox">(Github)</a>' => path('app/core/external/licences/pdox.txt'),
 				'Bootstrap <a target="_blank" href="https://github.com/twbs/bootstrap">(Github)</a>' => path('app/core/external/licences/bootstrap.txt'),
 				'Bootswatch by Thomas Park <a target="_blank" href="https://github.com/thomaspark/bootswatch">(Github)</a>' => path('app/core/external/licences/bootswatch.txt'),
+				'Manrope Font by Mikhail Sharanda <a target="_blank" href="https://github.com/sharanda/manrope">(Github)</a>' => path('app/core/external/licences/manrope.txt'),
 				'Inter Font by Rasmus Andersson <a target="_blank" href="https://github.com/rsms/inter">(Github)</a>' => path('app/core/external/licences/inter.txt'),
 				'Material Design Icons by Austin Andrews <a target="_blank" href="https://github.com/Templarian/MaterialDesign">(Github)</a>' => path('app/core/external/licences/mdi.txt'),
 				'Phpmailer <a target="_blank" href="https://github.com/PHPMailer/PHPMailer">(Github)</a>' => path('app/core/external/licences/phpmailer.txt'),
