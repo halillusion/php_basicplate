@@ -59,7 +59,7 @@ $route->addRoutes([
 		'middlewares'	=> ['Form::checkCSRF' => [], 'Auth::with' => ['nonAuth']],
 		'controller'	=> ['UserController::register' => []]
 	],
-	'form/user/recovery'		=> [
+	'form/user/recover'		=> [
 		'middlewares'	=> ['Form::checkCSRF' => [], 'Auth::with' => ['nonAuth']],
 		'controller'	=> ['UserController::recovery' => []]
 	],

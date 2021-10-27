@@ -17,8 +17,8 @@
 										<label for="token"><?php echo lang('def.token'); ?></label>
 									</div>
 									<div class="form-floating mb-3">
-										<input type="text" class="form-control" id="token" name="verify_token" value="<?php echo filter($_GET['token']); ?>" placeholder="<?php echo lang('def.token'); ?>" required>
-										<label for="token"><?php echo lang('def.token'); ?></label>
+										<input type="password" class="form-control" id="password" name="password" placeholder="<?php echo lang('def.password'); ?>" required>
+										<label for="password"><?php echo lang('def.new_password'); ?></label>
 									</div>
 									<?php
 								} else {

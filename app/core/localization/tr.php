@@ -95,6 +95,7 @@ return [
 		'token'								=> 'Anahtar',
 		'verify_desc'						=> 'Anahtarı aşağıdaki alana yapıştırıp hesabınızı doğrulayabilirsiniz.',
 		'recover_desc'						=> 'Bu sayfadan hesap şifrenizi sıfırlayabilirsiniz.',
+		'new_password'						=> 'Yeni Şifre',
 	],
 
 ];

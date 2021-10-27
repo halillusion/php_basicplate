@@ -362,4 +362,104 @@ class UserController {
 		return tokenGenerator(48);
 	}
 
+	public function recovery () {
+
+		$return = [];
+
+		extract(in([
+			'password'	=> 'nulled_text',
+			'email'		=> 'nulled_text',
+			'token'		=> 'nulled_text'
+		], $_POST));
+
+		if ($email) { // STEP 1
+
+			// Get user data
+			$get = (new Database)
+				->table('users')
+				->select('email, u_name, token, status')
+				->grouped(function($q) use ($email) {
+					$q->where('email', $email)->notWhere('status', 'deleted');
+				})
+				->get();
+
+			if ($get) {
+
+				$token = $this->createToken();
+				
+				$insert = (new Database)
+					->table('users')
+					->insert([
+						'u_name'	=> $username,
+						'email'		=> $email,
+						'password'	=> password_hash($password, PASSWORD_DEFAULT),
+						'token'		=> $token,
+						'role_id'	=> config('settings.default_user_role'),
+						'created_at'=> time()
+					]);
+
+				if ($insert) {
+
+					(new Notification)::create('register', [
+						'u_name'	=> $username,
+						'email'		=> $email,
+						'token'		=> $token,
+						'user_id'	=> $insert,
+					]);
+
+					$return = [
+						'status'	=> 'success',
+						'title'		=> 'alert.success',
+						'message'	=> 'alert.your_account_has_been_created',
+						'alert_type'=> 'toast',
+						'form_reset'=> true,
+						'reload'	=> [base('login'), 3]
+					];
+
+				} else {
+
+					$return = [
+						'status'	=> 'warning',
+						'title'		=> 'alert.warning',
+						'message'	=> 'alert.your_account_could_not_be_created',
+						'alert_type'=> 'toast'
+					];
+				}
+
+
+			} else {
+
+				$return = [
+					'status'	=> 'warning',
+					'title'		=> 'alert.warning',
+					'message'	=> 'alert.account_not_found',
+					'alert_type'=> 'toast'
+				];
+
+			}
+
+		} elseif ($token AND $password) { // STEP 2
+
+			$return = [
+				'status'	=> 'danger',
+				'title'		=> 'alert.error',
+				'message'	=> 'alert.form_cannot_empty',
+				'alert_type'=> 'toast'
+			];
+
+		} else {
+
+			$return = [
+				'status'	=> 'danger',
+				'title'		=> 'alert.error',
+				'message'	=> 'alert.form_cannot_empty',
+				'alert_type'=> 'toast'
+			];
+
+		}
+
+		Response::out($return);
+
+	}
+
 }

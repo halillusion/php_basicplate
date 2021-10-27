@@ -95,6 +95,7 @@ return [
 		'token'								=> 'Token',
 		'verify_desc'						=> 'You can verify your account by pasting the token in the field below.',
 		'recover_desc'						=> 'You can reset your account password from this page.',
+		'new_password'						=> 'New Password',
 	],
 
 ];
