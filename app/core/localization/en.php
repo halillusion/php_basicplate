@@ -49,6 +49,11 @@ return [
 		'your_account_has_been_verified'	=> 'The account has been successfully verified.',
 		'your_account_could_not_be_verified'=> 'There was a problem verifying the account!',
 		'cant_send_recover_link_unverified'	=> 'We can\'t send the recovery link to accounts without email verification.',
+		'failed_send_password_reset_link'	=> 'Failed to send password reset link.',
+		'sent_password_reset_link'			=> 'Password reset link has been sent.',
+		'cant_reset_password_unverified'	=> 'Unverified accounts cannot reset passwords.',
+		'password_has_been_reset'			=> 'Your password has been successfully reset.',
+		'failed_resetting_password'			=> 'There was a problem resetting the password.',
 	],
 
 	/**
@@ -63,7 +68,10 @@ return [
 		'recover_title'						=> 'Account Recovery',
 		'recover_mail_body'					=> 'Hi [USER], <br>
 		We just received an account recovery request. If this process belongs to you, you can renew your password using the link below. <br>
-		<a href="[LINK]">Renew now.</a>',
+		<a href="[LINK]">Renew password.</a>',
+		'recover_completed_title'			=> 'Your Account Has Been Recovered!',
+		'recover_completed_mail_body'		=> 'Hi [USER], <br>
+		Your password has been successfully reset. If the transaction is not yours, please get in touch.',	
 	],
 
 	/**

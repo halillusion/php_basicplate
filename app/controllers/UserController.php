@@ -362,6 +362,14 @@ class UserController {
 		return tokenGenerator(48);
 	}
 
+	public function clearSessions($id) {
+
+		return (new Database)->table('sessions')
+			->where('user_id', $id)
+			->delete();
+
+	}
+
 	public function recovery () {
 
 		$return = [];
@@ -403,12 +411,12 @@ class UserController {
 							'user_id'	=> $get->id
 						]);
 
-					if ($insert) {
+					if ($sendRecoverLink) {
 
 						$return = [
 							'status'	=> 'success',
 							'title'		=> 'alert.success',
-							'message'	=> 'alert.your_account_has_been_created',
+							'message'	=> 'alert.sent_password_reset_link',
 							'alert_type'=> 'toast',
 							'form_reset'=> true,
 						];
@@ -418,7 +426,7 @@ class UserController {
 						$return = [
 							'status'	=> 'warning',
 							'title'		=> 'alert.warning',
-							'message'	=> 'alert.your_account_could_not_be_created',
+							'message'	=> 'alert.failed_send_password_reset_link',
 							'alert_type'=> 'toast'
 						];
 					}
@@ -439,12 +447,77 @@ class UserController {
 
 		} elseif ($verify_token AND $password) { // STEP 2
 
-			$return = [
-				'status'	=> 'danger',
-				'title'		=> 'alert.error',
-				'message'	=> 'alert.form_cannot_empty',
-				'alert_type'=> 'toast'
-			];
+			// Get user data
+			$get = (new Database)
+				->table('users')
+				->select('id, email, u_name, token, status')
+				->grouped(function($q) use ($verify_token) {
+					$q->where('token', $verify_token)->notWhere('status', 'deleted');
+				})
+				->get();
+
+			if ($get) {
+				
+				if ($get->status != 'active') {
+
+					$return = [
+						'status'	=> 'warning',
+						'title'		=> 'alert.warning',
+						'message'	=> 'alert.cant_reset_password_unverified',
+						'alert_type'=> 'toast'
+					];
+
+				} else {
+
+					$update = (new Database)
+						->table('users')
+						->where('id', $get->id)
+						->update([
+							'password'	=> password_hash($password, PASSWORD_DEFAULT),
+							'token'		=> $this->createToken()
+						]);
+
+					if ($update) {
+
+						$this->clearSessions($get->id);
+						(new Notification)::create('recovery_completed', [
+							'u_name'	=> $get->u_name,
+							'email'		=> $get->email,
+							'user_id'	=> $get->id
+						]);
+
+						$return = [
+							'status'	=> 'success',
+							'title'		=> 'alert.success',
+							'message'	=> 'alert.password_has_been_reset',
+							'alert_type'=> 'toast',
+							'form_reset'=> true,
+							'reload'	=> [base('login'), 3]
+						];
+
+					} else {
+
+						$return = [
+							'status'	=> 'warning',
+							'title'		=> 'alert.warning',
+							'message'	=> 'alert.failed_resetting_password',
+							'alert_type'=> 'toast'
+						];
+					}
+
+				}
+
+
+			} else {
+
+				$return = [
+					'status'	=> 'warning',
+					'title'		=> 'alert.warning',
+					'message'	=> 'alert.account_not_found',
+					'alert_type'=> 'toast'
+				];
+
+			}
 
 		} else {
 

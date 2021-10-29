@@ -49,6 +49,11 @@ return [
 		'your_account_has_been_verified'	=> 'Hesap başarıyla doğrulandı.',
 		'your_account_could_not_be_verified'=> 'Hesap doğrulanırken bir sorun oluştu!',
 		'cant_send_recover_link_unverified'	=> 'E-posta doğrulaması yapılmayan hesaplara kurtarma bağlantısını gönderemiyoruz.',
+		'failed_send_password_reset_link'	=> 'Şifre sıfırlama bağlantısı gönderilemedi.',
+		'sent_password_reset_link'			=> 'Şifre sıfırlama bağlantısı gönderildi.',
+		'cant_reset_password_unverified'	=> 'Doğrulanmamış hesaplar şifre sıfırlayamaz.',
+		'password_has_been_reset'			=> 'Şifreniz başarıyla sıfırlandı.',
+		'failed_resetting_password'			=> 'Şifre sıfırlanırken bir sorun oluştu.',
 	],
 
 	/**
@@ -63,7 +68,10 @@ return [
 		'recover_title'						=> 'Hesap Kurtarma',
 		'recover_mail_body'					=> 'Selam [USER], <br>
 		Az önce bir hesap kurtarma talebi aldık. Bu işlem size aitse aşağıdaki bağlantıyla şifrenizi yenileyebilirsiniz. <br>
-		<a href="[LINK]">Şimdi yenile.</a>',	
+		<a href="[LINK]">Şimdi yenile.</a>',
+		'recover_completed_title'			=> 'Hesabınız Kurtarıldı!',
+		'recover_completed_mail_body'		=> 'Selam [USER], <br>
+		Şifreniz başarıyla sıfırlandı. İşlem size ait değilse lütfen iletişime geçin.',	
 	],
 
 	/**
