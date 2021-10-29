@@ -367,9 +367,9 @@ class UserController {
 		$return = [];
 
 		extract(in([
-			'password'	=> 'nulled_text',
-			'email'		=> 'nulled_text',
-			'token'		=> 'nulled_text'
+			'password'		=> 'nulled_text',
+			'email'			=> 'nulled_text',
+			'verify_token'	=> 'nulled_text'
 		], $_POST));
 
 		if ($email) { // STEP 1
@@ -377,53 +377,52 @@ class UserController {
 			// Get user data
 			$get = (new Database)
 				->table('users')
-				->select('email, u_name, token, status')
+				->select('id, email, u_name, token, status')
 				->grouped(function($q) use ($email) {
 					$q->where('email', $email)->notWhere('status', 'deleted');
 				})
 				->get();
 
 			if ($get) {
-
-				$token = $this->createToken();
 				
-				$insert = (new Database)
-					->table('users')
-					->insert([
-						'u_name'	=> $username,
-						'email'		=> $email,
-						'password'	=> password_hash($password, PASSWORD_DEFAULT),
-						'token'		=> $token,
-						'role_id'	=> config('settings.default_user_role'),
-						'created_at'=> time()
-					]);
-
-				if ($insert) {
-
-					(new Notification)::create('register', [
-						'u_name'	=> $username,
-						'email'		=> $email,
-						'token'		=> $token,
-						'user_id'	=> $insert,
-					]);
-
-					$return = [
-						'status'	=> 'success',
-						'title'		=> 'alert.success',
-						'message'	=> 'alert.your_account_has_been_created',
-						'alert_type'=> 'toast',
-						'form_reset'=> true,
-						'reload'	=> [base('login'), 3]
-					];
-
-				} else {
+				if ($get->status != 'active') {
 
 					$return = [
 						'status'	=> 'warning',
 						'title'		=> 'alert.warning',
-						'message'	=> 'alert.your_account_could_not_be_created',
+						'message'	=> 'alert.cant_send_recover_link_unverified',
 						'alert_type'=> 'toast'
 					];
+
+				} else {
+
+					$sendRecoverLink = (new Notification)::create('recovery', [
+							'u_name'	=> $get->u_name,
+							'email'		=> $get->email,
+							'token'		=> $get->token,
+							'user_id'	=> $get->id
+						]);
+
+					if ($insert) {
+
+						$return = [
+							'status'	=> 'success',
+							'title'		=> 'alert.success',
+							'message'	=> 'alert.your_account_has_been_created',
+							'alert_type'=> 'toast',
+							'form_reset'=> true,
+						];
+
+					} else {
+
+						$return = [
+							'status'	=> 'warning',
+							'title'		=> 'alert.warning',
+							'message'	=> 'alert.your_account_could_not_be_created',
+							'alert_type'=> 'toast'
+						];
+					}
+
 				}
 
 
@@ -438,7 +437,7 @@ class UserController {
 
 			}
 
-		} elseif ($token AND $password) { // STEP 2
+		} elseif ($verify_token AND $password) { // STEP 2
 
 			$return = [
 				'status'	=> 'danger',

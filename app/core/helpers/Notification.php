@@ -60,6 +60,52 @@ class Notification {
 					->insert($insert);
 
 			break;
+
+			case 'recovery':
+
+				$link = urlGenerator('recover', [], ['token' => $data['token']]);
+
+				$title = lang('notification.recover_title');
+				$mailBody = str_replace(['[USER]', '[LINK]'], [$data['u_name'], $link], lang('notification.recover_mail_body'));
+
+				if (! config('settings.mail_queue')) {
+
+					$status = self::sendEmail([
+						'title'				=> $title,
+						'content'			=> $mailBody,
+						'recipient_name'	=> $data['u_name'],
+						'recipient_email'	=> $data['email'],
+					]);
+
+					$status = $status ? 'completed' : 'pending';
+					
+				} else {
+
+					$status = 'pending';
+
+				}
+
+				$fileName = slugGenerator($title.'_'.$data['u_name'].'_'.tokenGenerator(8)).'.html';
+
+				pathChecker('app/storage/email/'.$status);
+				file_put_contents(path('app/storage/email/'.$status.'/'.$fileName), $mailBody);
+
+				$insert = [
+					'date'		=> time(),
+					'email'		=> $data['email'],
+					'name'		=> $data['u_name'],
+					'title'		=> $title,
+					'user_id'	=> $data['user_id'],
+					'sender_id'	=> 0,
+					'file'		=> $fileName,
+					'status'	=> $status
+				];
+
+				return (new Database)
+					->table('email_logs')
+					->insert($insert);
+
+			break;
 		}
 
 	}

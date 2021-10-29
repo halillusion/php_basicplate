@@ -48,6 +48,7 @@ return [
 		'this_account_already_verified'		=> 'Bu hesap zaten doğrulandı.',
 		'your_account_has_been_verified'	=> 'Hesap başarıyla doğrulandı.',
 		'your_account_could_not_be_verified'=> 'Hesap doğrulanırken bir sorun oluştu!',
+		'cant_send_recover_link_unverified'	=> 'E-posta doğrulaması yapılmayan hesaplara kurtarma bağlantısını gönderemiyoruz.',
 	],
 
 	/**
@@ -58,7 +59,11 @@ return [
 		'register_title'					=> 'Hesabınız oluşturuldu!',
 		'register_mail_body'				=> 'Selam [USER], <br>
 		Hesabınız başarıyla oluşturuldu. Aşağıdaki yöntemlerle hesabınızı doğrulayabilirsiniz. <br>
-		<a href="[LINK]">Şimdi doğrula.</a>',	
+		<a href="[LINK]">Şimdi doğrula.</a>',
+		'recover_title'						=> 'Hesap Kurtarma',
+		'recover_mail_body'					=> 'Selam [USER], <br>
+		Az önce bir hesap kurtarma talebi aldık. Bu işlem size aitse aşağıdaki bağlantıyla şifrenizi yenileyebilirsiniz. <br>
+		<a href="[LINK]">Şimdi yenile.</a>',	
 	],
 
 	/**

@@ -48,6 +48,7 @@ return [
 		'this_account_already_verified'		=> 'This account has already been verified.',
 		'your_account_has_been_verified'	=> 'The account has been successfully verified.',
 		'your_account_could_not_be_verified'=> 'There was a problem verifying the account!',
+		'cant_send_recover_link_unverified'	=> 'We can\'t send the recovery link to accounts without email verification.',
 	],
 
 	/**
@@ -58,7 +59,11 @@ return [
 		'register_title'					=> 'Your account has been created!',
 		'register_mail_body'				=> 'Hi [USER], <br>
 		Your account has been successfully created. You can verify your account with the following methods. <br>
-		<a href="[LINK]">Verify now.</a>',	
+		<a href="[LINK]">Verify now.</a>',
+		'recover_title'						=> 'Account Recovery',
+		'recover_mail_body'					=> 'Hi [USER], <br>
+		We just received an account recovery request. If this process belongs to you, you can renew your password using the link below. <br>
+		<a href="[LINK]">Renew now.</a>',
 	],
 
 	/**
