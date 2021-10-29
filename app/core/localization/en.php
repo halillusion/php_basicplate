@@ -52,8 +52,13 @@ return [
 		'failed_send_password_reset_link'	=> 'Failed to send password reset link.',
 		'sent_password_reset_link'			=> 'Password reset link has been sent.',
 		'cant_reset_password_unverified'	=> 'Unverified accounts cannot reset passwords.',
+		'cant_change_email_unverified'		=> 'Unverified accounts cannot update their email addresses.',
+		'cant_change_password_unverified'	=> 'Unverified accounts cannot update their passwords.',
 		'password_has_been_reset'			=> 'Your password has been successfully reset.',
 		'failed_resetting_password'			=> 'There was a problem resetting the password.',
+		'no_changes_to_save'				=> 'No changes to save!',
+		'profile_updated'					=> 'Your account has been successfully updated.',
+		'failed_profile_updated'			=> 'There was a problem updating your account.',
 	],
 
 	/**
@@ -71,7 +76,11 @@ return [
 		<a href="[LINK]">Renew password.</a>',
 		'recover_completed_title'			=> 'Your Account Has Been Recovered!',
 		'recover_completed_mail_body'		=> 'Hi [USER], <br>
-		Your password has been successfully reset. If the transaction is not yours, please get in touch.',	
+		Your password has been successfully reset. If the transaction is not yours, please get in touch.',
+		'verify_email_title'				=> 'Verify Email Address',
+		'verify_email_mail_body'			=> 'Hi [USER], <br>
+		Email verification required. You can do this by clicking the link below. <br>
+		<a href="[LINK]">Verify now.</a>',	
 	],
 
 	/**

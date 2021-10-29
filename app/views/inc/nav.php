@@ -25,12 +25,6 @@
 							<li class="nav-item">
 								<a class="nav-link" href="<?php echo urlGenerator('login'); ?>"><?php echo lang('def.login'); ?></a>
 							</li>
-							<li class="nav-item">
-								<a class="nav-link" href="<?php echo urlGenerator('register'); ?>"><?php echo lang('def.register'); ?></a>
-							</li>
-							<li class="nav-item">
-								<a class="nav-link" href="<?php echo urlGenerator('recover'); ?>"><?php echo lang('def.recover'); ?></a>
-							</li>
 						<?php
 						}	?>
 					</ul>

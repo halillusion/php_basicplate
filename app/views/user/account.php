@@ -25,12 +25,12 @@
 									<label for="l_name"><?php echo lang('def.last_name'); ?></label>
 								</div>
 								<div class="form-floating mb-3">
-									<input type="date" class="form-control" id="b_date" name="b_date" value="<?php echo date('d-m-Y', $_SESSION['user']->b_date); ?>" placeholder="<?php echo lang('def.birth_date'); ?>">
+									<input type="date" class="form-control" id="b_date" name="b_date" value="<?php if ($_SESSION['user']->b_date) echo date('Y-m-d', $_SESSION['user']->b_date); ?>" placeholder="<?php echo lang('def.birth_date'); ?>">
 									<label for="b_date"><?php echo lang('def.birth_date'); ?></label>
 								</div>
 								<hr class="mb-5">
 								<div class="form-floating mb-3">
-									<input type="password" class="form-control" id="pass" name="password" placeholder="<?php echo lang('def.password'); ?>" required>
+									<input type="password" class="form-control" id="pass" name="password" placeholder="<?php echo lang('def.password'); ?>">
 									<label for="pass"><?php echo lang('def.password'); ?></label>
 								</div>
 								<div class="d-grid mb-3">

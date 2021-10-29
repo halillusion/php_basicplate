@@ -52,8 +52,13 @@ return [
 		'failed_send_password_reset_link'	=> 'Şifre sıfırlama bağlantısı gönderilemedi.',
 		'sent_password_reset_link'			=> 'Şifre sıfırlama bağlantısı gönderildi.',
 		'cant_reset_password_unverified'	=> 'Doğrulanmamış hesaplar şifre sıfırlayamaz.',
+		'cant_change_email_unverified'		=> 'Doğrulanmamış hesaplar eposta adreslerini güncelleyemez.',
+		'cant_change_password_unverified'	=> 'Doğrulanmamış hesaplar şifrelerini güncelleyemez.',
 		'password_has_been_reset'			=> 'Şifreniz başarıyla sıfırlandı.',
 		'failed_resetting_password'			=> 'Şifre sıfırlanırken bir sorun oluştu.',
+		'no_changes_to_save'				=> 'Kaydedilecek bir değişiklik yok!',
+		'profile_updated'					=> 'Hesabınız başarıyla güncellendi.',
+		'failed_profile_updated'			=> 'Hesabınız güncellenirken bir sorun oluştu.',
 	],
 
 	/**
@@ -61,7 +66,7 @@ return [
 	 * 
 	 **/
 	'notification' => [
-		'register_title'					=> 'Hesabınız oluşturuldu!',
+		'register_title'					=> 'Hesabınız Oluşturuldu!',
 		'register_mail_body'				=> 'Selam [USER], <br>
 		Hesabınız başarıyla oluşturuldu. Aşağıdaki yöntemlerle hesabınızı doğrulayabilirsiniz. <br>
 		<a href="[LINK]">Şimdi doğrula.</a>',
@@ -72,6 +77,10 @@ return [
 		'recover_completed_title'			=> 'Hesabınız Kurtarıldı!',
 		'recover_completed_mail_body'		=> 'Selam [USER], <br>
 		Şifreniz başarıyla sıfırlandı. İşlem size ait değilse lütfen iletişime geçin.',	
+		'verify_email_title'				=> 'Eposta Adresini Doğrula',
+		'verify_email_mail_body'			=> 'Selam [USER], <br>
+		Eposta doğrulaması gerekiyor. Bunu aşağıdaki bağlantıya tıklayarak gerçekleştirebilirsin. <br>
+		<a href="[LINK]">Şimdi doğrula.</a>',
 	],
 
 	/**

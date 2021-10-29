@@ -534,4 +534,194 @@ class UserController {
 
 	}
 
+	public function account () {
+
+		$return = [];
+
+		extract(in([
+			'u_name'	=> 'nulled_text',
+			'email'		=> 'nulled_text',
+			'f_name'	=> 'nulled_text',
+			'l_name'	=> 'nulled_text',
+			'b_date'	=> 'nulled_text',
+			'password'	=> 'nulled_text'
+		], $_POST));
+
+		if ($u_name AND $email AND $f_name AND $l_name) {
+
+			// Get user data
+			$get = (new Database)
+				->table('users')
+				->select('id, u_name, f_name, l_name, email, b_date, token, status')
+				->where('id', $_SESSION['user']->id)
+				->get();
+
+			if ($get) {
+
+				$update = [];
+				$alert = false;
+
+				// u_name
+				if ($u_name != $get->u_name) {
+
+					$getU = (new Database)
+					->table('users')
+					->select('id, u_name')
+					->where('u_name', $u_name)
+					->get();
+
+					if ($getU) {
+						$alert = 'already_created_this_username';
+					} else {
+						$update['u_name'] = $u_name;
+					}
+
+				}
+
+				// email
+				if ($email != $get->email) {
+
+					if ($get->status != 'active') {
+
+						$alert = 'cant_change_email_unverified';
+
+					} else {
+
+						$getU = (new Database)
+						->table('users')
+						->select('id, email')
+						->where('email', $email)
+						->get();
+
+						if ($getU) {
+							$alert = 'already_created_this_email';
+						} else {
+							$update['email'] = $email;
+							$update['status'] = 'passive';
+						}
+					}
+				}
+
+				// f_name
+				if ($f_name AND $f_name != $get->f_name) {
+					$update['f_name'] = $f_name;
+				}
+
+				// l_name
+				if ($l_name AND $l_name != $get->l_name) {
+					$update['l_name'] = $l_name;
+				}
+
+				// b_date
+				if ($b_date AND strtotime($b_date) != $get->b_date) {
+					$update['b_date'] = strtotime($b_date);
+				}
+
+				// password
+				if ($password) {
+
+					if ($get->status != 'active') {
+
+						$alert = 'cant_change_password_unverified';
+
+					} else {
+
+						$update['password'] = password_hash($password, PASSWORD_DEFAULT);
+					}
+				}
+				
+				if (! $alert) {
+
+					if (count($update)) {
+
+						$update['updated_at'] = time();
+						$update['updated_by'] = $_SESSION['user']->id;
+
+						$updateAccount = (new Database)
+							->table('users')
+							->where('id', $_SESSION['user']->id)
+							->update($update);
+
+						if ($updateAccount) {
+
+							// Send verification link if email address has changed
+							if (isset($update['email']) !== false) {
+								(new Notification)::create('verify_email', [
+									'u_name'	=> (isset($update['u_name']) !== false ? $update['u_name'] : $get->u_name),
+									'email'		=> $update['email'],
+									'token'		=> $get->token,
+									'user_id'	=> $get->id
+								]);
+							}
+
+							// Update session
+							if (isset($update['password']) !== false) unset($update['password']);
+							foreach($update as $key => $value) $_SESSION['user']->{$key} = $value;
+
+							$return = [
+								'status'	=> 'success',
+								'title'		=> 'alert.success',
+								'message'	=> 'alert.profile_updated',
+								'alert_type'=> 'toast',
+								'reload'	=> [null, 3]
+							];
+
+						} else {
+
+							$return = [
+								'status'	=> 'warning',
+								'title'		=> 'alert.warning',
+								'message'	=> 'alert.failed_profile_updated',
+								'alert_type'=> 'toast'
+							];
+						}
+
+					} else {
+
+						$return = [
+							'status'	=> 'warning',
+							'title'		=> 'alert.warning',
+							'message'	=> 'alert.no_changes_to_save',
+							'alert_type'=> 'toast'
+						];
+
+					}
+
+				} else {
+
+					$return = [
+						'status'	=> 'warning',
+						'title'		=> 'alert.warning',
+						'message'	=> 'alert.' . $alert,
+						'alert_type'=> 'toast'
+					];
+				}
+
+
+			} else {
+
+				$return = [
+					'status'	=> 'warning',
+					'title'		=> 'alert.warning',
+					'message'	=> 'alert.account_not_found',
+					'alert_type'=> 'toast'
+				];
+
+			}
+
+		} else {
+
+			$return = [
+				'status'	=> 'danger',
+				'title'		=> 'alert.error',
+				'message'	=> 'alert.form_cannot_empty',
+				'alert_type'=> 'toast'
+			];
+
+		}
+
+		Response::out($return);
+
+	}
+
 }
