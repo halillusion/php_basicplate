@@ -89,6 +89,7 @@ return [
 	 **/
 	'def'	=> [
 		'home'								=> 'Ana sayfa',
+		'welcome'							=> 'Hoş Geldin',
 		'login'								=> 'Giriş Yap',
 		'logout'							=> 'Çıkış',
 		'register'							=> 'Kayıt Ol',

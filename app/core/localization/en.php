@@ -89,6 +89,7 @@ return [
 	 **/
 	'def'	=> [
 		'home'								=> 'Home',
+		'welcome'							=> 'Welcome',
 		'login'								=> 'Login',
 		'logout'							=> 'Logout',
 		'register'							=> 'Register',
