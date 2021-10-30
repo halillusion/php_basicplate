@@ -481,57 +481,6 @@ return [
 			]
 		],
 
-		/* Tags Table */
-		'tags' => [
-			'cols' => [
-				'id' => [
-					'type'          => 'int',
-					'auto_inc'      => true,
-					'attr'          => 'unsigned',
-					'type_values'   => 11,
-					'index'         => 'PRIMARY'
-				],
-				'name' => [
-					'type'          => 'varchar',
-					'type_values'   => 250,
-					'index'         => 'UNIQUE',
-				],
-				'slug' => [
-					'type'          => 'varchar',
-					'type_values'   => 250,
-					'index'         => 'UNIQUE',
-				],
-				'created_at' => [
-					'type'          => 'varchar',
-					'type_values'   => 80,
-					'index'         => 'INDEX'
-				],
-				'created_by' => [
-					'type'          => 'int',
-					'type_values'   => 10,
-					'index'         => 'INDEX'
-				],
-				'updated_at' => [
-					'type'          => 'varchar',
-					'type_values'   => 80,
-					'nullable'      => true,
-					'default'       => 'NULL'
-				],
-				'updated_by' => [
-					'type'          => 'int',
-					'type_values'   => 10,
-					'nullable'      => true,
-					'default'       => 'NULL'
-				],
-				'status' => [
-					'type'          => 'enum',
-					'type_values'   => ['active', 'passive', 'deleted'],
-					'default'       => 'passive',
-					'index'         => 'INDEX'
-				],
-			]
-		],
-
 		/* Cache Table */
 		'cache' => [
 			'cols' => [
