@@ -10,6 +10,8 @@ class PageController extends Core {
 
 	function __construct() {
 		
+		$this->viewFolder = 'page';
+
 	}
 
 }
