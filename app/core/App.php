@@ -19,7 +19,8 @@ class App extends Core
      */
     public function start()
     {   
-        if ($this->request[0] === 'script') {
+
+        if ($this->request[0] === 'script') { // Dynamic JS
 
             try {
 
@@ -36,7 +37,7 @@ class App extends Core
 
             }
 
-        } elseif ($this->request[0] === 'sandbox' AND config('app.dev_mode')) {
+        } elseif ($this->request[0] === 'sandbox' AND config('app.dev_mode')) { // Sandbox for Developers
 
             try {
 
@@ -53,7 +54,7 @@ class App extends Core
 
             }
 
-        } else {
+        } else { // HTML Output
 
             http(200);
             http('content_type', 'html');

@@ -16,6 +16,7 @@ class Core
      */
     public $currentLang = 'en';
     public $availableLangs = ['en', 'tr'];
+    public $viewFolder = '';
     
     public function __construct()
     {
@@ -71,4 +72,9 @@ class Core
     }
 
     
+    public function meta ()
+    {
+
+    }
+
 }

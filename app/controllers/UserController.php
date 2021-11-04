@@ -4,10 +4,11 @@ namespace app\controllers;
 
 use app\core\Database;
 use app\core\helpers\Response;
+use app\core\Core;
 use app\core\helpers\Session;
 use app\core\helpers\Notification;
 
-class UserController {
+class UserController extends Core {
 
 	function __construct() {
 		

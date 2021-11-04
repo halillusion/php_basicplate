@@ -84,6 +84,15 @@ return [
 	],
 
 	/**
+	 *  Page definitions
+	 * 
+	 **/
+	'page'	=> [
+		'index'								=> 'Home',
+		'index_desc'						=> 'Home description.',
+	],
+
+	/**
 	 *  Other definitions
 	 * 
 	 **/

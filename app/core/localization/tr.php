@@ -84,6 +84,15 @@ return [
 	],
 
 	/**
+	 *  Page definitions
+	 * 
+	 **/
+	'page'	=> [
+		'index'								=> 'Ana Sayfa',
+		'index_desc'						=> 'Ana sayfa açıklama.',
+	],
+
+	/**
 	 *  Other definitions
 	 * 
 	 **/

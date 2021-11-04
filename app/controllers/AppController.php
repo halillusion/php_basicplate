@@ -4,18 +4,20 @@ namespace app\controllers;
 
 use app\core\Database;
 use app\core\helpers\Response;
+use app\core\Core;
 
-class AppController {
+class AppController extends Core {
 
 	function __construct() {
 		
 	}
 
-	static function view ($key = null) {
+	public function view ($key = null) {
 
-		global $pageStructure, $title;
+		global $pageStructure, $title, $description;
 
-		$title = $key;
+		$title = lang('page.' . $key);
+		$description = lang('page.' . $key . '_desc');
 
 		if (is_array($pageStructure)) {
 			
@@ -50,7 +52,7 @@ class AppController {
 
 	}
 
-	function contactForm () {
+	public function contactForm () {
 
 		$return = [];
 
