@@ -148,7 +148,7 @@ function exceptionHandler(Exception $e ) {
 	exit();
 }
 
-function lang($key) {
+function lang($key, $returnNull = false) {
 
 	global $languages;
 
@@ -166,31 +166,25 @@ function lang($key) {
 
 				$key = $languages[$get[0]];
 
+			} elseif ($returnNull) {
+
+				$key = null;
+
 			}
 
+		} elseif ($returnNull) {
+
+			$key = null;
+
 		}
+
+	} elseif ($returnNull) {
+
+		$key = null;
 
 	}
 
 	return $key;
-
-}
-
-function title($echo = true) {
-
-	global $title;
-
-	$return = ($title ? $title . ' | ' : '') . config('app.name');
-
-	if ($echo) echo $return;
-	else return $return;
-
-}
-
-
-function meta() {
-
-	echo '<!-- META -->';
 
 }
 

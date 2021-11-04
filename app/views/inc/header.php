@@ -3,8 +3,9 @@
 	<head>
 		<meta charset="<?php echo lang('app.charset'); ?>">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<title><?php title(); ?></title>
-		<?php meta();
+		<title><?php $this->title(true); ?></title>
+		<?php
+		$this->meta(true);
 		assets('libs/bootstrap/css/bootstrap'.(lang('app.dir') == 'rtl' ? '.rtl' : '').'.min.css', true, true, true);
 		assets('css/app.css', true, true, true); // Basicplate Styles
 		assets('css/style.css', true, true, true); // Your Styles
