@@ -149,7 +149,7 @@ class Core
         if (is_array($pageStructure)) {
             
             if (isset($_SERVER['HTTP_X_VPJAX']) !== false) {
-                echo '<title>'.title(false).'</title><body id="wrap">';
+                echo '<title>'.$this->title(false).'</title><body id="wrap">';
             }
 
             foreach ($pageStructure as $part) {

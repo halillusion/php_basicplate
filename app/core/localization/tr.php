@@ -90,6 +90,14 @@ return [
 	'page'	=> [
 		'index'								=> 'Ana Sayfa',
 		'index_desc'						=> 'Ana sayfa açıklama.',
+		'contact'							=> 'İletişim',
+		'contact_desc'						=> 'İletişim sayfası.',
+		'login'								=> 'Giriş',
+		'login_desc'						=> 'Giriş sayfası.',
+		'register'							=> 'Kayıt',
+		'register_desc'						=> 'Kayıt sayfası.',
+		'recover'							=> 'Hesap Kurtarma',
+		'recover_desc'						=> 'Hesap kurtarma sayfası.',
 	],
 
 	/**

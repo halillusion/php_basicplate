@@ -90,6 +90,14 @@ return [
 	'page'	=> [
 		'index'								=> 'Home',
 		'index_desc'						=> 'Home description.',
+		'contact'							=> 'Contact',
+		'contact_desc'						=> 'Contact page.',
+		'login'								=> 'Login',
+		'login_desc'						=> 'Login page.',
+		'register'							=> 'Register',
+		'register_desc'						=> 'Register page.',
+		'recover'							=> 'Account Recovery',
+		'recover_desc'						=> 'Account recovery page.',
 	],
 
 	/**
