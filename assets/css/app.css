@@ -282,3 +282,39 @@ h1, h2, h3, h4, h5, h6 {
 .navbar {
     z-index: 12;
 }
+
+.management {
+    min-height: calc(100vh - 56px);
+}
+
+.management .row {
+    min-height: calc(100vh - 56px);
+}
+
+.management .sidebar {
+    background: #9a9fb9;
+}
+
+.management .sidebar ul li + li {
+    margin-top: 0.4rem
+}
+
+.management .sidebar ul li a {
+    transition: 0.2s ease-out;
+    background: #494d68;
+    color: #b4b8d3;
+    border-radius: 0.4rem;
+}
+
+.management .sidebar ul li a.active {
+    background: #232531;
+    color: #9a9fb9;
+}
+
+.management .sidebar ul li a:hover,
+.management .sidebar ul li a:focus {
+    background: #20212c;
+    color: #ffffff;
+    transform: translate(0, -0.2rem);
+    box-shadow: 0 0.4rem 0.8rem rgb(0 0 0 / 24%);
+}

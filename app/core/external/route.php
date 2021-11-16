@@ -52,8 +52,44 @@ $route->addRoutes([
 
 	// MANAGEMENT
 	'management'				=> [
-		'middlewares'	=> [],
+		'middlewares'	=> ['Auth::with' => ['auth']],
 		'controller'	=> ['ManagementController::view' => ['dashboard']]
+	],
+	'management/pages'				=> [
+		'middlewares'	=> ['Auth::with' => ['auth']],
+		'controller'	=> ['ManagementController::view' => ['pages']]
+	],
+	'management/contents'=> [
+		'middlewares'	=> ['Auth::with' => ['auth']],
+		'controller'	=> ['ManagementController::view' => ['contents']]
+	],
+	'management/categories'=> [
+		'middlewares'	=> ['Auth::with' => ['auth']],
+		'controller'	=> ['ManagementController::view' => ['categories']]
+	],
+	'management/media'		=> [
+		'middlewares'	=> ['Auth::with' => ['auth']],
+		'controller'	=> ['ManagementController::view' => ['media']]
+	],
+	'management/contact-forms'	=> [
+		'middlewares'	=> ['Auth::with' => ['auth']],
+		'controller'	=> ['ManagementController::view' => ['contact']]
+	],
+	'management/users'	=> [
+		'middlewares'	=> ['Auth::with' => ['auth']],
+		'controller'	=> ['ManagementController::view' => ['users']]
+	],
+	'management/user-roles'	=> [
+		'middlewares'	=> ['Auth::with' => ['auth']],
+		'controller'	=> ['ManagementController::view' => ['user_roles']]
+	],
+	'management/logs'	=> [
+		'middlewares'	=> ['Auth::with' => ['auth']],
+		'controller'	=> ['ManagementController::view' => ['logs']]
+	],
+	'management/settings'	=> [
+		'middlewares'	=> ['Auth::with' => ['auth']],
+		'controller'	=> ['ManagementController::view' => ['settings']]
 	],
 
 	// FORM

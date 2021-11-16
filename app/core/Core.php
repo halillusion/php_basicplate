@@ -80,6 +80,20 @@ class Core
         return new Auth();
     }
 
+    public function activeLink($route = '', $exact = true) {
+
+        global $activeRoute;
+
+        if (
+            ( $exact AND $route == $activeRoute ) OR
+            ( ! $exact AND strpos($activeRoute, $route) !== false )
+        ) {
+
+            return ' active';
+        }
+
+    }
+
     
     public function meta($echo = false)
     {

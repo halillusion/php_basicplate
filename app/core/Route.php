@@ -31,6 +31,8 @@ class Route
 
 	public function go() {
 
+		global $activeRoute;
+
 		if (isset($this->routes[$this->url]) !== false) {
 
 			$response = null;
@@ -68,6 +70,8 @@ class Route
 			if ($gateway === true) {
 
 				$controller = $this->routes[$this->url]['controller'];
+
+				$activeRoute = $this->url;
 
 				foreach ($controller as $path => $arguments) {
 
