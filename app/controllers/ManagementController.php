@@ -11,6 +11,7 @@ class ManagementController extends Core {
 	function __construct() {
 		
 		$this->viewFolder = 'management';
+		$this->titleBase = lang('def.management');
 
 	}
 

@@ -22,6 +22,7 @@ class Core
     public $title = null;
     public $description = null;
     public $keywords = null;
+    public $titleBase = null;
     
     public function __construct()
     {
@@ -164,6 +165,13 @@ class Core
         global $pageStructure;
         
         $this->title = lang('page.' . $key);
+
+        if ($this->titleBase) {
+
+            $this->title .= ' ‧ '.$this->titleBase;
+
+        }
+
         $this->description = lang('page.' . $key . '_desc');
 
         if (is_array($pageStructure)) {
