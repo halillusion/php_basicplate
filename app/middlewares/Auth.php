@@ -32,4 +32,17 @@ class Auth
 		}
 
 	}
+
+	public static function view($point) {
+
+		$return = false;
+		if (
+			isset($_SESSION['user']->role->view_points) !== false AND 
+			in_array($point, $_SESSION['user']->role->view_points) !== false
+		) {
+			$return = true;
+		}
+		return $return;
+
+	}
 }

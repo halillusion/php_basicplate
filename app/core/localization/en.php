@@ -98,6 +98,10 @@ return [
 		'register_desc'						=> 'Register page.',
 		'recover'							=> 'Account Recovery',
 		'recover_desc'						=> 'Account recovery page.',
+		'account'							=> 'Account',
+		'account_desc'						=> 'Account page.',
+		'dashboard'							=> 'Dashboard',
+		'dashboard_desc'					=> 'Dashboard home page.',
 	],
 
 	/**
@@ -136,6 +140,7 @@ return [
 		'verify_desc'						=> 'You can verify your account by pasting the token in the field below.',
 		'recover_desc'						=> 'You can reset your account password from this page.',
 		'new_password'						=> 'New Password',
+		'management'						=> 'Management',
 	],
 
 ];

@@ -49,7 +49,8 @@ $route->addRoutes([
 		'middlewares'	=> [],
 		'controller'	=> ['UserController::view' => ['verify']]
 	],
-	// management
+
+	// MANAGEMENT
 	'management'				=> [
 		'middlewares'	=> [],
 		'controller'	=> ['ManagementController::view' => ['dashboard']]

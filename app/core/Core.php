@@ -2,6 +2,8 @@
 
 namespace app\core;
 
+use app\middlewares\Auth;
+
 /**
  * Core Class
  * 
@@ -72,6 +74,10 @@ class Core
 
         }
 
+    }
+
+    public function auth() {
+        return new Auth();
     }
 
     

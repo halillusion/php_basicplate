@@ -9,7 +9,7 @@ use app\core\helpers\Session;
 use app\core\helpers\Notification;
 
 class UserController extends Core {
-
+	
 	function __construct() {
 		
 		$this->viewFolder = 'user';
@@ -51,6 +51,11 @@ class UserController extends Core {
 						->get();
 
 					if ($getRole) {
+
+						$getRole->view_points = strpos($getRole->view_points, ',') !== false ? 
+							explode(',', $getRole->view_points) : [$getRole->view_points];
+						$getRole->action_points = strpos($getRole->action_points, ',') !== false ? 
+							explode(',', $getRole->action_points) : [$getRole->action_points];
 
 						$get->role = $getRole;
 

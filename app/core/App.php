@@ -18,7 +18,7 @@ class App extends Core
      * @return void
      */
     public function start()
-    {   
+    {
 
         if ($this->request[0] === 'script') { // Dynamic JS
 
@@ -49,7 +49,7 @@ class App extends Core
                     $t->getCode(), 
                     $t->getMessage(), 
                     $t->getFile(),
-                    $t->getLine()
+                    $t->getLine() 
                 );
 
             }

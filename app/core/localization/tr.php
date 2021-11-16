@@ -98,6 +98,10 @@ return [
 		'register_desc'						=> 'Kayıt sayfası.',
 		'recover'							=> 'Hesap Kurtarma',
 		'recover_desc'						=> 'Hesap kurtarma sayfası.',
+		'account'							=> 'Hesap',
+		'account_desc'						=> 'Hesap sayfası.',
+		'dashboard'							=> 'Yönetim Paneli',
+		'dashboard_desc'					=> 'Yönetim paneli ana sayfası.',
 	],
 
 	/**
@@ -136,6 +140,7 @@ return [
 		'verify_desc'						=> 'Anahtarı aşağıdaki alana yapıştırıp hesabınızı doğrulayabilirsiniz.',
 		'recover_desc'						=> 'Bu sayfadan hesap şifrenizi sıfırlayabilirsiniz.',
 		'new_password'						=> 'Yeni Şifre',
+		'management'						=> 'Yönetim',
 	],
 
 ];
