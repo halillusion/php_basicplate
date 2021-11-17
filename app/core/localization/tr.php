@@ -168,6 +168,8 @@ return [
 		'user_roles'						=> 'Kullanıcı Rolleri',
 		'logs'								=> 'Kayıtlar',
 		'settings'							=> 'Ayarlar',
+		'action'							=> 'İşlem',
+		'all'								=> 'Tümü'
 	],
 
 ];

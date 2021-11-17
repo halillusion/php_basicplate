@@ -46,7 +46,6 @@ function trimAny(str, chars) {
 
 function init() {
 
-
 	// Click actions
 	document.querySelectorAll("[data-action]").forEach(function(actionBtn) {
 		actionBtn.addEventListener("click", async (e, i) => {
@@ -104,6 +103,96 @@ function init() {
 		})
 	});
 
+	let tableVariables = {
+
+		usersTable: {
+			selector: "#usersTable",
+			fetch: "/table/users",
+			columns: [ 
+				{
+					"searchable": {
+						"type": "number",
+						"min": 1,
+						"max": 999
+					},
+					"orderable": true,
+					"title": "#",
+					"key": "id"
+				},
+				{
+					"searchable": {
+						"type": "text",
+						"maxlenght": 50
+					},
+					"orderable": true,
+					"title": "<?php echo lang('def.username'); ?>",
+					"key": "username"
+				},
+				{
+					"searchable": {
+						"type": "text",
+						"maxlenght": 50
+					},
+					"orderable": true,
+					"title": "<?php echo lang('def.email'); ?>",
+					"key": "email"
+				},
+				{
+					"searchable": {
+						"type": "date",
+						"maxlenght": 50,
+						"min": "2021-01-01",
+						"max": "2021-12-31"
+					},
+					"orderable": true,
+					"title": "<?php echo lang('def.birth_date'); ?>",
+					"key": "email"
+				},
+				{
+					"searchable": {
+						"type": "select",
+						"datas": [
+							{"value": 'active', "name": "Active"},
+							{"value": 'passive', "name": "Passive"},
+							{"value": 'deleted', "name": "Deleted"}
+						],
+					},
+					"orderable": false,
+					"title": "<?php echo lang('def.action'); ?>",
+					"key": "action"
+				}
+			],
+			lengthOptions: [
+				{
+					"name": "10",
+					"value": 10,
+				},
+				{
+					"name": "50",
+					"value": 50,
+				},
+				{
+					"name": "100",
+					"value": 100,
+					"default": true
+				},
+				{
+					"name": "100",
+					"value": 100,
+				},
+				{
+					"name": "<?php echo lang('def.all'); ?>",
+					"value": 0,
+				}
+			],
+			defaultOrder: ["id", "desc"]
+		}
+
+	}
+
+	for(const [key, value] of Object.entries(tableVariables)) {
+		window[key] = new KalipsoTable(value);
+	}
 }
 
 async function formSender(e, url) {

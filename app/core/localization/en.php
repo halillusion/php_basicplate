@@ -168,6 +168,8 @@ return [
 		'user_roles'						=> 'User Roles',
 		'logs'								=> 'Logs',
 		'settings'							=> 'Settings',
+		'action'							=> 'Action',
+		'all'								=> 'All'
 	],
 
 ];
