@@ -154,7 +154,7 @@ class KalipsoTable {
             for (const [index, col] of Object.entries(this.options.columns)) {
 
                 tbody +=  this.options.tableFooter.searchBar ? `<td>` + 
-                    (! col.searchable ? col.title : this.generateSearchArea(col.searchable)) + 
+                    (! col.searchable ? col.title : this.generateSearchArea(col.searchable, col.key)) + 
                 `</td>` : `<td>` + col.title + `</td>`
 
             }
@@ -173,8 +173,9 @@ class KalipsoTable {
             tfoot = `<tfoot><tr>`
 
             for (const [index, col] of Object.entries(this.options.columns)) {
+                
                 tfoot +=  this.options.tableFooter.searchBar ? `<td>` + 
-                    (! col.searchable ? col.title : this.generateSearchArea(col.searchable)) + 
+                    (! col.searchable ? col.title : this.generateSearchArea(col.searchable, col.key)) + 
                 `</td>` : `<td>` + col.title + `</td>`
 
             }
@@ -185,16 +186,17 @@ class KalipsoTable {
 
     }
 
-    generateSearchArea(areaDatas) {
+    generateSearchArea(areaDatas, key) {
 
         // number | text | date | select
+        console.log(areaDatas)
         let bar = ``
         switch (areaDatas.type) {
 
             case "number":
             case "text":
             case "date":
-                bar = `<input type="` + areaDatas.type + `"` + 
+                bar = `<input data-search="` + key + `" type="` + areaDatas.type + `"` + 
                 (this.options.searchBar.class !== undefined && this.options.searchBar.class ? ` class="` + this.options.searchBar.class + `" ` : ` `) +
                 (areaDatas.min !== undefined && areaDatas.min ? ` min="` + areaDatas.min + `" ` : ` `) + 
                 (areaDatas.max !== undefined && areaDatas.max ? ` max="` + areaDatas.max + `" ` : ` `) + 
@@ -203,7 +205,7 @@ class KalipsoTable {
                 break;
 
             case "select":
-                bar = `<select` + 
+                bar = `<select data-search="` + key + `"` + 
                 (this.options.searchBar.class !== undefined && this.options.searchBar.class ? ` class="` + this.options.searchBar.class + `" ` : ` `) +
                 `>`
 
