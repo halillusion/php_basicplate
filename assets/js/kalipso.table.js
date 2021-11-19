@@ -26,20 +26,25 @@ class KalipsoTable {
                 }
             ],
             defaultOrder: ["id", "asc"],
-            fetch: null,
+            source: null, // object or string (url)
             lengthOptions: [
                 {"name": "10", "value": 10, "default":true},
                 {"name": "10", "value": 50},
                 {"name": this.l10n("all"), "value": 0}
             ],
             selector: null,
+            tableHeader: {
+                "class": "",
+                "searchBar": true
+            },
             tableFooter: {
-                "visible": true,
-                "class": '',
+                "visible": false,
+                "class": "",
                 "searchBar": true
             },
             searchBar: {
-                class: "form-control form-control-sm"
+                inputClass: null,
+                selectClass: null
             }
         }
 
@@ -53,7 +58,7 @@ class KalipsoTable {
 
         } else if (typeof options === 'object') {
 
-            this.options = {...defaultOptions, ...options}
+            this.options =  this.mergeObject(defaultOptions, options)
 
         } else {
 
@@ -66,6 +71,18 @@ class KalipsoTable {
         } else {
             this.bomb(this.l10n("target_selector_not_found") + ' (' + this.options.selector + ')', "warning")
         }
+    }
+    
+    mergeObject(defaultObj, overridedObj) {
+        
+        const keys = Object.keys(overridedObj)
+        let key = null
+        for (let i = 0; i < keys.length; i++) {
+            key = keys[i]
+            if (!defaultObj.hasOwnProperty(key) || typeof overridedObj[key] !== 'object') defaultObj[key] = overridedObj[key];
+            else this.mergeObject(defaultObj[key], overridedObj[key]);
+        }
+        return defaultObj;
     }
 
     // Returns translation using key according to active language.
@@ -121,25 +138,37 @@ class KalipsoTable {
         this.body() +
         this.footer()
 
+        this.eventListener()
+
     }
 
     head() {
 
-        let thead = ``
-        if (this.options.tableFooter.visible) {
+        let thead = `<thead><tr>`
 
-            thead = `<thead><tr>`
+        for (const [index, col] of Object.entries(this.options.columns)) {
+
+            thead +=  this.options.tableFooter.searchBar ? `<th>` + 
+                col.title + 
+            `</th>` : `<th>` + col.title + `</th>`
+
+        }
+
+        if (this.options.tableHeader.searchBar) {
+
+            thead += `</tr><tr>`
 
             for (const [index, col] of Object.entries(this.options.columns)) {
-
+                
                 thead +=  this.options.tableFooter.searchBar ? `<th>` + 
-                    col.title + 
+                    (! col.searchable ? col.title : this.generateSearchArea(col.searchable, col.key)) + 
                 `</th>` : `<th>` + col.title + `</th>`
 
             }
 
-            thead += `</tr></thead>`
         }
+
+        thead += `</tr></thead>`
         return thead
 
     }
@@ -153,9 +182,7 @@ class KalipsoTable {
 
             for (const [index, col] of Object.entries(this.options.columns)) {
 
-                tbody +=  this.options.tableFooter.searchBar ? `<td>` + 
-                    (! col.searchable ? col.title : this.generateSearchArea(col.searchable, col.key)) + 
-                `</td>` : `<td>` + col.title + `</td>`
+                tbody +=  `<td>` + col.title + `</td>`
 
             }
 
@@ -189,7 +216,6 @@ class KalipsoTable {
     generateSearchArea(areaDatas, key) {
 
         // number | text | date | select
-        console.log(areaDatas)
         let bar = ``
         switch (areaDatas.type) {
 
@@ -197,7 +223,7 @@ class KalipsoTable {
             case "text":
             case "date":
                 bar = `<input data-search="` + key + `" type="` + areaDatas.type + `"` + 
-                (this.options.searchBar.class !== undefined && this.options.searchBar.class ? ` class="` + this.options.searchBar.class + `" ` : ` `) +
+                (this.options.searchBar.inputClass !== undefined && this.options.searchBar.inputClass ? ` class="` + this.options.searchBar.inputClass + `" ` : ` `) +
                 (areaDatas.min !== undefined && areaDatas.min ? ` min="` + areaDatas.min + `" ` : ` `) + 
                 (areaDatas.max !== undefined && areaDatas.max ? ` max="` + areaDatas.max + `" ` : ` `) + 
                 (areaDatas.maxlenght !== undefined && areaDatas.maxlenght ? ` maxlenght="` + areaDatas.maxlenght + `" ` : ` `) + 
@@ -206,8 +232,8 @@ class KalipsoTable {
 
             case "select":
                 bar = `<select data-search="` + key + `"` + 
-                (this.options.searchBar.class !== undefined && this.options.searchBar.class ? ` class="` + this.options.searchBar.class + `" ` : ` `) +
-                `>`
+                (this.options.searchBar.selectClass !== undefined && this.options.searchBar.selectClass ? ` class="` + this.options.searchBar.selectClass + `" ` : ` `) +
+                `><option value=""></option>`
 
                 for (const [index, option] of Object.entries(areaDatas.datas)) {
                     bar += `<option value="` + option.value + `">` + option.name + `</option>`
@@ -219,5 +245,45 @@ class KalipsoTable {
 
         return bar
     }
+
+    eventListener () {
+
+        const element = document.querySelector(this.options.selector)
+
+        let searchInputs = document.querySelectorAll(this.options.selector + ' [data-search]')
+        if (searchInputs.length) {
+
+            for(let e=0;e<searchInputs.length;e++) {
+
+                if (searchInputs[e].nodeName.toLowerCase() === 'select') {
+
+                    searchInputs[e].addEventListener("change", a => {
+                        // sync select values
+                        this.fieldSynchronizer(searchInputs[e])
+                    });
+
+                } else {
+
+                    searchInputs[e].addEventListener("input", a => {
+                        // sync input values
+                        this.fieldSynchronizer(searchInputs[e])
+                    });
+                }
+                
+            }
+
+        }
+
+    }
+
+    fieldSynchronizer(field) {
+
+        const searchAttr = field.getAttribute("data-search")
+        const targetElements = document.querySelectorAll(this.options.selector + ` [data-search="` + searchAttr + `"]`)
+        targetElements.forEach( (input) => {
+            input.value = field.value
+        })
+
+    } 
 
 }

@@ -107,7 +107,7 @@ function init() {
 
 		usersTable: {
 			selector: "#usersTable",
-			fetch: "/table/users",
+			source: "/table/users",
 			columns: [ 
 				{
 					"searchable": {
@@ -146,7 +146,7 @@ function init() {
 					},
 					"orderable": true,
 					"title": "<?php echo lang('def.birth_date'); ?>",
-					"key": "email"
+					"key": "birthday"
 				},
 				{
 					"searchable": {
@@ -185,7 +185,17 @@ function init() {
 					"value": 0,
 				}
 			],
-			defaultOrder: ["id", "desc"]
+			searchBar: {
+				inputClass: "form-control form-control-sm",
+				selectClass: "form-control form-control-sm",
+			},
+			tableHeader: {
+				"searchBar": true
+			},
+			tableFooter: {
+				"visible": true,
+				"searchBar": true
+			}
 		}
 
 	}
