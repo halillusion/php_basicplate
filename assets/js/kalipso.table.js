@@ -139,6 +139,7 @@ class KalipsoTable {
     // The table structure is created.
     init (element) {
 
+        element.classList.add("kalipsoTable");
         element.innerHTML = this.head() +
         this.body() +
         this.footer()
@@ -154,9 +155,12 @@ class KalipsoTable {
 
         for (const [index, col] of Object.entries(this.options.columns)) {
 
-            thead +=  this.options.tableFooter.searchBar ? `<th>` + 
-                col.title + 
-            `</th>` : `<th>` + col.title + `</th>`
+            let thClass = 'sort'
+            if (this.options.defaultOrder[0] !== undefined && this.options.defaultOrder[0] === col.key) {
+                thClass += ` ` + this.options.defaultOrder[1]
+            }
+
+            thead +=  `<th` + (col.orderable ? ` class="` + thClass + `"` : ``) + `>` + col.title + `</th>`
 
         }
 
@@ -264,7 +268,7 @@ class KalipsoTable {
         let searchInputs = document.querySelectorAll(this.options.selector + ' [data-search]')
         if (searchInputs.length) {
 
-            for(let e=0;e<searchInputs.length;e++) {
+            for(let e=0; e < searchInputs.length; e++) {
 
                 if (searchInputs[e].nodeName.toLowerCase() === 'select') {
 
@@ -281,6 +285,45 @@ class KalipsoTable {
                     });
                 }
                 
+            }
+
+        }
+
+        let sortingTh = document.querySelectorAll(this.options.selector + ' thead th.sort')
+        if (sortingTh.length) {
+
+            for (let th = 0; th < sortingTh.length; th++) {
+                
+                sortingTh[th].addEventListener("click", a => {
+
+                    if (Array.from(sortingTh[th].classList).indexOf("asc") !== -1) { // asc
+
+                        sortingTh[th].classList.remove("asc")
+                        sortingTh[th].classList.add("desc")
+
+                    } else if (Array.from(sortingTh[th].classList).indexOf("desc") !== -1) { // desc
+
+                        sortingTh[th].classList.remove("desc")
+                        sortingTh[th].classList.add("asc")
+
+                    } else { // default
+
+                        sortingTh[th].classList.add("asc")
+
+                    }
+
+                    let thAreas =  document.querySelectorAll(this.options.selector + ' thead th.sort')
+
+                    if (thAreas.length) {
+
+                        for (let thIndex = 0; thIndex < thAreas.length; thIndex++) {
+                            if (thIndex !== th) thAreas[thIndex].classList.remove("asc", "desc")
+                        }
+
+                    }
+
+                })
+
             }
 
         }

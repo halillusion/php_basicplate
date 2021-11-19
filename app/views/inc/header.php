@@ -8,6 +8,7 @@
 		$this->meta(true);
 		assets('libs/bootstrap/css/bootstrap'.(lang('app.dir') == 'rtl' ? '.rtl' : '').'.min.css', true, true, true);
 		assets('css/app.css', true, true, true); // Basicplate Styles
+		assets('css/kalipso.table.css', true, true, true); // Basicplate Styles
 		assets('css/style.css', true, true, true); // Your Styles
 		?>
 	</head>
