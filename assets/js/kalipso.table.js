@@ -71,8 +71,10 @@ class KalipsoTable {
         } else {
             this.bomb(this.l10n("target_selector_not_found") + ' (' + this.options.selector + ')', "warning")
         }
+
     }
     
+    // Provides synchronization of setting data.
     mergeObject(defaultObj, overridedObj) {
         
         const keys = Object.keys(overridedObj)
@@ -83,6 +85,7 @@ class KalipsoTable {
             else this.mergeObject(defaultObj[key], overridedObj[key]);
         }
         return defaultObj;
+
     }
 
     // Returns translation using key according to active language.
@@ -100,6 +103,7 @@ class KalipsoTable {
         } else {
             return false
         }
+
     }
 
     // It sends an output to the console by attributes.
@@ -129,6 +133,7 @@ class KalipsoTable {
                 break;
 
         }
+
     }
 
     // The table structure is created.
@@ -142,6 +147,7 @@ class KalipsoTable {
 
     }
 
+    // Prepares the table header.
     head() {
 
         let thead = `<thead><tr>`
@@ -173,6 +179,7 @@ class KalipsoTable {
 
     }
 
+    // Prepares the table body.
     body() {
 
         let tbody = ``
@@ -192,6 +199,7 @@ class KalipsoTable {
 
     }
 
+    // Prepares the table footer.
     footer() {
 
         let tfoot = ``
@@ -213,6 +221,7 @@ class KalipsoTable {
 
     }
 
+    // Prepares search fields for in-table searches.
     generateSearchArea(areaDatas, key) {
 
         // number | text | date | select
@@ -244,8 +253,10 @@ class KalipsoTable {
         }
 
         return bar
+
     }
 
+    // Prepares event listeners so that table actions can be listened to.
     eventListener () {
 
         const element = document.querySelector(this.options.selector)
@@ -276,6 +287,7 @@ class KalipsoTable {
 
     }
 
+    // If there is more than one of the changing search fields, it ensures that all search fields are synchronized with the same data.
     fieldSynchronizer(field) {
 
         const searchAttr = field.getAttribute("data-search")
