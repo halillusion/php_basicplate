@@ -14,7 +14,6 @@ class KalipsoTable {
         this.version = '0.0.1'
         this.loading = false
         this.result = []
-        this.tempResult = []
 
         if (window.KalipsoTable === undefined) {
             window.KalipsoTable = {}
@@ -69,7 +68,8 @@ class KalipsoTable {
                 inputClass: null,
                 selectClass: null
             },
-            params: {}
+            params: [],
+            fullSearch: null
         }
 
         this.data = []
@@ -164,10 +164,40 @@ class KalipsoTable {
     }
 
     // Prepare content with options
-    prepareBody() {
+    prepareBody(push = false) {
 
         if (typeof this.options.source === 'object') { // client-side
 
+            let results = [] // this.options.source
+            if (Object.keys(this.options.params).length) { // search
+
+                this.options.source.forEach((p) => {
+                    for (const [key, value] of Object.entries(this.options.params)) {
+
+                        if (p[key] !== undefined) {
+                            let string = p[key];
+                            string = string.toString()
+                            if (string.indexOf(value) >= 0) {
+                                results.push(p)
+                            }
+                        }
+                    }
+                })
+
+            }
+
+            if (results.lenght && this.options.fullSearch) { // full search
+
+
+
+            }
+
+
+            if (this.options.order.length) { // order
+
+            }
+
+            console.log(results)
 
 
         } else { // front-side
@@ -175,8 +205,6 @@ class KalipsoTable {
 
 
         }
-
-
     }
 
     // The table structure is created.
@@ -234,10 +262,11 @@ class KalipsoTable {
     body() {
 
         let tbody = ``
-        console.log(this.result.length)
 
         if (this.result.length === 0) {
+
             tbody = `<tbody><tr><td colspan="100%" class="no_result_info">` + this.l10n("no_record") + `</td></tr></tbody>`
+
         } else {
             tbody = `<tbody>content</tbody>`
         }
@@ -385,7 +414,7 @@ class KalipsoTable {
 
                     }
 
-                    this.prepareBody()
+                    this.prepareBody(true)
 
                 })
 
@@ -406,14 +435,14 @@ class KalipsoTable {
         this.options.params[searchAttr] = field.value
 
         // clear empty string parameters
-        let tempParams = {} 
+        let tempParams = []
         for (const [key, value] of Object.entries(this.options.params)) {
 
             if (value !== "") tempParams[key] = value
         }
         this.options.params = tempParams
 
-        this.prepareBody()
+        this.prepareBody(true)
 
     }
 
