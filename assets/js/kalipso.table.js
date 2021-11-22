@@ -8,11 +8,30 @@
 
 class KalipsoTable {
 
-    // The class is started with the default options.
+    // The class is started with the default options and definitions.
     constructor (options, data = null) {
 
         this.version = '0.0.1'
+
+        if (window.KalipsoTable === undefined) {
+            window.KalipsoTable = {}
+        }
+
+        if (window.KalipsoTable.languages === undefined) {
+            window.KalipsoTable.languages = {}
+        }
+
+        window.KalipsoTable.languages["en"] = {
+            "init_option_error": "KalipsoTable cannot be initialized without default options!",
+            "target_selector_not_found": "Target selector not found!",
+
+            "all": "All",
+            "sorting_asc": "Sorting (A-Z)",
+            "sorting_desc": "Sorting (Z-A)",
+        }
+
         let defaultOptions = {
+            language: "en",
             columns: [
                 {
                     "searchable": {
@@ -25,7 +44,7 @@ class KalipsoTable {
                     "key": "id"
                 }
             ],
-            defaultOrder: ["id", "asc"],
+            order: ["id", "asc"],
             source: null, // object or string (url)
             lengthOptions: [
                 {"name": "10", "value": 10, "default":true},
@@ -45,11 +64,12 @@ class KalipsoTable {
             searchBar: {
                 inputClass: null,
                 selectClass: null
-            }
+            },
+            params: {}
         }
 
         this.data = []
-        this.bomb( this.version, "debug" )
+        // this.bomb( this.version, "debug" )
 
         if (typeof options === 'string') {
 
@@ -69,7 +89,7 @@ class KalipsoTable {
         if (this.options.selector !== undefined && document.querySelector(this.options.selector)) {
             this.init(document.querySelector(this.options.selector))
         } else {
-            this.bomb(this.l10n("target_selector_not_found") + ' (' + this.options.selector + ')', "warning")
+            // this.bomb(this.l10n("target_selector_not_found") + ' (' + this.options.selector + ')', "warning")
         }
 
     }
@@ -91,15 +111,10 @@ class KalipsoTable {
     // Returns translation using key according to active language.
     l10n (key) {
 
-        let languageDefinitions = {
-            "init_option_error": "KalipsoTable cannot be initialized without default options!",
-            "target_selector_not_found": "Target selector not found!",
+        const dir = this.options !== undefined ? this.options.language : "en"
 
-            "all": "All"
-        }
-
-        if (languageDefinitions[key] !== undefined) {
-            return languageDefinitions[key]
+        if (window.KalipsoTable.languages[dir][key] !== undefined) {
+            return window.KalipsoTable.languages[dir][key]
         } else {
             return false
         }
@@ -156,11 +171,13 @@ class KalipsoTable {
         for (const [index, col] of Object.entries(this.options.columns)) {
 
             let thClass = 'sort'
-            if (this.options.defaultOrder[0] !== undefined && this.options.defaultOrder[0] === col.key) {
-                thClass += ` ` + this.options.defaultOrder[1]
+            let sortingTitle = this.l10n("sorting_asc")
+            if (this.options.order[0] !== undefined && this.options.order[0] === col.key) {
+                thClass += ` ` + this.options.order[1]
+                sortingTitle = this.l10n("sorting_" + (this.options.order[1] === "desc" ? "asc" : "desc"))
             }
 
-            thead +=  `<th` + (col.orderable ? ` class="` + thClass + `"` : ``) + `>` + col.title + `</th>`
+            thead +=  `<th` + (col.orderable ? ` class="` + thClass + `" data-sort="` + col.key + `" title="` + sortingTitle + `"` : ``) + `>` + col.title + `</th>`
 
         }
 
@@ -300,15 +317,21 @@ class KalipsoTable {
 
                         sortingTh[th].classList.remove("asc")
                         sortingTh[th].classList.add("desc")
+                        sortingTh[th].setAttribute("title", this.l10n("sorting_asc"))
+                        this.options.order = [sortingTh[th].getAttribute("data-sort"), "desc"]
 
                     } else if (Array.from(sortingTh[th].classList).indexOf("desc") !== -1) { // desc
 
                         sortingTh[th].classList.remove("desc")
                         sortingTh[th].classList.add("asc")
+                        sortingTh[th].setAttribute("title", this.l10n("sorting_desc"))
+                        this.options.order = [sortingTh[th].getAttribute("data-sort"), "asc"]
 
                     } else { // default
 
                         sortingTh[th].classList.add("asc")
+                        sortingTh[th].setAttribute("title", this.l10n("sorting_desc"))
+                        this.options.order = [sortingTh[th].getAttribute("data-sort"), "asc"]
 
                     }
 
@@ -338,6 +361,17 @@ class KalipsoTable {
         targetElements.forEach( (input) => {
             input.value = field.value
         })
+        this.options.params[searchAttr] = field.value
+
+        // clear empty string parameters
+        let tempParams = {} 
+        for (const [key, value] of Object.entries(this.options.params)) {
+
+            if (value !== "") tempParams[key] = value
+        }
+        this.options.params = tempParams
+
+        console.log(this.options.params)
 
     } 
 
