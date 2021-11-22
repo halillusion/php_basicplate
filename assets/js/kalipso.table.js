@@ -12,6 +12,9 @@ class KalipsoTable {
     constructor (options, data = null) {
 
         this.version = '0.0.1'
+        this.loading = false
+        this.result = []
+        this.tempResult = []
 
         if (window.KalipsoTable === undefined) {
             window.KalipsoTable = {}
@@ -28,6 +31,7 @@ class KalipsoTable {
             "all": "All",
             "sorting_asc": "Sorting (A-Z)",
             "sorting_desc": "Sorting (Z-A)",
+            "no_record": "No record!"
         }
 
         let defaultOptions = {
@@ -95,14 +99,22 @@ class KalipsoTable {
     }
     
     // Provides synchronization of setting data.
-    mergeObject(defaultObj, overridedObj) {
+    mergeObject(defaultObj, overridedObj, key = null) {
         
-        const keys = Object.keys(overridedObj)
-        let key = null
-        for (let i = 0; i < keys.length; i++) {
-            key = keys[i]
-            if (!defaultObj.hasOwnProperty(key) || typeof overridedObj[key] !== 'object') defaultObj[key] = overridedObj[key];
-            else this.mergeObject(defaultObj[key], overridedObj[key]);
+        if (defaultObj !== null) {
+            const keys = Object.keys(overridedObj)
+            let key = null
+
+            for (let i = 0; i < keys.length; i++) {
+                key = keys[i]
+                if (! defaultObj.hasOwnProperty(key) || typeof overridedObj[key] !== 'object') defaultObj[key] = overridedObj[key];
+                else {
+                    defaultObj[key] = this.mergeObject(defaultObj[key], overridedObj[key], key);
+                }
+            }
+
+        } else {
+            defaultObj = overridedObj
         }
         return defaultObj;
 
@@ -151,8 +163,26 @@ class KalipsoTable {
 
     }
 
+    // Prepare content with options
+    prepareBody() {
+
+        if (typeof this.options.source === 'object') { // client-side
+
+
+
+        } else { // front-side
+
+
+
+        }
+
+
+    }
+
     // The table structure is created.
     init (element) {
+
+        this.prepareBody()
 
         element.classList.add("kalipsoTable");
         element.innerHTML = this.head() +
@@ -188,8 +218,8 @@ class KalipsoTable {
             for (const [index, col] of Object.entries(this.options.columns)) {
                 
                 thead +=  this.options.tableFooter.searchBar ? `<th>` + 
-                    (! col.searchable ? col.title : this.generateSearchArea(col.searchable, col.key)) + 
-                `</th>` : `<th>` + col.title + `</th>`
+                    (! col.searchable ? `` : this.generateSearchArea(col.searchable, col.key)) + 
+                `</th>` : `<th></th>`
 
             }
 
@@ -204,6 +234,15 @@ class KalipsoTable {
     body() {
 
         let tbody = ``
+        console.log(this.result.length)
+
+        if (this.result.length === 0) {
+            tbody = `<tbody><tr><td colspan="100%" class="no_result_info">` + this.l10n("no_record") + `</td></tr></tbody>`
+        } else {
+            tbody = `<tbody>content</tbody>`
+        }
+        /*
+
         if (this.options.tableFooter.visible) {
 
             tbody = `<tbody><tr>`
@@ -216,6 +255,7 @@ class KalipsoTable {
 
             tbody += `</tr></tbody>`
         }
+        */
         return tbody
 
     }
@@ -269,7 +309,7 @@ class KalipsoTable {
                     bar += `<option value="` + option.value + `">` + option.name + `</option>`
                 }
 
-                bar += `</select`
+                bar += `</select>`
                 break;
         }
 
@@ -345,6 +385,8 @@ class KalipsoTable {
 
                     }
 
+                    this.prepareBody()
+
                 })
 
             }
@@ -371,8 +413,8 @@ class KalipsoTable {
         }
         this.options.params = tempParams
 
-        console.log(this.options.params)
+        this.prepareBody()
 
-    } 
+    }
 
 }

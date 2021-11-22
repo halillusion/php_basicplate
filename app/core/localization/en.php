@@ -169,7 +169,8 @@ return [
 		'logs'								=> 'Logs',
 		'settings'							=> 'Settings',
 		'action'							=> 'Action',
-		'all'								=> 'All'
+		'all'								=> 'All',
+		'status'							=> 'Status',
 	],
 
 ];

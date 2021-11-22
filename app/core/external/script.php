@@ -107,7 +107,16 @@ function init() {
 
 		usersTable: {
 			selector: "#usersTable",
-			source: "/table/users",
+			source: [
+				{
+					"id": 1,
+					"username": "test1",
+					"email": "test1@example.com",
+					"birthday": "12.12.2021",
+					"status": "active",
+					"action": "action"
+				}
+			],
 			columns: [ 
 				{
 					"searchable": {
@@ -157,6 +166,12 @@ function init() {
 							{"value": 'deleted', "name": "Deleted"}
 						],
 					},
+					"orderable": false,
+					"title": "<?php echo lang('def.status'); ?>",
+					"key": "status"
+				},
+				{
+					"searchable": false,
 					"orderable": false,
 					"title": "<?php echo lang('def.action'); ?>",
 					"key": "action"

@@ -169,7 +169,8 @@ return [
 		'logs'								=> 'Kayıtlar',
 		'settings'							=> 'Ayarlar',
 		'action'							=> 'İşlem',
-		'all'								=> 'Tümü'
+		'all'								=> 'Tümü',
+		'status'							=> 'Durum',
 	],
 
 ];
