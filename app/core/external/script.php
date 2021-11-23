@@ -107,6 +107,7 @@ function init() {
 
 		usersTable: {
 			selector: "#usersTable",
+			language: "tr",
 			source: [
 				{
 					"id": 1,
@@ -142,7 +143,7 @@ function init() {
 				},
 				{
 					"id": 3,
-					"username": "test3",
+					"username": "<div>test3</div>",
 					"email": "test3@example.com",
 					"birthday": "10.12.2021",
 					"status": "passive",
@@ -180,10 +181,8 @@ function init() {
 				},
 				{
 					"searchable": {
-						"type": "date",
-						"maxlenght": 50,
-						"min": "2021-01-01",
-						"max": "2021-12-31"
+						"type": "text",
+						"maxlenght": 50
 					},
 					"orderable": true,
 					"title": "<?php echo lang('def.birth_date'); ?>",
@@ -198,7 +197,7 @@ function init() {
 							{"value": 'deleted', "name": "Deleted"}
 						],
 					},
-					"orderable": false,
+					"orderable": true,
 					"title": "<?php echo lang('def.status'); ?>",
 					"key": "status"
 				},
@@ -232,9 +231,17 @@ function init() {
 					"value": 0,
 				}
 			],
-			searchBar: {
+			customize: {
+				tableWrapClass: "table-responsive",
+				tableClass: "table",
+				tableHeadClass: "",
+				tableBodyClass: "",
+				tableFooterClass: "",
 				inputClass: "form-control form-control-sm",
 				selectClass: "form-control form-control-sm",
+				paginationUlClass: 'pagination',
+                paginationLiClass: 'page-item',
+                paginationAClass: 'page-link'
 			},
 			tableHeader: {
 				"searchBar": true

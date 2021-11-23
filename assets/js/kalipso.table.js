@@ -35,6 +35,13 @@ class KalipsoTable {
 
         let defaultOptions = {
             language: "en",
+            schema: '<div class="table-row">' + 
+                '<div class="column-25">[L]</div>' + // Listing option select
+                '<div class="column-25">[S]</div>' + // Full search input
+                '<div class="column-100">[T]</div>' + // Table
+                '<div class="column-50">[I]</div>' + // Info
+                '<div class="column-50">[P]</div>' + // Pagination
+            '</div>',
             columns: [
                 {
                     "searchable": {
@@ -56,24 +63,30 @@ class KalipsoTable {
             ],
             selector: null,
             tableHeader: {
-                "class": "",
-                "searchBar": true
+                searchBar: true
+            },
+            customize: {
+                tableWrapClass: "kalipso-table-wrapper",
+                tableClass: "kalipso-table",
+                tableHeadClass: null,
+                tableBodyClass: null,
+                tableFooterClass: null,
+                inputClass: 'form-input',
+                selectClass: 'form-input',
+                paginationUlClass: 'paginate',
+                paginationLiClass: 'paginate-item',
+                paginationAClass: 'paginate-item-link'
             },
             tableFooter: {
                 "visible": false,
-                "class": "",
                 "searchBar": true
-            },
-            searchBar: {
-                inputClass: null,
-                selectClass: null
             },
             params: [],
             fullSearch: null
         }
 
         this.data = []
-        // this.bomb( this.version, "debug" )
+        this.bomb( this.version, "debug" )
 
         if (typeof options === 'string') {
 
@@ -93,7 +106,7 @@ class KalipsoTable {
         if (this.options.selector !== undefined && document.querySelector(this.options.selector)) {
             this.init(document.querySelector(this.options.selector))
         } else {
-            // this.bomb(this.l10n("target_selector_not_found") + ' (' + this.options.selector + ')', "warning")
+            this.bomb(this.l10n("target_selector_not_found") + ' (' + this.options.selector + ')', "debug")
         }
 
     }
@@ -124,6 +137,10 @@ class KalipsoTable {
     l10n (key) {
 
         const dir = this.options !== undefined ? this.options.language : "en"
+
+        if (window.KalipsoTable.languages[dir] === undefined) {
+            this.bomb("Language definitions not found for " + dir, "error")
+        }
 
         if (window.KalipsoTable.languages[dir][key] !== undefined) {
             return window.KalipsoTable.languages[dir][key]
@@ -212,24 +229,22 @@ class KalipsoTable {
                 results = results.sort((a, b) => {
                     const key = this.options.order[0]
                     if (this.options.order[1] === 'desc') {
-                        return b[key] > a[key] ? 1 : -1
+                        return this.strip(b[key]) > this.strip(a[key]) ? 1 : -1
                     } else {
-                        return a[key] > b[key] ? 1 : -1
+                        return this.strip(a[key]) > this.strip(b[key]) ? 1 : -1
                     }
                 })
 
             }
 
-            if (results.length) {
-                this.result = results
-            }
+            this.result = results
 
             if (push) {
                 document.querySelector(this.options.selector + ' tbody').innerHTML = this.body(false)
             }
 
 
-        } else { // front-side
+        } else { // server-side
 
 
 
@@ -253,7 +268,7 @@ class KalipsoTable {
     // Prepares the table header.
     head() {
 
-        let thead = `<thead><tr>`
+        let thead = `<thead`+(this.options.customize.tableHeadClass ? ` class="` + this.options.customize.tableHeadClass + `"` : ``)+`><tr>`
 
         for (const [index, col] of Object.entries(this.options.columns)) {
 
@@ -288,7 +303,7 @@ class KalipsoTable {
     }
 
     // Prepares the table body.
-    body(withTbodyTag = true) {
+    body(withBodyTag = true) {
 
         let tbody = ``
 
@@ -311,7 +326,7 @@ class KalipsoTable {
             })
 
         }
-        return withTbodyTag ? `<tbody>` + tbody + `</tbody>` : tbody
+        return withBodyTag ? `<tbody`+(this.options.customize.tableBodyClass ? ` class="` + this.options.customize.tableBodyClass + `"` : ``)+`>` + tbody + `</tbody>` : tbody
 
     }
 
@@ -321,7 +336,7 @@ class KalipsoTable {
         let tfoot = ``
         if (this.options.tableFooter.visible) {
 
-            tfoot = `<tfoot><tr>`
+            tfoot = `<tfoot`+(this.options.customize.tableFooterClass ? ` class="` + this.options.customize.tableFooterClass + `"` : ``)+`><tr>`
 
             for (const [index, col] of Object.entries(this.options.columns)) {
                 
@@ -337,6 +352,14 @@ class KalipsoTable {
 
     }
 
+    // Clean tags.
+    strip(text) {
+
+        let tmp = document.createElement("DIV");
+        tmp.innerHTML = text;
+        return tmp.textContent || tmp.innerText || "";
+    }
+
     // Prepares search fields for in-table searches.
     generateSearchArea(areaDatas, key) {
 
@@ -348,7 +371,7 @@ class KalipsoTable {
             case "text":
             case "date":
                 bar = `<input data-search="` + key + `" type="` + areaDatas.type + `"` + 
-                (this.options.searchBar.inputClass !== undefined && this.options.searchBar.inputClass ? ` class="` + this.options.searchBar.inputClass + `" ` : ` `) +
+                (this.options.customize.inputClass !== undefined && this.options.customize.inputClass ? ` class="` + this.options.customize.inputClass + `" ` : ` `) +
                 (areaDatas.min !== undefined && areaDatas.min ? ` min="` + areaDatas.min + `" ` : ` `) + 
                 (areaDatas.max !== undefined && areaDatas.max ? ` max="` + areaDatas.max + `" ` : ` `) + 
                 (areaDatas.maxlenght !== undefined && areaDatas.maxlenght ? ` maxlenght="` + areaDatas.maxlenght + `" ` : ` `) + 
@@ -357,7 +380,7 @@ class KalipsoTable {
 
             case "select":
                 bar = `<select data-search="` + key + `"` + 
-                (this.options.searchBar.selectClass !== undefined && this.options.searchBar.selectClass ? ` class="` + this.options.searchBar.selectClass + `" ` : ` `) +
+                (this.options.customize.selectClass !== undefined && this.options.customize.selectClass ? ` class="` + this.options.customize.selectClass + `" ` : ` `) +
                 `><option value=""></option>`
 
                 for (const [index, option] of Object.entries(areaDatas.datas)) {
