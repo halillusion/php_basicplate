@@ -183,21 +183,50 @@ class KalipsoTable {
                         }
                     }
                 })
+            } else {
+                results = this.options.source
+            }
+
+            if (results.length && this.options.fullSearch) { // full search
+                // will return
+                /*
+                results.forEach((p) => {
+                    for (const [key, value] of Object.entries(this.options.columns)) {
+
+                        console.log(key)
+                        if (p[key] !== undefined) {
+                            let string = p[key];
+                            string = string.toString()
+                            if (string.indexOf(value) >= 0) {
+                                results.push(p)
+                            }
+                        }
+                    }
+                })*/
 
             }
 
-            if (results.lenght && this.options.fullSearch) { // full search
 
+            if (results.length && this.options.order.length) { // order
 
+                results = results.sort((a, b) => {
+                    const key = this.options.order[0]
+                    if (this.options.order[1] === 'desc') {
+                        return b[key] > a[key] ? 1 : -1
+                    } else {
+                        return a[key] > b[key] ? 1 : -1
+                    }
+                })
 
             }
 
-
-            if (this.options.order.length) { // order
-
+            if (results.length) {
+                this.result = results
             }
 
-            console.log(results)
+            if (push) {
+                document.querySelector(this.options.selector + ' tbody').innerHTML = this.body(false)
+            }
 
 
         } else { // front-side
@@ -259,33 +288,30 @@ class KalipsoTable {
     }
 
     // Prepares the table body.
-    body() {
+    body(withTbodyTag = true) {
 
         let tbody = ``
 
         if (this.result.length === 0) {
 
-            tbody = `<tbody><tr><td colspan="100%" class="no_result_info">` + this.l10n("no_record") + `</td></tr></tbody>`
+            tbody = `<tr><td colspan="100%" class="no_result_info">` + this.l10n("no_record") + `</td></tr>`
 
         } else {
-            tbody = `<tbody>content</tbody>`
+
+            this.result.forEach((row) => {
+
+                tbody += `<tr>`
+                for (const [index, col] of Object.entries(this.options.columns)) {
+                
+                    if (row[col.key] !== undefined) tbody += `<td>` + row[col.key] + `</td>`
+                    else tbody += `<td></td>`
+
+                }
+                tbody += `</tr>`
+            })
+
         }
-        /*
-
-        if (this.options.tableFooter.visible) {
-
-            tbody = `<tbody><tr>`
-
-            for (const [index, col] of Object.entries(this.options.columns)) {
-
-                tbody +=  `<td>` + col.title + `</td>`
-
-            }
-
-            tbody += `</tr></tbody>`
-        }
-        */
-        return tbody
+        return withTbodyTag ? `<tbody>` + tbody + `</tbody>` : tbody
 
     }
 

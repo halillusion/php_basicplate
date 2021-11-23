@@ -112,8 +112,40 @@ function init() {
 					"id": 1,
 					"username": "test1",
 					"email": "test1@example.com",
-					"birthday": "12.12.2021",
+					"birthday": "07.07.2021",
 					"status": "active",
+					"action": "action"
+				},
+				{
+					"id": 5,
+					"username": "test5",
+					"email": "test5@example.com",
+					"birthday": "01.01.2021",
+					"status": "passive",
+					"action": "action"
+				},
+				{
+					"id": 4,
+					"username": "test4",
+					"email": "test4@example.com",
+					"birthday": "05.05.2021",
+					"status": "deleted",
+					"action": "action"
+				},
+				{
+					"id": 2,
+					"username": "test2",
+					"email": "test2@example.com",
+					"birthday": "09.12.2021",
+					"status": "active",
+					"action": "action"
+				},
+				{
+					"id": 3,
+					"username": "test3",
+					"email": "test3@example.com",
+					"birthday": "10.12.2021",
+					"status": "passive",
 					"action": "action"
 				}
 			],

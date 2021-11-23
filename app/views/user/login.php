@@ -10,11 +10,11 @@
 								</div>
 								<?php createCSRF(); ?>
 								<div class="form-floating mb-3">
-									<input type="text" class="form-control" id="email" name="email" placeholder="name@example.com" required>
+									<input autocomplete="username" type="text" class="form-control" id="email" name="email" placeholder="name@example.com" required>
 									<label for="email"><?php echo lang('def.email_or_username'); ?></label>
 								</div>
 								<div class="form-floating mb-3">
-									<input type="password" class="form-control" id="pass" name="password" placeholder="<?php echo lang('def.password'); ?>" required>
+									<input autocomplete="current-password" type="password" class="form-control" id="pass" name="password" placeholder="<?php echo lang('def.password'); ?>" required>
 									<label for="pass"><?php echo lang('def.password'); ?></label>
 								</div>
 								<div class="d-grid mb-3">
