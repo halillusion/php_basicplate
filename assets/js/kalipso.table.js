@@ -257,16 +257,17 @@ class KalipsoTable {
         this.prepareBody()
 
         let schema = this.options.schema
-
-        let table = `<div`+(this.options.customize.tableWrapClass ? ` class="` + this.options.customize.tableWrapClass + `"` : ``)+`>` + 
+        const table = `<div`+(this.options.customize.tableWrapClass ? ` class="` + this.options.customize.tableWrapClass + `"` : ``)+`>` + 
             `<table`+(this.options.customize.tableClass ? ` class="` + this.options.customize.tableClass + `"` : ``) + `>` +
                 this.body() +
                 this.footer() +
             `</table>` + 
         `</div>`
+        const sorting = this.sorting()
+        schema = schema.replace("[T]", table)
+        schema = schema.replace("[L]", sorting)
 
         console.log(schema)
-        console.log(table)
         return
 
 
@@ -278,6 +279,17 @@ class KalipsoTable {
 
         this.eventListener()
 
+    }
+
+    sorting () {
+
+        let sortingDom = `<select data-perpage>` +
+
+        this.options
+
+        sortingDom += `</select>`
+
+        return sortingDom
     }
 
     // Prepares the table header.
