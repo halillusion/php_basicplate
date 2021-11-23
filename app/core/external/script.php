@@ -107,7 +107,7 @@ function init() {
 
 		usersTable: {
 			selector: "#usersTable",
-			language: "tr",
+			language: "en",
 			source: [
 				{
 					"id": 1,

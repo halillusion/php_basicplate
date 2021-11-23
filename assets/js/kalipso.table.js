@@ -256,6 +256,21 @@ class KalipsoTable {
 
         this.prepareBody()
 
+        let schema = this.options.schema
+
+        let table = `<div`+(this.options.customize.tableWrapClass ? ` class="` + this.options.customize.tableWrapClass + `"` : ``)+`>` + 
+            `<table`+(this.options.customize.tableClass ? ` class="` + this.options.customize.tableClass + `"` : ``) + `>` +
+                this.body() +
+                this.footer() +
+            `</table>` + 
+        `</div>`
+
+        console.log(schema)
+        console.log(table)
+        return
+
+
+
         element.classList.add("kalipsoTable");
         element.innerHTML = this.head() +
         this.body() +

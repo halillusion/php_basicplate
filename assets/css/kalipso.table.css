@@ -1,13 +1,13 @@
-table.kalipsoTable {
+table.kalipso-table {
 	
 }
 
-table.kalipsoTable thead th.sort {
+table.kalipso-table thead th.sort {
 	position: relative;
 	cursor: pointer;
 }
 
-table.kalipsoTable thead th.sort:before {
+table.kalipso-table thead th.sort:before {
 	position: absolute;
 	width: 1.2rem;
 	height: 1.2rem;
@@ -21,7 +21,7 @@ table.kalipsoTable thead th.sort:before {
 	transition: 0.1s ease-out;
 }
 
-table.kalipsoTable thead th.sort:after {
+table.kalipso-table thead th.sort:after {
 	position: absolute;
 	width: 1.2rem;
 	height: 1.2rem;
@@ -35,10 +35,10 @@ table.kalipsoTable thead th.sort:after {
 	transition: 0.1s ease-out;
 }
 
-table.kalipsoTable thead th.sort.asc:before {
+table.kalipso-table thead th.sort.asc:before {
 	opacity: 1;
 }
 
-table.kalipsoTable thead th.sort.desc:after {
+table.kalipso-table thead th.sort.desc:after {
 	opacity: 1;
 }
