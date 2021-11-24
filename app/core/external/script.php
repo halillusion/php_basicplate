@@ -233,7 +233,7 @@ function init() {
 			],
 			customize: {
 				tableWrapClass: "table-responsive",
-				tableClass: "table",
+				tableClass: "table table-bordered",
 				tableHeadClass: "",
 				tableBodyClass: "",
 				tableFooterClass: "",

@@ -258,7 +258,8 @@ class KalipsoTable {
 
         let schema = this.options.schema
         const table = `<div`+(this.options.customize.tableWrapClass ? ` class="` + this.options.customize.tableWrapClass + `"` : ``)+`>` + 
-            `<table`+(this.options.customize.tableClass ? ` class="` + this.options.customize.tableClass + `"` : ``) + `>` +
+            `<table`+(this.options.customize.tableClass ? ` class="kalipso-table ` + this.options.customize.tableClass + `"` : ` class="kalipso-table"`) + `>` +
+                this.head() +
                 this.body() +
                 this.footer() +
             `</table>` + 
@@ -267,15 +268,8 @@ class KalipsoTable {
         schema = schema.replace("[T]", table)
         schema = schema.replace("[L]", sorting)
 
-        console.log(schema)
-        return
 
-
-
-        element.classList.add("kalipsoTable");
-        element.innerHTML = this.head() +
-        this.body() +
-        this.footer()
+        element.innerHTML = schema
 
         this.eventListener()
 
