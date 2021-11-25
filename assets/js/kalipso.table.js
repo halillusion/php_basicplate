@@ -57,9 +57,6 @@ class KalipsoTable {
             order: ["id", "asc"],
             source: null, // object or string (url)
             lengthOptions: [
-                {"name": "10", "value": 10, "default":true},
-                {"name": "10", "value": 50},
-                {"name": this.l10n("all"), "value": 0}
             ],
             selector: null,
             tableHeader: {
@@ -277,11 +274,29 @@ class KalipsoTable {
 
     sorting () {
 
-        let sortingDom = `<select data-perpage>` +
+        let sortingDom = ``
 
-        this.options
+        if (this.options.lengthOptions.length) {
+            return
+            sortingDom = []
+            let defaultSelected = false
+            for (let i = 0; i < this.options.lengthOptions.length; i++) {
 
-        sortingDom += `</select>`
+                let selected = ``
+                if (this.options.lengthOptions[i].default !== undefined && this.options.lengthOptions[i].default) {
+                    defaultSelected = this.options.lengthOptions[i].value
+                    selected = ` selected`
+                }
+
+                sortingDom.push(`<option value="` + this.options.lengthOptions[i].value + `"` + selected + `>` + this.options.lengthOptions[i].name + `</option>`)
+            }
+
+            if (! defaultSelected) {
+                sortingDom[0]
+            }
+
+            sortingDom = `<select data-perpage></select>`
+        }
 
         return sortingDom
     }
