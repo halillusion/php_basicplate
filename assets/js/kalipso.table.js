@@ -80,7 +80,8 @@ class KalipsoTable {
             },
             params: [],
             pageLenght: 0,
-            fullSearch: true
+            fullSearch: true,
+            fullSearchParam: ""
         }
 
         this.data = []
@@ -190,7 +191,7 @@ class KalipsoTable {
                     for (const [key, value] of Object.entries(this.options.params)) {
 
                         if (p[key] !== undefined) {
-                            let string = p[key];
+                            let string = p[key]
                             string = string.toString()
                             if (string.indexOf(value) >= 0) {
                                 results.push(p)
@@ -202,22 +203,22 @@ class KalipsoTable {
                 results = this.options.source
             }
 
-            if (results.length && this.options.fullSearch) { // full search
-                // will return
-                /*
+            if (results.length && this.options.fullSearch && this.options.fullSearchParam) { // full search
+                
                 results.forEach((p) => {
                     for (const [key, value] of Object.entries(this.options.columns)) {
 
-                        console.log(key)
                         if (p[key] !== undefined) {
                             let string = p[key];
+                            console.
                             string = string.toString()
                             if (string.indexOf(value) >= 0) {
                                 results.push(p)
+                                break;
                             }
                         }
                     }
-                })*/
+                })
 
             }
 
@@ -280,12 +281,15 @@ class KalipsoTable {
 
         let area = ``
         if (this.options.fullSearch) {
-
             area = `<input data-full-search type="text" class="` + this.options.customize.inputClass + `"/>`
-
         }
-
         return area
+    }
+
+    fullSearch(param) {
+
+        this.options.fullSearchParam = param
+        this.prepareBody(true)
 
     }
 
@@ -486,6 +490,20 @@ class KalipsoTable {
                 
             }
 
+        }
+
+        if (this.options.fullSearch) {
+
+            let searchInput = document.querySelector(this.options.selector + ' [data-full-search]')
+            if (searchInput) {
+                searchInput.addEventListener("change", a => {
+                    this.fullSearch(searchInput.value)
+                })
+
+                searchInput.addEventListener("input", a => {
+                    this.fullSearch(searchInput.value)
+                })
+            }
         }
 
         let sortingTh = document.querySelectorAll(this.options.selector + ' thead th.sort')

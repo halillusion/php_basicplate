@@ -13,12 +13,16 @@
 
 .table-row .column-25 > input,
 .table-row .column-50 > input,
-.table-row .column-100 > input,
+.table-row .column-100 > input {
+    width: 100%;
+    max-width: 15rem
+}
+
 .table-row .column-25 > select,
 .table-row .column-50 > select,
 .table-row .column-100 > select {
     width: 100%;
-    max-width: 15rem
+    max-width: 10rem
 }
 
 .table-row .column-25 {
