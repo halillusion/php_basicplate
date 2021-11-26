@@ -1,3 +1,45 @@
+.table-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.table-row .column-25,
+.table-row .column-50,
+.table-row .column-100 {
+    padding-top: 0.1rem;
+    padding-bottom: 0.1rem;
+}
+
+.table-row .column-25 > input,
+.table-row .column-50 > input,
+.table-row .column-100 > input,
+.table-row .column-25 > select,
+.table-row .column-50 > select,
+.table-row .column-100 > select {
+    width: 100%;
+    max-width: 15rem
+}
+
+.table-row .column-25 {
+    flex: 0 0 auto;
+    width: 25%;
+}
+
+.table-row .column-50 {
+    flex: 0 0 auto;
+    width: 50%;
+}
+
+.table-row .column-100 {
+    flex: 0 0 auto;
+    width: 100%;
+}
+
+.table-row input[data-full-search] {
+    margin-left: auto;
+}
+
 table.kalipso-table {
 	
 }

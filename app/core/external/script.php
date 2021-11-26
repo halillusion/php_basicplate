@@ -223,10 +223,6 @@ function init() {
 					"default": true
 				},
 				{
-					"name": "100",
-					"value": 100,
-				},
-				{
 					"name": "<?php echo lang('def.all'); ?>",
 					"value": 0,
 				}

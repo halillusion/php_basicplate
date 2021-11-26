@@ -79,7 +79,8 @@ class KalipsoTable {
                 "searchBar": true
             },
             params: [],
-            fullSearch: null
+            pageLenght: 0,
+            fullSearch: true
         }
 
         this.data = []
@@ -252,6 +253,8 @@ class KalipsoTable {
     init (element) {
 
         this.prepareBody()
+        const sorting = this.sorting()
+        const fullSearch = this.fullSearchArea()
 
         let schema = this.options.schema
         const table = `<div`+(this.options.customize.tableWrapClass ? ` class="` + this.options.customize.tableWrapClass + `"` : ``)+`>` + 
@@ -261,9 +264,10 @@ class KalipsoTable {
                 this.footer() +
             `</table>` + 
         `</div>`
-        const sorting = this.sorting()
+        
         schema = schema.replace("[T]", table)
         schema = schema.replace("[L]", sorting)
+        schema = schema.replace("[S]", fullSearch)
 
 
         element.innerHTML = schema
@@ -272,30 +276,54 @@ class KalipsoTable {
 
     }
 
+    fullSearchArea() {
+
+        let area = ``
+        if (this.options.fullSearch) {
+
+            area = `<input data-full-search type="text" class="` + this.options.customize.inputClass + `"/>`
+
+        }
+
+        return area
+
+    }
+
     sorting () {
 
         let sortingDom = ``
 
         if (this.options.lengthOptions.length) {
-            return
-            sortingDom = []
             let defaultSelected = false
-            for (let i = 0; i < this.options.lengthOptions.length; i++) {
+            let selected = ``
 
-                let selected = ``
+            sortingDom = `<select data-perpage>`
+
+            for (let i = 0; i < this.options.lengthOptions.length; i++) {
                 if (this.options.lengthOptions[i].default !== undefined && this.options.lengthOptions[i].default) {
                     defaultSelected = this.options.lengthOptions[i].value
+                }
+            }
+
+            for (let i = 0; i < this.options.lengthOptions.length; i++) {
+
+                const val = this.options.lengthOptions[i].value.toString()
+                const name = this.options.lengthOptions[i].name
+                selected = ``
+
+                if (defaultSelected === this.options.lengthOptions[i].value || (defaultSelected === false && i === 0)) {
                     selected = ` selected`
+                    if (defaultSelected === false && i === 0) {
+                        defaultSelected = this.options.lengthOptions[i].value
+                    }
                 }
 
-                sortingDom.push(`<option value="` + this.options.lengthOptions[i].value + `"` + selected + `>` + this.options.lengthOptions[i].name + `</option>`)
+                sortingDom = sortingDom.concat(`<option value="` + val + `"` + selected + `>` + name + `</option>`)
             }
 
-            if (! defaultSelected) {
-                sortingDom[0]
-            }
+            sortingDom = sortingDom.concat(`</select>`)
 
-            sortingDom = `<select data-perpage></select>`
+            this.pageLenght = defaultSelected
         }
 
         return sortingDom
