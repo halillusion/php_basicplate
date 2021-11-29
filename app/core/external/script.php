@@ -214,6 +214,10 @@ function init() {
 					"value": 10,
 				},
 				{
+					"name": "1",
+					"value": 1,
+				},
+				{
 					"name": "50",
 					"value": 50,
 				},

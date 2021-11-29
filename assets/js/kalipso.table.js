@@ -275,6 +275,11 @@ class KalipsoTable {
     pagination(withParent = true) {
 
         let pagination = ``
+        let page = this.options.page
+
+        let pageCount = Math.ceil(this.options.totalRecord / this.options.pageLenght)
+
+        console.log(pageCount)
 
         if (this.result && this.result.length !== 0) {
             pagination = `<ul` + (this.options.customize.paginationUlClass ? ` class="` + this.options.customize.paginationUlClass + `"` : ``) + `>
@@ -286,7 +291,7 @@ class KalipsoTable {
             pagination = `tyutyu`;
         }
 
-        return withParent ? `<span class="kalipso-pagination" data-pagination>` + pagination + `</span>` : pagination
+        return withParent ? `<nav class="kalipso-pagination" data-pagination>` + pagination + `</nav>` : pagination
     }
 
     // The table structure is created.
@@ -380,7 +385,7 @@ class KalipsoTable {
 
             sortingDom = sortingDom.concat(`</select>`)
 
-            this.pageLenght = defaultSelected
+            this.options.pageLenght = defaultSelected
         }
 
         return sortingDom

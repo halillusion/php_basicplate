@@ -89,6 +89,13 @@ table.kalipso-table thead th.sort.desc:after {
 	opacity: 1;
 }
 
+.kalipso-pagination {
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    flex-direction: row;
+}
+
 .kalipso-pagination ul {
 	list-style-type: none;
 	margin: 0;
