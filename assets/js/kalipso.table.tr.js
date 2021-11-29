@@ -22,7 +22,9 @@
         "all": "Tümü",
         "sorting_asc": "Sıralama (A-Z)",
         "sorting_desc": "Sıralama (Z-A)",
-        "no_record": "Kayıt yok!"
+        "no_record": "Kayıt yok!",
+        "out_of_x_records": "[X] kayıt içinden",
+        "showing_x_out_of_y_records": "[X] kayıttan [Y] arası gösteriliyor.",
     }
 
 })()

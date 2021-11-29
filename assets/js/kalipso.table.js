@@ -30,7 +30,9 @@ class KalipsoTable {
             "all": "All",
             "sorting_asc": "Sorting (A-Z)",
             "sorting_desc": "Sorting (Z-A)",
-            "no_record": "No record!"
+            "no_record": "No record!",
+            "out_of_x_records": "out of [X] records",
+            "showing_x_out_of_y_records": "Showing [X] out of [Y] records.",
         }
 
         let defaultOptions = {
@@ -81,7 +83,8 @@ class KalipsoTable {
             params: [],
             pageLenght: 0,
             fullSearch: true,
-            fullSearchParam: ""
+            fullSearchParam: "",
+            totalRecord: 0
         }
 
         this.data = []
@@ -184,6 +187,8 @@ class KalipsoTable {
 
         if (typeof this.options.source === 'object') { // client-side
 
+            this.options.totalRecord = Object.keys(this.options.source).length
+
             let results = [] // this.options.source
             if (Object.keys(this.options.params).length) { // search
 
@@ -204,24 +209,18 @@ class KalipsoTable {
             }
 
             if (results.length && this.options.fullSearch && this.options.fullSearchParam) { // full search
-                
+                let tempResults = []
                 results.forEach((p) => {
-                    for (const [key, value] of Object.entries(this.options.columns)) {
-
-                        if (p[key] !== undefined) {
-                            let string = p[key];
-                            console.
-                            string = string.toString()
-                            if (string.indexOf(value) >= 0) {
-                                results.push(p)
-                                break;
-                            }
+                    for (const [key, value] of Object.entries(p)) {
+                        let string = value.toString()
+                        if (string.indexOf(this.options.fullSearchParam) >= 0) {
+                            tempResults.push(p)
+                            break;
                         }
                     }
                 })
-
+                results = tempResults
             }
-
 
             if (results.length && this.options.order.length) { // order
 
@@ -240,6 +239,7 @@ class KalipsoTable {
 
             if (push) {
                 document.querySelector(this.options.selector + ' tbody').innerHTML = this.body(false)
+                document.querySelector(this.options.selector + ' [data-info]').innerHTML = this.information()
             }
 
 
@@ -250,12 +250,34 @@ class KalipsoTable {
         }
     }
 
+    // table information text
+    information() {
+
+        let info = ``
+
+        if (this.result && this.result.length !== 0) {
+            info = this.l10n("showing_x_out_of_y_records").replace("[X]", this.result.length)
+            info = info.replace("[Y]", "1-1");
+        } else {
+            info = this.l10n("no_record");
+        }
+
+        if (this.options.totalRecord > 0 || this.result.length !== this.options.totalRecord) {
+            info = info + ` (` + this.l10n("out_of_x_records").replace("[X]", this.options.totalRecord) + `)`
+        }
+
+        console.log(this.options.totalRecord)
+
+        return `<span class="kalipso-information" data-info>` + info + `</span>`
+    }
+
     // The table structure is created.
     init (element) {
 
         this.prepareBody()
         const sorting = this.sorting()
         const fullSearch = this.fullSearchArea()
+        const info = this.information()
 
         let schema = this.options.schema
         const table = `<div`+(this.options.customize.tableWrapClass ? ` class="` + this.options.customize.tableWrapClass + `"` : ``)+`>` + 
@@ -269,6 +291,7 @@ class KalipsoTable {
         schema = schema.replace("[T]", table)
         schema = schema.replace("[L]", sorting)
         schema = schema.replace("[S]", fullSearch)
+        schema = schema.replace("[I]", info)
 
 
         element.innerHTML = schema
@@ -301,7 +324,10 @@ class KalipsoTable {
             let defaultSelected = false
             let selected = ``
 
-            sortingDom = `<select data-perpage>`
+            sortingDom = `<select data-perpage` + 
+                (this.options.customize.selectClass !== undefined && this.options.customize.selectClass 
+                    ? ` class="` + this.options.customize.selectClass + `" ` : ` `) +
+                `>`
 
             for (let i = 0; i < this.options.lengthOptions.length; i++) {
                 if (this.options.lengthOptions[i].default !== undefined && this.options.lengthOptions[i].default) {
