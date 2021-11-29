@@ -82,6 +82,7 @@ class KalipsoTable {
             },
             params: [],
             pageLenght: 0,
+            page: 1,
             fullSearch: true,
             fullSearchParam: "",
             totalRecord: 0
@@ -116,7 +117,7 @@ class KalipsoTable {
     // Provides synchronization of setting data.
     mergeObject(defaultObj, overridedObj, key = null) {
         
-        if (defaultObj !== null) {
+        if (defaultObj !== null && overridedObj !== null) {
             const keys = Object.keys(overridedObj)
             let key = null
 
@@ -239,7 +240,8 @@ class KalipsoTable {
 
             if (push) {
                 document.querySelector(this.options.selector + ' tbody').innerHTML = this.body(false)
-                document.querySelector(this.options.selector + ' [data-info]').innerHTML = this.information()
+                document.querySelector(this.options.selector + ' [data-info]').innerHTML = this.information(false)
+                document.querySelector(this.options.selector + ' [data-pagination]').innerHTML = this.pagination(false)
             }
 
 
@@ -251,7 +253,7 @@ class KalipsoTable {
     }
 
     // table information text
-    information() {
+    information(withParent = true) {
 
         let info = ``
 
@@ -266,9 +268,25 @@ class KalipsoTable {
             info = info + ` (` + this.l10n("out_of_x_records").replace("[X]", this.options.totalRecord) + `)`
         }
 
-        console.log(this.options.totalRecord)
+        return withParent ? `<span class="kalipso-information" data-info>` + info + `</span>` : info
+    }
 
-        return `<span class="kalipso-information" data-info>` + info + `</span>`
+    // table pagination
+    pagination(withParent = true) {
+
+        let pagination = ``
+
+        if (this.result && this.result.length !== 0) {
+            pagination = `<ul` + (this.options.customize.paginationUlClass ? ` class="` + this.options.customize.paginationUlClass + `"` : ``) + `>
+                <li` + (this.options.customize.paginationUlClass ? ` class="` + this.options.customize.paginationUlClass + `"` : ``) + `>
+                    <a` + (this.options.customize.paginationAClass ? ` class="` + this.options.customize.paginationAClass + `"` : ``) + ` href="#">Previous</a>
+                </li>
+            </ul>`
+        } else {
+            pagination = `tyutyu`;
+        }
+
+        return withParent ? `<span class="kalipso-pagination" data-pagination>` + pagination + `</span>` : pagination
     }
 
     // The table structure is created.
@@ -278,6 +296,7 @@ class KalipsoTable {
         const sorting = this.sorting()
         const fullSearch = this.fullSearchArea()
         const info = this.information()
+        const pagination = this.pagination()
 
         let schema = this.options.schema
         const table = `<div`+(this.options.customize.tableWrapClass ? ` class="` + this.options.customize.tableWrapClass + `"` : ``)+`>` + 
@@ -292,6 +311,7 @@ class KalipsoTable {
         schema = schema.replace("[L]", sorting)
         schema = schema.replace("[S]", fullSearch)
         schema = schema.replace("[I]", info)
+        schema = schema.replace("[P]", pagination)
 
 
         element.innerHTML = schema
@@ -312,6 +332,13 @@ class KalipsoTable {
     fullSearch(param) {
 
         this.options.fullSearchParam = param
+        this.prepareBody(true)
+
+    }
+
+    perPage(param) {
+
+        this.options.pageLenght = parseInt(param)
         this.prepareBody(true)
 
     }
@@ -530,6 +557,13 @@ class KalipsoTable {
                     this.fullSearch(searchInput.value)
                 })
             }
+        }
+
+        let searchInput = document.querySelector(this.options.selector + ' [data-perpage]')
+        if (searchInput) {
+            searchInput.addEventListener("change", a => {
+                this.perPage(searchInput.value)
+            })
         }
 
         let sortingTh = document.querySelectorAll(this.options.selector + ' thead th.sort')

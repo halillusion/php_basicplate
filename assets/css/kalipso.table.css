@@ -88,3 +88,58 @@ table.kalipso-table thead th.sort.asc:before {
 table.kalipso-table thead th.sort.desc:after {
 	opacity: 1;
 }
+
+.kalipso-pagination ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	margin-top: 0.6rem;
+}
+
+.kalipso-pagination ul li {
+}
+
+.kalipso-pagination ul li a {
+	padding: 0.4rem 0.8rem;
+	background: #ededed;
+	color: #696868;
+	border: 1px solid transparent;
+	font-weight: 600;
+	border-top-color: #acacac;
+	border-bottom-color: #acacac;
+}
+
+.kalipso-pagination ul li a:not([disabled]):hover {
+	padding: 0.4rem 0.8rem;
+	color: #000000;
+	background: #dddddd;
+}
+
+.kalipso-pagination ul li a.active {
+	padding: 0.4rem 0.8rem;
+	color: #ffffff;
+	background: #acacac;
+}
+
+.kalipso-pagination ul li a[disabled] {
+	pointer-events: none;
+	user-select: none;
+	opacity: 0.5
+}
+
+.kalipso-pagination ul li:first-child a {
+	border-left-color: #acacac;
+	border-top-left-radius: 0.4rem;
+	border-bottom-left-radius: 0.4rem;
+}
+
+.kalipso-pagination ul li:last-child a {
+	border-right-color: #acacac;
+	border-top-right-radius: 0.4rem;
+	border-bottom-right-radius: 0.4rem;
+}
+
+.kalipso-pagination ul li:not(:last-child) a {
+	border-right-color: #cdcdcd
+}

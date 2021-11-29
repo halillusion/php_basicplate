@@ -235,9 +235,9 @@ function init() {
 				tableFooterClass: "",
 				inputClass: "form-control form-control-sm",
 				selectClass: "form-control form-control-sm",
-				paginationUlClass: 'pagination',
-                paginationLiClass: 'page-item',
-                paginationAClass: 'page-link'
+				paginationUlClass: null,
+                paginationLiClass: null,
+                paginationAClass: null
 			},
 			tableHeader: {
 				"searchBar": true
