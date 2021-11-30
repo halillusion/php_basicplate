@@ -33,6 +33,10 @@ class KalipsoTable {
             "no_record": "No record!",
             "out_of_x_records": "out of [X] records",
             "showing_x_out_of_y_records": "Showing [X] out of [Y] records.",
+            "prev": "Previous",
+            "next": "Next",
+            "first": "First",
+            "last": "Last",
         }
 
         let defaultOptions = {
@@ -242,6 +246,8 @@ class KalipsoTable {
                 document.querySelector(this.options.selector + ' tbody').innerHTML = this.body(false)
                 document.querySelector(this.options.selector + ' [data-info]').innerHTML = this.information(false)
                 document.querySelector(this.options.selector + ' [data-pagination]').innerHTML = this.pagination(false)
+
+                this.eventListener()
             }
 
 
@@ -277,19 +283,42 @@ class KalipsoTable {
         let pagination = ``
         let page = this.options.page
 
-        let pageCount = Math.ceil(this.options.totalRecord / this.options.pageLenght)
+        let pageCount = this.options.pageLenght <= 0 ? 1 : Math.ceil(this.options.totalRecord / this.options.pageLenght)
 
-        console.log(pageCount)
+        pagination = `<ul` + (this.options.customize.paginationUlClass ? ` class="` + this.options.customize.paginationUlClass + `"` : ``) + `>`
 
         if (this.result && this.result.length !== 0) {
-            pagination = `<ul` + (this.options.customize.paginationUlClass ? ` class="` + this.options.customize.paginationUlClass + `"` : ``) + `>
-                <li` + (this.options.customize.paginationUlClass ? ` class="` + this.options.customize.paginationUlClass + `"` : ``) + `>
-                    <a` + (this.options.customize.paginationAClass ? ` class="` + this.options.customize.paginationAClass + `"` : ``) + ` href="#">Previous</a>
-                </li>
-            </ul>`
-        } else {
-            pagination = `tyutyu`;
+            
+            let prevAttr = ` disabled`
+            if (page > 1) {
+                prevAttr = ` data-page="` + (page - 1) + `"`
+            }
+
+            pagination = pagination + `<li` + (this.options.customize.paginationUlClass ? ` class="` + this.options.customize.paginationUlClass + `"` : ``) + `>` +
+            `<a` + (this.options.customize.paginationAClass ? ` class="` + this.options.customize.paginationAClass + `"` : ``) + ` href="javascript:;"` + prevAttr + `>` + this.l10n("prev") + `</a>` +
+            `</li>`
+
+            for (let i = 1; i <= pageCount; i++) {
+                let aClass = page === i ? `active` : ``
+
+                aClass = aClass + (this.options.customize.paginationAClass ? (aClass === `` ? `` : ` `) + this.options.customize.paginationAClass : ``)
+
+                pagination = pagination + `<li` + (this.options.customize.paginationUlClass ? ` class="` + this.options.customize.paginationUlClass + `"` : ``) + `>` +
+                `<a` + (aClass !== `` ? ` class="` + aClass + `"` : ``) + ` href="javascript:;" data-page="` + i + `">` + i + `</a>` +
+                `</li>`
+            }
+
+            let nextAttr = ` disabled`
+            if (page < pageCount) {
+                nextAttr = ` data-page="` + (page + 1) + `"`
+            }
+
+            pagination = pagination + `<li` + (this.options.customize.paginationUlClass ? ` class="` + this.options.customize.paginationUlClass + `"` : ``) + `>` +
+            `<a` + (this.options.customize.paginationAClass ? ` class="` + this.options.customize.paginationAClass + `"` : ``) + ` href="javascript:;"` + nextAttr + `>` + this.l10n("next") + `</a>` +
+            `</li>`
         }
+
+        pagination = pagination + `</ul>`
 
         return withParent ? `<nav class="kalipso-pagination" data-pagination>` + pagination + `</nav>` : pagination
     }
@@ -346,6 +375,12 @@ class KalipsoTable {
         this.options.pageLenght = parseInt(param)
         this.prepareBody(true)
 
+    }
+
+    switchPage (param) {
+
+        this.options.page = parseInt(param)
+        this.prepareBody(true)
     }
 
     sorting () {
@@ -569,6 +604,20 @@ class KalipsoTable {
             searchInput.addEventListener("change", a => {
                 this.perPage(searchInput.value)
             })
+        }
+
+        let pageSwitch = document.querySelectorAll(this.options.selector + ' [data-page]')
+
+        if (pageSwitch.length) {
+
+            for(let e=0; e < pageSwitch.length; e++) {
+                pageSwitch[e].addEventListener("click", a => {
+                    // sync select values
+                    this.switchPage(pageSwitch[e].getAttribute("data-page"))
+                });
+                
+            }
+
         }
 
         let sortingTh = document.querySelectorAll(this.options.selector + ' thead th.sort')
