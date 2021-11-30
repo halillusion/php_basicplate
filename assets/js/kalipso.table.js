@@ -241,15 +241,13 @@ class KalipsoTable {
             }
 
             this.result = results
+            this.options.totalRecord = this.result.length
 
             if (push) {
                 document.querySelector(this.options.selector + ' tbody').innerHTML = this.body(false)
                 document.querySelector(this.options.selector + ' [data-info]').innerHTML = this.information(false)
                 document.querySelector(this.options.selector + ' [data-pagination]').innerHTML = this.pagination(false)
-
-                this.eventListener()
             }
-
 
         } else { // server-side
 
@@ -271,7 +269,7 @@ class KalipsoTable {
         }
 
         if (this.options.totalRecord > 0 || this.result.length !== this.options.totalRecord) {
-            info = info + ` (` + this.l10n("out_of_x_records").replace("[X]", this.options.totalRecord) + `)`
+            info = info + ` (` + this.l10n("out_of_x_records").replace("[X]", this.options.source.length) + `)`
         }
 
         return withParent ? `<span class="kalipso-information" data-info>` + info + `</span>` : info
@@ -284,10 +282,20 @@ class KalipsoTable {
         let page = this.options.page
 
         let pageCount = this.options.pageLenght <= 0 ? 1 : Math.ceil(this.options.totalRecord / this.options.pageLenght)
+        console.log(this.options.totalRecord, this.options.pageLenght, pageCount)
 
         pagination = `<ul` + (this.options.customize.paginationUlClass ? ` class="` + this.options.customize.paginationUlClass + `"` : ``) + `>`
 
         if (this.result && this.result.length !== 0) {
+
+            let firstAttr = ` disabled`
+            if (page > 1) {
+                firstAttr = ` data-page="` + 1 + `"`
+            }
+
+            pagination = pagination + `<li` + (this.options.customize.paginationUlClass ? ` class="` + this.options.customize.paginationUlClass + `"` : ``) + `>` +
+            `<a` + (this.options.customize.paginationAClass ? ` class="` + this.options.customize.paginationAClass + `"` : ``) + ` href="javascript:;"` + firstAttr + `>` + this.l10n("first") + `</a>` +
+            `</li>`
             
             let prevAttr = ` disabled`
             if (page > 1) {
@@ -315,6 +323,15 @@ class KalipsoTable {
 
             pagination = pagination + `<li` + (this.options.customize.paginationUlClass ? ` class="` + this.options.customize.paginationUlClass + `"` : ``) + `>` +
             `<a` + (this.options.customize.paginationAClass ? ` class="` + this.options.customize.paginationAClass + `"` : ``) + ` href="javascript:;"` + nextAttr + `>` + this.l10n("next") + `</a>` +
+            `</li>`
+
+            let lastAttr = ` disabled`
+            if (page < pageCount) {
+                lastAttr = ` data-page="` + pageCount + `"`
+            }
+
+            pagination = pagination + `<li` + (this.options.customize.paginationUlClass ? ` class="` + this.options.customize.paginationUlClass + `"` : ``) + `>` +
+            `<a` + (this.options.customize.paginationAClass ? ` class="` + this.options.customize.paginationAClass + `"` : ``) + ` href="javascript:;"` + lastAttr + `>` + this.l10n("last") + `</a>` +
             `</li>`
         }
 
@@ -373,14 +390,60 @@ class KalipsoTable {
     perPage(param) {
 
         this.options.pageLenght = parseInt(param)
+        this.options.page = 1
         this.prepareBody(true)
 
     }
 
     switchPage (param) {
 
-        this.options.page = parseInt(param)
+        param = parseInt(param)
+
+        let pageCount = this.options.pageLenght <= 0 ? 1 : Math.ceil(this.options.totalRecord / this.options.pageLenght)
+        if (param > pageCount) {
+            this.options.page = pageCount
+        } else if (param < 1) {
+            this.options.page = 1
+        } else {
+            this.options.page = param
+        }
+
         this.prepareBody(true)
+    }
+
+    sort (element) {
+
+        if (Array.from(element.classList).indexOf("asc") !== -1) { // asc
+
+            element.classList.remove("asc")
+            element.classList.add("desc")
+            element.setAttribute("title", this.l10n("sorting_asc"))
+            this.options.order = [element.getAttribute("data-sort"), "desc"]
+
+        } else if (Array.from(element.classList).indexOf("desc") !== -1) { // desc
+
+            element.classList.remove("desc")
+            element.classList.add("asc")
+            element.setAttribute("title", this.l10n("sorting_desc"))
+            this.options.order = [element.getAttribute("data-sort"), "asc"]
+
+        } else { // default
+
+            element.classList.add("asc")
+            element.setAttribute("title", this.l10n("sorting_desc"))
+            this.options.order = [element.getAttribute("data-sort"), "asc"]
+
+        }
+
+        let thAreas =  document.querySelectorAll(this.options.selector + ' thead th.sort')
+        if (thAreas.length) {
+            for (let thIndex = 0; thIndex < thAreas.length; thIndex++) {
+                if (thIndex !== th) thAreas[thIndex].classList.remove("asc", "desc")
+            }
+        }
+
+        this.prepareBody(true)
+
     }
 
     sorting () {
@@ -474,7 +537,22 @@ class KalipsoTable {
 
         } else {
 
-            this.result.forEach((row) => {
+            let bodyResult = []
+
+            if (typeof this.options.source !== 'object' || this.options.pageLenght === 0) {
+                bodyResult = this.result
+            } else {
+                let gap = this.options.pageLenght
+                let page = this.options.page
+
+                let start = page === 1 ? 0 : ((page * gap) - 1)
+                let end = gap === 1 ? start + gap : (start + gap) - 1
+
+                bodyResult = this.result.slice(start, end)
+
+            }
+
+            bodyResult.forEach((row) => {
 
                 tbody += `<tr>`
                 for (const [index, col] of Object.entries(this.options.columns)) {
@@ -487,6 +565,7 @@ class KalipsoTable {
             })
 
         }
+
         return withBodyTag ? `<tbody`+(this.options.customize.tableBodyClass ? ` class="` + this.options.customize.tableBodyClass + `"` : ``)+`>` + tbody + `</tbody>` : tbody
 
     }
@@ -557,114 +636,90 @@ class KalipsoTable {
     }
 
     // Prepares event listeners so that table actions can be listened to.
-    eventListener () {
+    async eventListener (searchEvents = true, pageEvents = true, sortingEvents = true, paginationEvents = true) {
 
-        const element = document.querySelector(this.options.selector)
+        if (searchEvents) {
+            let searchInputs = await document.querySelectorAll(this.options.selector + ' [data-search]')
+            if (searchInputs.length) {
 
-        let searchInputs = document.querySelectorAll(this.options.selector + ' [data-search]')
-        if (searchInputs.length) {
+                for(let e=0; e < searchInputs.length; e++) {
 
-            for(let e=0; e < searchInputs.length; e++) {
+                    if (searchInputs[e].nodeName.toLowerCase() === 'select') {
 
-                if (searchInputs[e].nodeName.toLowerCase() === 'select') {
+                        await searchInputs[e].addEventListener("change", a => {
+                            // sync select values
+                            searchInputs[e].removeEventListener("change", this, true)
+                            this.fieldSynchronizer(searchInputs[e])
 
-                    searchInputs[e].addEventListener("change", a => {
-                        // sync select values
-                        this.fieldSynchronizer(searchInputs[e])
-                    });
+                        })
 
-                } else {
+                    } else {
 
-                    searchInputs[e].addEventListener("input", a => {
-                        // sync input values
-                        this.fieldSynchronizer(searchInputs[e])
-                    });
+                        await searchInputs[e].addEventListener("input", a => {
+                            // sync input values
+                            searchInputs[e].removeEventListener("input", this, true)
+                            this.fieldSynchronizer(searchInputs[e])
+                        })
+                    }
+                    
                 }
-                
+
             }
 
+            if (this.options.fullSearch) {
+
+                let searchInput = await document.querySelector(this.options.selector + ' [data-full-search]')
+                if (searchInput) {
+                    await searchInput.addEventListener("change", a => {
+                        searchInput.removeEventListener("change", this, true)
+                        this.fullSearch(searchInput.value)
+                    })
+
+                    await searchInput.addEventListener("input", a => {
+                        this.fullSearch(searchInput.value)
+                    })
+                }
+            }
         }
 
-        if (this.options.fullSearch) {
-
-            let searchInput = document.querySelector(this.options.selector + ' [data-full-search]')
-            if (searchInput) {
-                searchInput.addEventListener("change", a => {
-                    this.fullSearch(searchInput.value)
+        if (pageEvents) {
+            let perPage = await document.querySelector(this.options.selector + ' [data-perpage]')
+            if (perPage) {
+                await perPage.addEventListener("change", a => {
+                    perPage.removeEventListener("change", this, true)
+                    this.perPage(perPage.value)
                 })
-
-                searchInput.addEventListener("input", a => {
-                    this.fullSearch(searchInput.value)
-                })
             }
         }
 
-        let searchInput = document.querySelector(this.options.selector + ' [data-perpage]')
-        if (searchInput) {
-            searchInput.addEventListener("change", a => {
-                this.perPage(searchInput.value)
-            })
+        if (paginationEvents) {
+            let pageSwitch = await document.querySelectorAll(this.options.selector + ' [data-page]')
+            if (pageSwitch.length) {
+
+                for(let e=0; e < pageSwitch.length; e++) {
+                    await pageSwitch[e].addEventListener("click", a => {
+                        // sync select values
+                        pageSwitch[e].removeEventListener("click", this, true)
+                        this.switchPage(pageSwitch[e].getAttribute("data-page"))
+                    })
+                }
+            }
         }
 
-        let pageSwitch = document.querySelectorAll(this.options.selector + ' [data-page]')
+        if (sortingEvents) {
+            let sortingTh = await document.querySelectorAll(this.options.selector + ' thead th[data-sort]')
+            if (sortingTh.length) {
 
-        if (pageSwitch.length) {
+                for (let th = 0; th < sortingTh.length; th++) {
+                    
+                    await sortingTh[th].addEventListener("click", a => {
+                        sortingTh[th].removeEventListener("click", this, true)
+                        this.sort(sortingTh[th])
+                    })
 
-            for(let e=0; e < pageSwitch.length; e++) {
-                pageSwitch[e].addEventListener("click", a => {
-                    // sync select values
-                    this.switchPage(pageSwitch[e].getAttribute("data-page"))
-                });
-                
-            }
-
-        }
-
-        let sortingTh = document.querySelectorAll(this.options.selector + ' thead th.sort')
-        if (sortingTh.length) {
-
-            for (let th = 0; th < sortingTh.length; th++) {
-                
-                sortingTh[th].addEventListener("click", a => {
-
-                    if (Array.from(sortingTh[th].classList).indexOf("asc") !== -1) { // asc
-
-                        sortingTh[th].classList.remove("asc")
-                        sortingTh[th].classList.add("desc")
-                        sortingTh[th].setAttribute("title", this.l10n("sorting_asc"))
-                        this.options.order = [sortingTh[th].getAttribute("data-sort"), "desc"]
-
-                    } else if (Array.from(sortingTh[th].classList).indexOf("desc") !== -1) { // desc
-
-                        sortingTh[th].classList.remove("desc")
-                        sortingTh[th].classList.add("asc")
-                        sortingTh[th].setAttribute("title", this.l10n("sorting_desc"))
-                        this.options.order = [sortingTh[th].getAttribute("data-sort"), "asc"]
-
-                    } else { // default
-
-                        sortingTh[th].classList.add("asc")
-                        sortingTh[th].setAttribute("title", this.l10n("sorting_desc"))
-                        this.options.order = [sortingTh[th].getAttribute("data-sort"), "asc"]
-
-                    }
-
-                    let thAreas =  document.querySelectorAll(this.options.selector + ' thead th.sort')
-
-                    if (thAreas.length) {
-
-                        for (let thIndex = 0; thIndex < thAreas.length; thIndex++) {
-                            if (thIndex !== th) thAreas[thIndex].classList.remove("asc", "desc")
-                        }
-
-                    }
-
-                    this.prepareBody(true)
-
-                })
+                }
 
             }
-
         }
 
     }

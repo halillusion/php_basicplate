@@ -108,6 +108,7 @@ table.kalipso-table thead th.sort.desc:after {
 }
 
 .kalipso-pagination ul li a {
+	user-select: none;
 	padding: 0.4rem 0.8rem;
 	background: #ededed;
 	color: #696868;
