@@ -385,6 +385,8 @@ class KalipsoTable {
         this.options.fullSearchParam = param
         this.prepareBody(true)
 
+        this.eventListener(false, true, false, true)
+
     }
 
     perPage(param) {
@@ -392,6 +394,8 @@ class KalipsoTable {
         this.options.pageLenght = parseInt(param)
         this.options.page = 1
         this.prepareBody(true)
+
+        this.eventListener(false, true, false, true)
 
     }
 
@@ -409,9 +413,11 @@ class KalipsoTable {
         }
 
         this.prepareBody(true)
+
+        this.eventListener(false, true, false, true)
     }
 
-    sort (element) {
+    sort (element, index) {
 
         if (Array.from(element.classList).indexOf("asc") !== -1) { // asc
 
@@ -438,7 +444,7 @@ class KalipsoTable {
         let thAreas =  document.querySelectorAll(this.options.selector + ' thead th.sort')
         if (thAreas.length) {
             for (let thIndex = 0; thIndex < thAreas.length; thIndex++) {
-                if (thIndex !== th) thAreas[thIndex].classList.remove("asc", "desc")
+                if (thIndex !== index) thAreas[thIndex].classList.remove("asc", "desc")
             }
         }
 
@@ -714,7 +720,7 @@ class KalipsoTable {
                     
                     await sortingTh[th].addEventListener("click", a => {
                         sortingTh[th].removeEventListener("click", this, true)
-                        this.sort(sortingTh[th])
+                        this.sort(sortingTh[th], th)
                     })
 
                 }
