@@ -284,6 +284,11 @@ class KalipsoTable {
         let pageCount = this.options.pageLenght <= 0 ? 1 : Math.ceil(this.options.totalRecord / this.options.pageLenght)
         console.log(this.options.totalRecord, this.options.pageLenght, pageCount)
 
+        if (pageCount < page) {
+            page = pageCount
+            this.options.page = page
+        }
+
         pagination = `<ul` + (this.options.customize.paginationUlClass ? ` class="` + this.options.customize.paginationUlClass + `"` : ``) + `>`
 
         if (this.result && this.result.length !== 0) {
@@ -395,7 +400,8 @@ class KalipsoTable {
         this.options.page = 1
         this.prepareBody(true)
 
-        this.eventListener(false, true, false, true)
+        this.eventListener(false, false, false, true)
+        // searchEvents = true, pageEvents = true, sortingEvents = true, paginationEvents = true
 
     }
 
@@ -558,6 +564,8 @@ class KalipsoTable {
 
             }
 
+            console.log(bodyResult)
+
             bodyResult.forEach((row) => {
 
                 tbody += `<tr>`
@@ -641,57 +649,57 @@ class KalipsoTable {
 
     }
 
+    event (event, attrSelector, callback) {
+
+        let that = this
+        document.body.addEventListener(event, e => {
+            console.log(e)
+            if (e.target.getAttributeNames().indexOf(attrSelector) !== -1) {
+                callback.call(this.fieldSynchronizer(), e.target, this);
+            }
+        })
+    }
+
     // Prepares event listeners so that table actions can be listened to.
-    async eventListener (searchEvents = true, pageEvents = true, sortingEvents = true, paginationEvents = true) {
+    eventListener (searchEvents = true, pageEvents = true, sortingEvents = true, paginationEvents = true) {
 
         if (searchEvents) {
-            let searchInputs = await document.querySelectorAll(this.options.selector + ' [data-search]')
-            if (searchInputs.length) {
 
-                for(let e=0; e < searchInputs.length; e++) {
+            /*
+            this.event("change", this.options.selector + ' [data-search]', (e) => {
 
-                    if (searchInputs[e].nodeName.toLowerCase() === 'select') {
+                this.fieldSynchronizer(e)
 
-                        await searchInputs[e].addEventListener("change", a => {
-                            // sync select values
-                            searchInputs[e].removeEventListener("change", this, true)
-                            this.fieldSynchronizer(searchInputs[e])
+            })
+            */
 
-                        })
+            this.event("input", 'data-search', function(f, e) {
+                f(e)
+            })
 
-                    } else {
-
-                        await searchInputs[e].addEventListener("input", a => {
-                            // sync input values
-                            searchInputs[e].removeEventListener("input", this, true)
-                            this.fieldSynchronizer(searchInputs[e])
-                        })
-                    }
-                    
-                }
-
-            }
-
+            return
             if (this.options.fullSearch) {
 
-                let searchInput = await document.querySelector(this.options.selector + ' [data-full-search]')
+                let searchInput = document.querySelector(this.options.selector + ' [data-full-search]')
                 if (searchInput) {
-                    await searchInput.addEventListener("change", a => {
+                    searchInput.addEventListener("change", a => {
                         searchInput.removeEventListener("change", this, true)
                         this.fullSearch(searchInput.value)
                     })
 
-                    await searchInput.addEventListener("input", a => {
+                    searchInput.addEventListener("input", a => {
                         this.fullSearch(searchInput.value)
                     })
                 }
             }
         }
 
+        return
+
         if (pageEvents) {
-            let perPage = await document.querySelector(this.options.selector + ' [data-perpage]')
+            let perPage = document.querySelector(this.options.selector + ' [data-perpage]')
             if (perPage) {
-                await perPage.addEventListener("change", a => {
+                perPage.addEventListener("change", a => {
                     perPage.removeEventListener("change", this, true)
                     this.perPage(perPage.value)
                 })
@@ -699,11 +707,11 @@ class KalipsoTable {
         }
 
         if (paginationEvents) {
-            let pageSwitch = await document.querySelectorAll(this.options.selector + ' [data-page]')
+            let pageSwitch = document.querySelectorAll(this.options.selector + ' [data-page]')
             if (pageSwitch.length) {
 
                 for(let e=0; e < pageSwitch.length; e++) {
-                    await pageSwitch[e].addEventListener("click", a => {
+                    pageSwitch[e].addEventListener("click", a => {
                         // sync select values
                         pageSwitch[e].removeEventListener("click", this, true)
                         this.switchPage(pageSwitch[e].getAttribute("data-page"))
@@ -713,12 +721,12 @@ class KalipsoTable {
         }
 
         if (sortingEvents) {
-            let sortingTh = await document.querySelectorAll(this.options.selector + ' thead th[data-sort]')
+            let sortingTh = document.querySelectorAll(this.options.selector + ' thead th[data-sort]')
             if (sortingTh.length) {
 
                 for (let th = 0; th < sortingTh.length; th++) {
                     
-                    await sortingTh[th].addEventListener("click", a => {
+                    sortingTh[th].addEventListener("click", a => {
                         sortingTh[th].removeEventListener("click", this, true)
                         this.sort(sortingTh[th], th)
                     })
@@ -733,6 +741,7 @@ class KalipsoTable {
     // If there is more than one of the changing search fields, it ensures that all search fields are synchronized with the same data.
     fieldSynchronizer(field) {
 
+        console.log(field = field.target)
         const searchAttr = field.getAttribute("data-search")
         const targetElements = document.querySelectorAll(this.options.selector + ` [data-search="` + searchAttr + `"]`)
         targetElements.forEach( (input) => {
