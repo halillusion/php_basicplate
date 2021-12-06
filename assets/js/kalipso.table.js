@@ -282,7 +282,6 @@ class KalipsoTable {
         let page = this.options.page
 
         let pageCount = this.options.pageLenght <= 0 ? 1 : Math.ceil(this.options.totalRecord / this.options.pageLenght)
-        console.log(this.options.totalRecord, this.options.pageLenght, pageCount)
 
         if (pageCount < page) {
             page = pageCount
@@ -385,29 +384,24 @@ class KalipsoTable {
         return area
     }
 
-    fullSearch(param) {
+    fullSearch(el) {
 
-        this.options.fullSearchParam = param
+        this.options.fullSearchParam = el.value
         this.prepareBody(true)
-
-        this.eventListener(false, true, false, true)
 
     }
 
-    perPage(param) {
+    perPage(el) {
 
-        this.options.pageLenght = parseInt(param)
+        this.options.pageLenght = parseInt(el.value)
         this.options.page = 1
         this.prepareBody(true)
 
-        this.eventListener(false, false, false, true)
-        // searchEvents = true, pageEvents = true, sortingEvents = true, paginationEvents = true
-
     }
 
-    switchPage (param) {
+    switchPage (el) {
 
-        param = parseInt(param)
+        let param = parseInt(el.getAttribute("data-page"))
 
         let pageCount = this.options.pageLenght <= 0 ? 1 : Math.ceil(this.options.totalRecord / this.options.pageLenght)
         if (param > pageCount) {
@@ -419,8 +413,6 @@ class KalipsoTable {
         }
 
         this.prepareBody(true)
-
-        this.eventListener(false, true, false, true)
     }
 
     sort (element, index) {
@@ -564,8 +556,6 @@ class KalipsoTable {
 
             }
 
-            console.log(bodyResult)
-
             bodyResult.forEach((row) => {
 
                 tbody += `<tr>`
@@ -651,11 +641,17 @@ class KalipsoTable {
 
     event (event, attrSelector, callback) {
 
-        let that = this
         document.body.addEventListener(event, e => {
-            console.log(e)
             if (e.target.getAttributeNames().indexOf(attrSelector) !== -1) {
-                callback.call(this.fieldSynchronizer(), e.target, this);
+                if (attrSelector === "data-search") {
+                    callback.call(this.fieldSynchronizer(e.target))
+                } else if (attrSelector === "data-full-search") {
+                    callback.call(this.fullSearch(e.target))
+                } else if (attrSelector === "data-perpage") {
+                    callback.call(this.perPage(e.target))
+                } else if (attrSelector === "data-page") {
+                    callback.call(this.switchPage(e.target))
+                }
             }
         })
     }
@@ -665,58 +661,31 @@ class KalipsoTable {
 
         if (searchEvents) {
 
-            /*
-            this.event("change", this.options.selector + ' [data-search]', (e) => {
+            this.event("input", 'data-search', () => {})
+            this.event("change", 'data-search', () => {})
 
-                this.fieldSynchronizer(e)
-
-            })
-            */
-
-            this.event("input", 'data-search', function(f, e) {
-                f(e)
-            })
-
-            return
             if (this.options.fullSearch) {
 
                 let searchInput = document.querySelector(this.options.selector + ' [data-full-search]')
                 if (searchInput) {
-                    searchInput.addEventListener("change", a => {
-                        searchInput.removeEventListener("change", this, true)
-                        this.fullSearch(searchInput.value)
-                    })
 
-                    searchInput.addEventListener("input", a => {
-                        this.fullSearch(searchInput.value)
-                    })
+                    this.event("input", 'data-full-search', () => {})
+                    this.event("change", 'data-full-search', () => {})
                 }
             }
         }
 
-        return
-
         if (pageEvents) {
             let perPage = document.querySelector(this.options.selector + ' [data-perpage]')
             if (perPage) {
-                perPage.addEventListener("change", a => {
-                    perPage.removeEventListener("change", this, true)
-                    this.perPage(perPage.value)
-                })
+                this.event("change", 'data-perpage', () => {})
             }
         }
 
         if (paginationEvents) {
             let pageSwitch = document.querySelectorAll(this.options.selector + ' [data-page]')
             if (pageSwitch.length) {
-
-                for(let e=0; e < pageSwitch.length; e++) {
-                    pageSwitch[e].addEventListener("click", a => {
-                        // sync select values
-                        pageSwitch[e].removeEventListener("click", this, true)
-                        this.switchPage(pageSwitch[e].getAttribute("data-page"))
-                    })
-                }
+                this.event("click", 'data-page', () => {})
             }
         }
 
@@ -740,8 +709,6 @@ class KalipsoTable {
 
     // If there is more than one of the changing search fields, it ensures that all search fields are synchronized with the same data.
     fieldSynchronizer(field) {
-
-        console.log(field = field.target)
         const searchAttr = field.getAttribute("data-search")
         const targetElements = document.querySelectorAll(this.options.selector + ` [data-search="` + searchAttr + `"]`)
         targetElements.forEach( (input) => {
